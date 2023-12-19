@@ -1,4 +1,4 @@
-package com.health.elastic.search.model;
+package org.spoken_tutorial.health.elasticsearch.models;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;

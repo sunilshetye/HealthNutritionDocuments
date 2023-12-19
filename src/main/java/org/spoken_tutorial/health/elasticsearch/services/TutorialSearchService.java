@@ -1,9 +1,8 @@
-package com.health.elastic.search.service;
+package org.spoken_tutorial.health.elasticsearch.services;
 
+import org.spoken_tutorial.health.elasticsearch.repositories.TutorialSearchRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.health.elastic.search.repository.TutorialSearchRepository;
 
 @Service
 public class TutorialSearchService {

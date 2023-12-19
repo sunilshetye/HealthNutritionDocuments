@@ -1,14 +1,13 @@
-package com.health.elastic.search.repository;
+package org.spoken_tutorial.health.elasticsearch.repositories;
 
+import org.spoken_tutorial.health.elasticsearch.models.TutorialSearch;
 import org.springframework.data.elasticsearch.annotations.Query;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
-
-import com.health.elastic.search.model.TutorialSearch;
 
 public interface TutorialSearchRepository extends ElasticsearchRepository<TutorialSearch, String>{
 	
 	
-	TutorialSearch findByDocumentTypeAndDocumentTypeIdAllIgnoreCase(String documentType, String documentTypeId);
+	TutorialSearch findByDocumentTypeAndDocumentTypeId(String documentType, String documentTypeId);
 	
 	//TutorialSearch findTopByOrderByIdDesc();
 }

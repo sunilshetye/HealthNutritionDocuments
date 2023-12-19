@@ -1,4 +1,4 @@
-package com.health.elastic.search;
+package org.spoken_tutorial.health.elasticsearch;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

@@ -1,4 +1,4 @@
-package com.health.elastic.search.contentfile;
+package org.spoken_tutorial.health.elasticsearch.contentfile;
 
 import java.io.FileInputStream;
 import java.io.IOException;

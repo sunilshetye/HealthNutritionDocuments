@@ -1,9 +1,16 @@
-package com.health.elastic.search.controller;
+package org.spoken_tutorial.health.elasticsearch.controllers;
 
-import java.util.Optional;
+import java.util.List;
 
 import org.apache.tika.parser.AutoDetectParser;
 import org.apache.tika.parser.Parser;
+import org.spoken_tutorial.health.elasticsearch.contentfile.ContentsfromFile;
+import org.spoken_tutorial.health.elasticsearch.models.QueueManagement;
+import org.spoken_tutorial.health.elasticsearch.models.TutorialSearch;
+import org.spoken_tutorial.health.elasticsearch.repositories.QueueManagementRepository;
+import org.spoken_tutorial.health.elasticsearch.repositories.TutorialSearchRepository;
+import org.spoken_tutorial.health.elasticsearch.services.QueueManagementService;
+import org.spoken_tutorial.health.elasticsearch.services.TutorialSearchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,17 +19,18 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.health.elastic.search.contentfile.ContentsfromFile;
-import com.health.elastic.search.model.TutorialSearch;
-import com.health.elastic.search.repository.TutorialSearchRepository;
-import com.health.elastic.search.service.TutorialSearchService;
-
 
 @RestController
-public class TutorialSearchController {
+public class HomeController {
 	
 	@Autowired
-	TutorialSearchRepository repo;
+	TutorialSearchRepository tutorialRepo;
+	
+	@Autowired
+	QueueManagementRepository queRepo;
+	
+	@Autowired
+	QueueManagementService queuemntService;
 	
 	@Autowired
 	TutorialSearchService tutSearchService;
@@ -45,7 +53,7 @@ public class TutorialSearchController {
 		
 		tut.setDocumentType(documentType);
 		tut.setDocumentTypeId(documentTypeId);
-		repo.save(tut);
+		tutorialRepo.save(tut);
 		return 1;
 		
 	}
@@ -53,7 +61,7 @@ public class TutorialSearchController {
 	@PutMapping("/updateDocument/{path}/{documentType}/{documentTypeId}")
 	public int updateDocument(@PathVariable String path,@PathVariable String documentType,@PathVariable String documentTypeId) {
 		
-		TutorialSearch tut = repo.findByDocumentTypeAndDocumentTypeIdAllIgnoreCase(documentType, documentTypeId);
+		TutorialSearch tut = tutorialRepo.findByDocumentTypeAndDocumentTypeId(documentType, documentTypeId);
 		Parser parser= new AutoDetectParser();
 		String docContent="";
 	
@@ -61,7 +69,7 @@ public class TutorialSearchController {
 			docContent=ContentsfromFile.extractContentForElastic(parser, path);
 			tut.setDocumentContent(docContent);
 			
-			repo.save(tut);
+			tutorialRepo.save(tut);
 		}
 		catch(Exception e) {
 			
@@ -75,7 +83,7 @@ public class TutorialSearchController {
 	
 	@GetMapping("/findByDocumentTypeAndDocumentTypeId/{documentType}/{documentTypeId}")
 	public TutorialSearch findByDocumentTypeAndDocumentTypeId(@PathVariable String documentType,@PathVariable String documentTypeId) {
-		TutorialSearch tut = repo.findByDocumentTypeAndDocumentTypeIdAllIgnoreCase(documentType, documentTypeId);
+		TutorialSearch tut = tutorialRepo.findByDocumentTypeAndDocumentTypeId(documentType, documentTypeId);
 		return tut;
 	}
 	
@@ -83,7 +91,7 @@ public class TutorialSearchController {
 	
 	@DeleteMapping("/deleteDocument/{id}")
 	public String deleteDocument(@PathVariable String id) {	
-		repo.deleteById(id);
+		tutorialRepo.deleteById(id);
 		return "deleted";
 		
 	}
@@ -93,7 +101,7 @@ public class TutorialSearchController {
 	
 	
 	
-	/**Testing */
+	/************Testing ************************************************************/
 	
 	@PostMapping("/addDocumentTest/{content}/{documentType}/{documentTypeId}")
 	public int addDocumentTest(@PathVariable String content, @PathVariable String documentType, @PathVariable String documentTypeId) {
@@ -103,7 +111,7 @@ public class TutorialSearchController {
 		tut.setDocumentContent(content);
 		tut.setDocumentType(documentType);
 		tut.setDocumentTypeId(documentTypeId);
-		repo.save(tut);
+		tutorialRepo.save(tut);
 		return 1;
 		
 	}
@@ -112,13 +120,33 @@ public class TutorialSearchController {
 	@PutMapping("/updateDocumentTest/{content}/{documentType}/{documentTypeId}")
 	public int updateDocumentTest(@PathVariable String content,@PathVariable String documentType,@PathVariable String documentTypeId) {
 		
-		TutorialSearch tut = repo.findByDocumentTypeAndDocumentTypeIdAllIgnoreCase(documentType, documentTypeId);
+		TutorialSearch tut = tutorialRepo.findByDocumentTypeAndDocumentTypeId(documentType, documentTypeId);
 		
 		tut.setDocumentContent(content);
 		
-		repo.save(tut);
+		tutorialRepo.save(tut);
 		return 1;
 		
 	}
+	
+	@PostMapping("/saveQueueTest/{requestId}/{requestType}")
+	QueueManagement saveQueueTest(@PathVariable String requestId, @PathVariable String requestType){
+		QueueManagement q1= new QueueManagement();
+		q1.setQueueId(queuemntService.getNewId());
+		q1.setRequestId(requestId);
+		q1.setRequestType(requestType);
+		queRepo.save(q1);
+		return q1;
+		
+	}
+	
+
+	@GetMapping("/findAllQueueTest")
+	Iterable<QueueManagement> findAllQueueTest(){
+	
+		return  queRepo.findAll();
+		
+	}
+
 
 }
