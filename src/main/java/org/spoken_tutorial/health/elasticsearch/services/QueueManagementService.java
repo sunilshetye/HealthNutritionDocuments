@@ -11,7 +11,7 @@ public class QueueManagementService {
 	private QueueManagementRepository repo;
 	
 	public long getNewId() {
-	        // TODO Auto-generated method stub
+	       
 	        try {
 	            return repo.getNewId() + 1;
 	        } catch (Exception e) {

@@ -5,8 +5,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 public interface QueueManagementRepository extends JpaRepository<QueueManagement, Long> {
-	
-	@Query("select max(queueId) from QueueManagement")
-	Long getNewId();
+
+    @Query("select max(queueId) from QueueManagement")
+    Long getNewId();
+
+    QueueManagement findByDocumentTypeAndDocumentId(String documentType, String documentId);
 
 }

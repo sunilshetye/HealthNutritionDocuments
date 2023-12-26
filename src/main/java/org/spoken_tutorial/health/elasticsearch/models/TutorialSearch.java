@@ -5,75 +5,69 @@ import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 
-
 @Document(indexName = "healthnutritionidx")
 public class TutorialSearch {
-	
-	@Id
-	private String id;
-	
-	@Field(type = FieldType.Text, index = true, store = false)
-	private String documentContent;
-	
-	@Field(type = FieldType.Keyword, index = true, store = true)
-	private String documentType;
-	
-	@Field(type = FieldType.Keyword, index = true, store = true)
-	private String documentTypeId;
-	
 
-	public String getId() {
-		return id;
-	}
+    @Id
+    private String id;
 
-	public void setId(String id) {
-		this.id = id;
-	}
+    @Field(type = FieldType.Text, index = true, store = false)
+    private String documentContent;
 
+    @Field(type = FieldType.Keyword, index = true, store = true)
+    private String documentType;
 
-	public String getDocumentType() {
-		return documentType;
-	}
+    @Field(type = FieldType.Keyword, index = true, store = true)
+    private String documentId;
 
-	public void setDocumentType(String documentType) {
-		this.documentType = documentType;
-	}
+    public String getId() {
+        return id;
+    }
 
-	public String getDocumentTypeId() {
-		return documentTypeId;
-	}
+    public void setId(String id) {
+        this.id = id;
+    }
 
-	public void setDocumentTypeId(String documentTypeId) {
-		this.documentTypeId = documentTypeId;
-	}
+    public String getDocumentType() {
+        return documentType;
+    }
 
-	public String getDocumentContent() {
-		return documentContent;
-	}
+    public void setDocumentType(String documentType) {
+        this.documentType = documentType;
+    }
 
-	public void setDocumentContent(String documentContent) {
-		this.documentContent = documentContent;
-	}
+    public String getDocumentId() {
+        return documentId;
+    }
 
-	public TutorialSearch() {
-		super();
-	}
-	
-	
+    public void setDocumentId(String documentId) {
+        this.documentId = documentId;
+    }
 
-	public TutorialSearch(String id, String documentContent, String documentType, String documentTypeId) {
-		super();
-		this.id = id;
-		this.documentContent = documentContent;
-		this.documentType = documentType;
-		this.documentTypeId = documentTypeId;
-	}
+    public String getDocumentContent() {
+        return documentContent;
+    }
 
-	public TutorialSearch(String id, String documentContent) {
-		super();
-		this.id = id;
-		this.documentContent = documentContent;
-	}
+    public void setDocumentContent(String documentContent) {
+        this.documentContent = documentContent;
+    }
 
-	
+    public TutorialSearch() {
+        super();
+    }
+
+    public TutorialSearch(String id, String documentContent, String documentType, String documentId) {
+        super();
+        this.id = id;
+        this.documentContent = documentContent;
+        this.documentType = documentType;
+        this.documentId = documentId;
+    }
+
+    public TutorialSearch(String id, String documentContent) {
+        super();
+        this.id = id;
+        this.documentContent = documentContent;
+    }
+
 }
