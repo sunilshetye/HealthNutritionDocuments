@@ -13,9 +13,6 @@ public class QueueManagement {
     @Column(name = "queueId", nullable = false, updatable = false)
     private long queueId;
 
-    @Column(name = "requestId", nullable = true)
-    private String requestId;
-
     @Column(name = "requestTime", nullable = true, updatable = false)
     private Timestamp requestTime;
 
@@ -155,14 +152,6 @@ public class QueueManagement {
         this.queueId = queueId;
     }
 
-    public String getRequestId() {
-        return requestId;
-    }
-
-    public void setRequestId(String requestId) {
-        this.requestId = requestId;
-    }
-
     public Timestamp getRequestTime() {
         return requestTime;
     }
@@ -237,10 +226,9 @@ public class QueueManagement {
         this.message = message;
     }
 
-    public QueueManagement(long queueId, String requestId, Timestamp requestTime, String requestType) {
+    public QueueManagement(long queueId, Timestamp requestTime, String requestType) {
         super();
         this.queueId = queueId;
-        this.requestId = requestId;
         this.requestTime = requestTime;
         this.requestType = requestType;
     }
