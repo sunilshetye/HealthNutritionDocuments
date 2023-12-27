@@ -18,7 +18,6 @@ import org.spoken_tutorial.health.elasticsearch.repositories.QueueManagementRepo
 import org.spoken_tutorial.health.elasticsearch.services.DocumentSearchService;
 import org.spoken_tutorial.health.elasticsearch.services.QueueManagementService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,8 +29,8 @@ public class HomeController {
 
     private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
 
-    @Autowired
-    private Environment env;
+    // @Autowired
+    // private Environment env;
 
     @Autowired
     private DocumentSearchRepository docuSearchRepo;
@@ -45,7 +44,7 @@ public class HomeController {
     @Autowired
     DocumentSearchService docuSearchService;
 
-    String basePath = env.getProperty("spring.applicationexternalPath.name");
+    // String basePath = env.getProperty("spring.applicationexternalPath.name");
 
     private Timestamp getCurrentTime() { // Current Date
 
@@ -136,7 +135,7 @@ public class HomeController {
             @RequestParam String documentUrl, @RequestParam String view_url, @RequestParam Optional<String> category,
             @RequestParam Optional<String> topic, @RequestParam Optional<String> outlinePath) {
 
-        documentPath = basePath + "/TimeScript.pdf";
+        // documentPath = basePath + "/TimeScript.pdf";
 
         return addDocument(documentId, documentType, documentPath, documentUrl, rank, view_url, language, category,
                 topic, outlinePath, "updateDocument");
@@ -159,7 +158,5 @@ public class HomeController {
     /************
      * Testing
      ************************************************************/
-
-    String path = "D:\\Users\\aloks\\Documents\\TimeScript.pdf";
 
 }
