@@ -5,6 +5,6 @@ import org.springframework.data.elasticsearch.repository.ElasticsearchRepository
 
 public interface DocumentSearchRepository extends ElasticsearchRepository<DocumentSearch, String> {
 
-    DocumentSearch findByDocumentTypeAndDocumentId(String documentType, String documentTypeId);
+    DocumentSearch findByDocumentId(String documentId);
 
 }

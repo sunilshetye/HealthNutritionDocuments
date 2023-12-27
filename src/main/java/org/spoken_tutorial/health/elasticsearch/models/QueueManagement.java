@@ -59,7 +59,7 @@ public class QueueManagement {
     private String topic;
 
     @Column(name = "outlinePath", nullable = true)
-    private String outlinePth;
+    private String outlinePath;
 
     public String getDocumentId() {
         return documentId;
@@ -85,12 +85,12 @@ public class QueueManagement {
         this.documentUrl = documentUrl;
     }
 
-    public String getOutlinePth() {
-        return outlinePth;
+    public String getOutlinePath() {
+        return outlinePath;
     }
 
-    public void setOutlinePth(String outlinePth) {
-        this.outlinePth = outlinePth;
+    public void setOutlinePath(String outlinePath) {
+        this.outlinePath = outlinePath;
     }
 
     public String getDocumentType() {

@@ -18,6 +18,7 @@ import org.spoken_tutorial.health.elasticsearch.repositories.QueueManagementRepo
 import org.spoken_tutorial.health.elasticsearch.services.DocumentSearchService;
 import org.spoken_tutorial.health.elasticsearch.services.QueueManagementService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,16 +31,21 @@ public class HomeController {
     private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
 
     @Autowired
-    DocumentSearchRepository docuSearchRepo;
+    private Environment env;
 
     @Autowired
-    QueueManagementRepository queRepo;
+    private DocumentSearchRepository docuSearchRepo;
 
     @Autowired
-    QueueManagementService queuemntService;
+    private QueueManagementRepository queRepo;
+
+    @Autowired
+    private QueueManagementService queuemntService;
 
     @Autowired
     DocumentSearchService docuSearchService;
+
+    String basePath = env.getProperty("spring.applicationexternalPath.name");
 
     private Timestamp getCurrentTime() { // Current Date
 
@@ -89,7 +95,7 @@ public class HomeController {
         QueueManagement queuemnt = new QueueManagement();
         queuemnt.setQueueId(queueId);
         if (outlinePath.isPresent())
-            queuemnt.setOutlinePth(outlinePath.get());
+            queuemnt.setOutlinePath(outlinePath.get());
         queuemnt.setRequestTime(getCurrentTime());
         queuemnt.setRequestType(requestType);
         queuemnt.setDocumentId(documentId);
@@ -129,6 +135,8 @@ public class HomeController {
             @PathVariable String language, @PathVariable int rank, @RequestParam String documentPath,
             @RequestParam String documentUrl, @RequestParam String view_url, @RequestParam Optional<String> category,
             @RequestParam Optional<String> topic, @RequestParam Optional<String> outlinePath) {
+
+        documentPath = basePath + "/TimeScript.pdf";
 
         return addDocument(documentId, documentType, documentPath, documentUrl, rank, view_url, language, category,
                 topic, outlinePath, "updateDocument");
