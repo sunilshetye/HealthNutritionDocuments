@@ -13,10 +13,10 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spoken_tutorial.health.elasticsearch.models.QueueManagement;
+import org.spoken_tutorial.health.elasticsearch.repositories.DocumentSearchRepository;
 import org.spoken_tutorial.health.elasticsearch.repositories.QueueManagementRepository;
-import org.spoken_tutorial.health.elasticsearch.repositories.TutorialSearchRepository;
+import org.spoken_tutorial.health.elasticsearch.services.DocumentSearchService;
 import org.spoken_tutorial.health.elasticsearch.services.QueueManagementService;
-import org.spoken_tutorial.health.elasticsearch.services.TutorialSearchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,7 +30,7 @@ public class HomeController {
     private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
 
     @Autowired
-    TutorialSearchRepository tutorialRepo;
+    DocumentSearchRepository docuSearchRepo;
 
     @Autowired
     QueueManagementRepository queRepo;
@@ -39,7 +39,7 @@ public class HomeController {
     QueueManagementService queuemntService;
 
     @Autowired
-    TutorialSearchService tutSearchService;
+    DocumentSearchService docuSearchService;
 
     private Timestamp getCurrentTime() { // Current Date
 
@@ -78,7 +78,7 @@ public class HomeController {
             return resultMap;
         }
 
-        if (outlinePath != null && outlinePath.get() != null && !doesFileExist(outlinePath.get())) {
+        if (outlinePath != null && outlinePath.isPresent() && !doesFileExist(outlinePath.get())) {
 
             resultMap.put("status", "failed");
             resultMap.put("reason", "outline file does not exist");
@@ -88,7 +88,7 @@ public class HomeController {
 
         QueueManagement queuemnt = new QueueManagement();
         queuemnt.setQueueId(queueId);
-        if (outlinePath != null)
+        if (outlinePath.isPresent())
             queuemnt.setOutlinePth(outlinePath.get());
         queuemnt.setRequestTime(getCurrentTime());
         queuemnt.setRequestType(requestType);
@@ -97,12 +97,12 @@ public class HomeController {
         queuemnt.setDocumentPath(documentPath);
         queuemnt.setDocumentUrl(documentUrl);
         queuemnt.setRank(rank);
-        queuemnt.setView_url(view_url);
+        queuemnt.setViewUrl(view_url);
         queuemnt.setLanguage(language);
-        queuemnt.setMessage("success");
-        if (category != null)
+        queuemnt.setStatus("pending");
+        if (category.isPresent())
             queuemnt.setCategory(category.get());
-        if (topic != null)
+        if (topic.isPresent())
             queuemnt.setTopic(topic.get());
 
         resultMap.put("Id", Long.toString(queueId));

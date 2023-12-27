@@ -31,9 +31,6 @@ public class QueueManagement {
     @Column(name = "procesingTime", nullable = true)
     private long procesingTime;
 
-    @Column(name = "message", nullable = true)
-    private String message;
-
     @Column(name = "documentId", nullable = true)
     private String documentId;
 
@@ -49,8 +46,8 @@ public class QueueManagement {
     @Column(name = "rankView", nullable = true)
     private int rank;
 
-    @Column(name = "view_url", nullable = true)
-    private String view_url;
+    @Column(name = "viewUrl", nullable = true)
+    private String viewUrl;
 
     @Column(name = "language", nullable = true)
     private String language;
@@ -112,12 +109,12 @@ public class QueueManagement {
         this.rank = rank;
     }
 
-    public String getView_url() {
-        return view_url;
+    public String getViewUrl() {
+        return viewUrl;
     }
 
-    public void setView_url(String view_url) {
-        this.view_url = view_url;
+    public void setViewUrl(String viewUrl) {
+        this.viewUrl = viewUrl;
     }
 
     public String getLanguage() {
@@ -200,21 +197,13 @@ public class QueueManagement {
         this.procesingTime = procesingTime;
     }
 
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
     public QueueManagement() {
         super();
 
     }
 
     public QueueManagement(long queueId, Timestamp request, String requestType, String status, long startTime,
-            long endTime, long procesingTime, String message) {
+            long endTime, long procesingTime) {
         super();
         this.queueId = queueId;
         this.requestTime = request;
@@ -223,7 +212,7 @@ public class QueueManagement {
         this.startTime = startTime;
         this.endTime = endTime;
         this.procesingTime = procesingTime;
-        this.message = message;
+
     }
 
     public QueueManagement(long queueId, Timestamp requestTime, String requestType) {

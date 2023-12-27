@@ -6,7 +6,7 @@ import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 
 @Document(indexName = "healthnutritionidx")
-public class TutorialSearch {
+public class DocumentSearch {
 
     @Id
     private String id;
@@ -52,11 +52,11 @@ public class TutorialSearch {
         this.documentContent = documentContent;
     }
 
-    public TutorialSearch() {
+    public DocumentSearch() {
         super();
     }
 
-    public TutorialSearch(String id, String documentContent, String documentType, String documentId) {
+    public DocumentSearch(String id, String documentContent, String documentType, String documentId) {
         super();
         this.id = id;
         this.documentContent = documentContent;
@@ -64,7 +64,7 @@ public class TutorialSearch {
         this.documentId = documentId;
     }
 
-    public TutorialSearch(String id, String documentContent) {
+    public DocumentSearch(String id, String documentContent) {
         super();
         this.id = id;
         this.documentContent = documentContent;
