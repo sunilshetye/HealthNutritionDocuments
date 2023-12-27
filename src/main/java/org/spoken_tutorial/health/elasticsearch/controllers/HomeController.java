@@ -18,6 +18,7 @@ import org.spoken_tutorial.health.elasticsearch.repositories.QueueManagementRepo
 import org.spoken_tutorial.health.elasticsearch.services.DocumentSearchService;
 import org.spoken_tutorial.health.elasticsearch.services.QueueManagementService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,9 +29,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class HomeController {
 
     private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
-
-    // @Autowired
-    // private Environment env;
 
     @Autowired
     private DocumentSearchRepository docuSearchRepo;
@@ -44,9 +42,10 @@ public class HomeController {
     @Autowired
     DocumentSearchService docuSearchService;
 
-    // String basePath = env.getProperty("spring.applicationexternalPath.name");
+    @Value("${spring.applicationexternalPath.name}")
+    String basePath;
 
-    private Timestamp getCurrentTime() { // Current Date
+    private Timestamp getCurrentTime() {
 
         Date date = new Date();
         long t = date.getTime();
@@ -57,7 +56,7 @@ public class HomeController {
 
     private boolean doesFileExist(String filePath) {
 
-        Path path = Paths.get(filePath);
+        Path path = Paths.get(basePath, filePath);
         return Files.exists(path);
     }
 
@@ -135,8 +134,6 @@ public class HomeController {
             @RequestParam String documentUrl, @RequestParam String view_url, @RequestParam Optional<String> category,
             @RequestParam Optional<String> topic, @RequestParam Optional<String> outlinePath) {
 
-        // documentPath = basePath + "/TimeScript.pdf";
-
         return addDocument(documentId, documentType, documentPath, documentUrl, rank, view_url, language, category,
                 topic, outlinePath, "updateDocument");
     }
@@ -154,9 +151,5 @@ public class HomeController {
 
         return addDocument(documentId, documentType, null, null, 0, null, language, null, null, null, "deleteDocument");
     }
-
-    /************
-     * Testing
-     ************************************************************/
 
 }
