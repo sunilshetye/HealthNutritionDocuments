@@ -175,7 +175,7 @@ public class HomeController {
         if (topic.isPresent())
             queuemnt.setTopic(topic.get());
 
-        resultMap.put("Id", Long.toString(queueId));
+        resultMap.put(Config.QUEUE_ID, Long.toString(queueId));
         resultMap.put(Config.STATUS, Config.SUCCESS);
 
         queRepo.save(queuemnt);

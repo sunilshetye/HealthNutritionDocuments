@@ -25,5 +25,6 @@ public class Config {
     public static final String UPDATE_DOCUMENT = "updateDocument";
     public static final String UPDATE_DOCUMENT_RANK = "updateDocumentRank";
     public static final String DELETE_DOCUMENT = "deleteDocument";
+    public static final String QUEUE_ID = "queueId";
 
 }
