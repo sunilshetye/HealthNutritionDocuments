@@ -62,7 +62,8 @@ public class HomeController {
         return Files.exists(path);
     }
 
-    private Map<String, String> queueStatus(Long queueId) {
+    @GetMapping("/queueStatus/{queueId}")
+    public Map<String, String> queueStatus(@PathVariable Long queueId) {
 
         Map<String, String> resultMap = new HashMap<>();
         QueueManagement queuemnt = queRepo.findByQueueId(queueId);
@@ -106,7 +107,8 @@ public class HomeController {
 
     }
 
-    private Map<String, String> documentStatus(String documentId) {
+    @GetMapping("/documentStatus/{documentId}")
+    public Map<String, String> documentStatus(@PathVariable String documentId) {
 
         Map<String, String> resultMap = new HashMap<>();
         DocumentSearch documentSearch = docuSearchRepo.findByDocumentId(documentId);
