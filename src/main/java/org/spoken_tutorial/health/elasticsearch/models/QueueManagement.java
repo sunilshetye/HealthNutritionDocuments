@@ -22,6 +22,9 @@ public class QueueManagement {
     @Column(name = "status", nullable = true)
     private String status;
 
+    @Column(name = "reason", nullable = true)
+    private String reason;
+
     @Column(name = "startTime", nullable = true)
     private long startTime;
 
@@ -75,6 +78,14 @@ public class QueueManagement {
 
     public void setDocumentPath(String documentPath) {
         this.documentPath = documentPath;
+    }
+
+    public String getReason() {
+        return reason;
+    }
+
+    public void setReason(String reason) {
+        this.reason = reason;
     }
 
     public String getDocumentUrl() {
@@ -220,6 +231,13 @@ public class QueueManagement {
         this.queueId = queueId;
         this.requestTime = requestTime;
         this.requestType = requestType;
+    }
+
+    @Override
+    public String toString() {
+        return "QueueManagement [queueId=" + queueId + ", requestTime=" + requestTime + ", requestType=" + requestType
+                + ", status=" + status + ", documentId=" + documentId + ", documentType=" + documentType + ", rank="
+                + rank + ", language=" + language + "]";
     }
 
 }

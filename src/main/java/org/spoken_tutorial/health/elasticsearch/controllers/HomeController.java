@@ -12,6 +12,8 @@ import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.spoken_tutorial.health.elasticsearch.config.Config;
+import org.spoken_tutorial.health.elasticsearch.models.DocumentSearch;
 import org.spoken_tutorial.health.elasticsearch.models.QueueManagement;
 import org.spoken_tutorial.health.elasticsearch.repositories.DocumentSearchRepository;
 import org.spoken_tutorial.health.elasticsearch.repositories.QueueManagementRepository;
@@ -60,6 +62,70 @@ public class HomeController {
         return Files.exists(path);
     }
 
+    private Map<String, String> queueStatus(Long queueId) {
+
+        Map<String, String> resultMap = new HashMap<>();
+        QueueManagement queuemnt = queRepo.findByQueueId(queueId);
+
+        if (queuemnt == null) {
+            resultMap.put(Config.STATUS, Config.STATUS_NOTFOUND);
+
+        } else {
+
+            String status = queuemnt.getStatus();
+
+            if (status.equals(Config.STATUS_PENDING)) {
+                resultMap.put(Config.STATUS, status);
+            }
+
+            else if (status.equals(Config.STATUS_PROCESSING)) {
+                resultMap.put(Config.STATUS, status);
+                resultMap.put(Config.START_TIME, Long.toString(queuemnt.getStartTime()));
+                resultMap.put(Config.CURRENT_TIME, Long.toString(System.currentTimeMillis()));
+            }
+
+            else if (status.equals(Config.STATUS_DONE)) {
+                resultMap.put(Config.STATUS, status);
+                resultMap.put(Config.START_TIME, Long.toString(queuemnt.getStartTime()));
+                resultMap.put(Config.END_TIME, Long.toString(queuemnt.getEndTime()));
+                resultMap.put(Config.PROCESSING_TIME, Long.toString(queuemnt.getProcesingTime()));
+
+            }
+
+            else if (status.equals(Config.STATUS_FAILED)) {
+                resultMap.put(Config.STATUS, status);
+                resultMap.put(Config.REASON, queuemnt.getReason());
+                resultMap.put(Config.START_TIME, Long.toString(queuemnt.getStartTime()));
+                resultMap.put(Config.END_TIME, Long.toString(queuemnt.getEndTime()));
+                resultMap.put(Config.PROCESSING_TIME, Long.toString(queuemnt.getProcesingTime()));
+            }
+
+        }
+
+        return resultMap;
+
+    }
+
+    private Map<String, String> documentStatus(String documentId) {
+
+        Map<String, String> resultMap = new HashMap<>();
+        DocumentSearch documentSearch = docuSearchRepo.findByDocumentId(documentId);
+
+        if (documentSearch == null) {
+            resultMap.put(Config.STATUS, Config.STATUS_NOTFOUND);
+        } else {
+            resultMap.put(Config.DOCUMENT_ID, documentSearch.getDocumentId());
+            resultMap.put(Config.DOCUMENT_TYPE, documentSearch.getDocumentType());
+            resultMap.put(Config.LANGUAGE, documentSearch.getLanguage());
+            resultMap.put(Config.RANK, Integer.toString(documentSearch.getRank()));
+            resultMap.put(Config.CREATION_TIME, Long.toString(documentSearch.getCreationTime()));
+            resultMap.put(Config.MODIFICATION_TIME, Long.toString(documentSearch.getModificationTime()));
+            resultMap.put(Config.CHANGE_TIME, Long.toString(documentSearch.getChangeTime()));
+        }
+        return resultMap;
+
+    }
+
     @GetMapping("/findAll")
     public List<QueueManagement> findAll() {
         return queRepo.findAll();
@@ -77,15 +143,15 @@ public class HomeController {
                 requestType, language, view_url, documentId, documentPath, documentType, outlinePath);
 
         if (documentPath != null && !doesFileExist(documentPath)) {
-            resultMap.put("status", "failed");
-            resultMap.put("reason", "document file does not exist");
+            resultMap.put(Config.STATUS, Config.STATUS_FAILED);
+            resultMap.put(Config.REASON, "document file does not exist");
             return resultMap;
         }
 
         if (outlinePath != null && outlinePath.isPresent() && !doesFileExist(outlinePath.get())) {
 
-            resultMap.put("status", "failed");
-            resultMap.put("reason", "outline file does not exist");
+            resultMap.put(Config.STATUS, Config.STATUS_FAILED);
+            resultMap.put(Config.REASON, "outline file does not exist");
             return resultMap;
 
         }
@@ -109,8 +175,8 @@ public class HomeController {
         if (topic.isPresent())
             queuemnt.setTopic(topic.get());
 
-        resultMap.put("Id", Long.toString(queueId));
-        resultMap.put("status", "success");
+        resultMap.put(Config.QUEUE_ID, Long.toString(queueId));
+        resultMap.put(Config.STATUS, Config.SUCCESS);
 
         queRepo.save(queuemnt);
 
@@ -125,7 +191,7 @@ public class HomeController {
             @RequestParam Optional<String> topic, @RequestParam Optional<String> outlinePath) {
 
         return addDocument(documentId, documentType, documentPath, documentUrl, rank, view_url, language, category,
-                topic, outlinePath, "addDocument");
+                topic, outlinePath, Config.ADD_DOCUMENT);
     }
 
     @PostMapping("/updateDocument/{documentId}/{documentType}/{language}/{rank}")
@@ -135,21 +201,22 @@ public class HomeController {
             @RequestParam Optional<String> topic, @RequestParam Optional<String> outlinePath) {
 
         return addDocument(documentId, documentType, documentPath, documentUrl, rank, view_url, language, category,
-                topic, outlinePath, "updateDocument");
+                topic, outlinePath, Config.UPDATE_DOCUMENT);
     }
 
     @PostMapping("/updateDocumentRank/{documentId}/{documentType}/{language}/{rank}")
     public Map<String, String> updateDocumentRank(@PathVariable String documentId, @PathVariable String documentType,
             @PathVariable String language, @PathVariable int rank) {
         return addDocument(documentId, documentType, null, null, rank, null, language, null, null, null,
-                "updateDocumentRank");
+                Config.UPDATE_DOCUMENT_RANK);
     }
 
     @GetMapping("/deleteDocument/{documentId}/{documentType}/{language}")
     public Map<String, String> deleteDocument(@PathVariable String documentId, @PathVariable String documentType,
             @PathVariable String language) {
 
-        return addDocument(documentId, documentType, null, null, 0, null, language, null, null, null, "deleteDocument");
+        return addDocument(documentId, documentType, null, null, 0, null, language, null, null, null,
+                Config.DELETE_DOCUMENT);
     }
 
 }

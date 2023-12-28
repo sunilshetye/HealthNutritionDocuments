@@ -9,4 +9,6 @@ public interface QueueManagementRepository extends JpaRepository<QueueManagement
     @Query("select max(queueId) from QueueManagement")
     Long getNewId();
 
+    QueueManagement findByQueueId(Long queueId);
+
 }
