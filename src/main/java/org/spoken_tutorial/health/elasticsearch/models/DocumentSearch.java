@@ -20,12 +20,78 @@ public class DocumentSearch {
     @Field(type = FieldType.Keyword, index = true, store = true)
     private String documentId;
 
+    @Field(type = FieldType.Keyword, index = true, store = true)
+    private String language;
+
+    @Field(name = "rankView", type = FieldType.Integer, index = true, store = true)
+    private int rank;
+
+    @Field(type = FieldType.Keyword, index = true, store = true)
+    private String viewUrl;
+
+    @Field(type = FieldType.Long, index = true, store = true)
+    private Long creationTime;
+
+    @Field(type = FieldType.Long, index = true, store = true)
+    private Long modificationTime;
+
+    @Field(type = FieldType.Long, index = true, store = true)
+    private Long changeTime;
+
     public String getId() {
         return id;
     }
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
+    }
+
+    public int getRank() {
+        return rank;
+    }
+
+    public void setRank(int rank) {
+        this.rank = rank;
+    }
+
+    public String getViewUrl() {
+        return viewUrl;
+    }
+
+    public void setViewUrl(String viewUrl) {
+        this.viewUrl = viewUrl;
+    }
+
+    public Long getCreationTime() {
+        return creationTime;
+    }
+
+    public void setCreationTime(Long creationTime) {
+        this.creationTime = creationTime;
+    }
+
+    public Long getModificationTime() {
+        return modificationTime;
+    }
+
+    public void setModificationTime(Long modificationTime) {
+        this.modificationTime = modificationTime;
+    }
+
+    public Long getChangeTime() {
+        return changeTime;
+    }
+
+    public void setChangeTime(Long changeTime) {
+        this.changeTime = changeTime;
     }
 
     public String getDocumentType() {
@@ -68,6 +134,13 @@ public class DocumentSearch {
         super();
         this.id = id;
         this.documentContent = documentContent;
+    }
+
+    @Override
+    public String toString() {
+        return "DocumentSearch [documentType=" + documentType + ", documentId=" + documentId + ", language=" + language
+                + ", rank=" + rank + ", viewUrl=" + viewUrl + ", creationTime=" + creationTime + ", modificationTime="
+                + modificationTime + ", changeTime=" + changeTime + "]";
     }
 
 }
