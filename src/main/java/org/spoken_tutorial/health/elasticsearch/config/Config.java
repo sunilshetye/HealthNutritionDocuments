@@ -3,6 +3,7 @@ package org.spoken_tutorial.health.elasticsearch.config;
 public class Config {
 
     public static final String STATUS = "status";
+    public static final String STATUS_QUEUED = "queued";
     public static final String STATUS_PROCESSING = "processing";
     public static final String STATUS_PENDING = "pending";
     public static final String STATUS_DONE = "done";
@@ -26,5 +27,9 @@ public class Config {
     public static final String UPDATE_DOCUMENT_RANK = "updateDocumentRank";
     public static final String DELETE_DOCUMENT = "deleteDocument";
     public static final String QUEUE_ID = "queueId";
+    public static final String RUNNING_DOCUMENT = "runningDocument";
+    public static final String SKIPPED_DOCUMENT = "skippedDocument";
+    public static final Long NO_TASK_SLEEP_TIME = 30L * 1000;
+    public static final Long TASK_SLEEP_TIME = 10L * 1000;
 
 }

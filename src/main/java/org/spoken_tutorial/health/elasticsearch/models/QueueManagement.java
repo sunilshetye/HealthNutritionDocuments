@@ -7,7 +7,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 
 @Entity
-public class QueueManagement {
+public class QueueManagement implements Runnable {
 
     @Id
     @Column(name = "queueId", nullable = false, updatable = false)
@@ -27,6 +27,9 @@ public class QueueManagement {
 
     @Column(name = "startTime", nullable = true)
     private long startTime;
+
+    @Column(name = "queueTime", nullable = true)
+    private long queueTime;
 
     @Column(name = "endTime", nullable = true)
     private long endTime;
@@ -63,6 +66,14 @@ public class QueueManagement {
 
     @Column(name = "outlinePath", nullable = true)
     private String outlinePath;
+
+    public long getQueueTime() {
+        return queueTime;
+    }
+
+    public void setQueueTime(long queueTime) {
+        this.queueTime = queueTime;
+    }
 
     public String getDocumentId() {
         return documentId;
@@ -238,6 +249,12 @@ public class QueueManagement {
         return "QueueManagement [queueId=" + queueId + ", requestTime=" + requestTime + ", requestType=" + requestType
                 + ", status=" + status + ", documentId=" + documentId + ", documentType=" + documentType + ", rank="
                 + rank + ", language=" + language + "]";
+    }
+
+    @Override
+    public void run() {
+        // TODO Auto-generated method stub
+
     }
 
 }
