@@ -39,6 +39,5 @@ public class Config {
     public static final String SKIPPED_DOCUMENT = "skippedDocument";
     public static final Long NO_TASK_SLEEP_TIME = 30L * 1000;
     public static final Long TASK_SLEEP_TIME = 10L * 1000;
-    public static final int POOL_SIZE = 5;
 
 }

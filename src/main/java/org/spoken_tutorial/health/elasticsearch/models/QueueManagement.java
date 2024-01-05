@@ -274,34 +274,6 @@ public class QueueManagement implements Runnable {
         this.requestType = requestType;
     }
 
-//    @Autowired
-//    public QueueManagement(DocumentSearchRepository docRepo1) {
-//
-//        QueueManagement.docRepo = docRepo1;
-//
-//    }
-//
-//    @Autowired
-//    public QueueManagement(TaskProcessingService taskProcessingService1) {
-//
-//        QueueManagement.taskProcessingService = taskProcessingService1;
-//
-//    }
-//
-//    @Autowired
-//    public QueueManagement(QueueManagementRepository queueRepo1) {
-//
-//        QueueManagement.queueRepo = queueRepo1;
-//
-//    }
-//
-//    @Autowired
-//    public QueueManagement(ContentsfromFile contentsfromFile1) {
-//
-//        QueueManagement.contentsfromFile = contentsfromFile1;
-//
-//    }
-
     @Override
     public String toString() {
         return "QueueManagement [queueId=" + queueId + ", requestTime=" + requestTime + ", requestType=" + requestType

@@ -34,9 +34,6 @@ public class TaskProcessingService {
 
     private final Map<String, Long> runningDocuments = new HashMap<>();
 
-    // private final ExecutorService executorService =
-    // Executors.newFixedThreadPool(Config.POOL_SIZE);
-
     public void intializeQueue() {
         List<QueueManagement> qmnts = queuemntService.findByStatusOrderByRequestTimeAsc(Config.STATUS_QUEUED);
         for (QueueManagement qmnt : qmnts) {
@@ -90,7 +87,7 @@ public class TaskProcessingService {
                 qmnt.setStatus(Config.STATUS_QUEUED);
                 qmnt.setQueueTime(System.currentTimeMillis());
                 repo.save(qmnt);
-                // executorService.submit(qmnt);
+
                 applicationContext.getAutowireCapableBeanFactory().autowireBean(qmnt);
                 taskExecutor.submit(qmnt);
                 count = count + 1;
