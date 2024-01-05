@@ -14,6 +14,9 @@ public class DocumentSearch {
     @Field(type = FieldType.Text, index = true, store = false)
     private String documentContent;
 
+    @Field(type = FieldType.Text, index = false, store = true)
+    private String outlineContent;
+
     @Field(type = FieldType.Keyword, index = true, store = true)
     private String documentType;
 
@@ -48,6 +51,14 @@ public class DocumentSearch {
 
     public String getLanguage() {
         return language;
+    }
+
+    public String getOutlineContent() {
+        return outlineContent;
+    }
+
+    public void setOutlineContent(String outlineContent) {
+        this.outlineContent = outlineContent;
     }
 
     public void setLanguage(String language) {

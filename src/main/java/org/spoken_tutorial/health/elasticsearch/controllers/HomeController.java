@@ -20,7 +20,6 @@ import org.spoken_tutorial.health.elasticsearch.repositories.QueueManagementRepo
 import org.spoken_tutorial.health.elasticsearch.services.DocumentSearchService;
 import org.spoken_tutorial.health.elasticsearch.services.QueueManagementService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -42,10 +41,10 @@ public class HomeController {
     private QueueManagementService queuemntService;
 
     @Autowired
-    DocumentSearchService docuSearchService;
+    private Config config;
 
-    @Value("${spring.applicationexternalPath.name}")
-    String basePath;
+    @Autowired
+    DocumentSearchService docuSearchService;
 
     private Timestamp getCurrentTime() {
 
@@ -57,8 +56,11 @@ public class HomeController {
     }
 
     private boolean doesFileExist(String filePath) {
+        if (filePath.contains("..") || !filePath.startsWith(config.BASE_NAME)) {
+            return false;
+        }
+        Path path = Paths.get(config.BASE_PATH, filePath);
 
-        Path path = Paths.get(basePath, filePath);
         return Files.exists(path);
     }
 

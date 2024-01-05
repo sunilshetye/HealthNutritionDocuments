@@ -25,7 +25,9 @@ public class HealthNutritionElasticSearchApplication implements CommandLineRunne
     public void run(String... args) throws Exception {
 
         try {
+            taskProcessingService.intializeQueue();
             taskProcessingService.queueProcessor();
+
         } catch (Exception e) {
             logger.error("Error in queueProcessor method", e);
         }
