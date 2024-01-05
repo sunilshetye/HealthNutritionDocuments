@@ -2,12 +2,42 @@ package org.spoken_tutorial.health.elasticsearch.models;
 
 import java.sql.Timestamp;
 
+import org.apache.tika.parser.AutoDetectParser;
+import org.apache.tika.parser.Parser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.spoken_tutorial.health.elasticsearch.config.Config;
+import org.spoken_tutorial.health.elasticsearch.contentfile.ContentsfromFile;
+import org.spoken_tutorial.health.elasticsearch.repositories.DocumentSearchRepository;
+import org.spoken_tutorial.health.elasticsearch.repositories.QueueManagementRepository;
+import org.spoken_tutorial.health.elasticsearch.threadpool.TaskProcessingService;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.Transient;
 
 @Entity
 public class QueueManagement implements Runnable {
+
+    private static final Logger logger = LoggerFactory.getLogger(QueueManagement.class);
+
+    @Autowired
+    @Transient
+    private DocumentSearchRepository docRepo;
+
+    @Autowired
+    @Transient
+    private TaskProcessingService taskProcessingService;
+
+    @Autowired
+    @Transient
+    private QueueManagementRepository queueRepo;
+
+    @Autowired
+    @Transient
+    private ContentsfromFile contentsfromFile;
 
     @Id
     @Column(name = "queueId", nullable = false, updatable = false)
@@ -244,6 +274,34 @@ public class QueueManagement implements Runnable {
         this.requestType = requestType;
     }
 
+//    @Autowired
+//    public QueueManagement(DocumentSearchRepository docRepo1) {
+//
+//        QueueManagement.docRepo = docRepo1;
+//
+//    }
+//
+//    @Autowired
+//    public QueueManagement(TaskProcessingService taskProcessingService1) {
+//
+//        QueueManagement.taskProcessingService = taskProcessingService1;
+//
+//    }
+//
+//    @Autowired
+//    public QueueManagement(QueueManagementRepository queueRepo1) {
+//
+//        QueueManagement.queueRepo = queueRepo1;
+//
+//    }
+//
+//    @Autowired
+//    public QueueManagement(ContentsfromFile contentsfromFile1) {
+//
+//        QueueManagement.contentsfromFile = contentsfromFile1;
+//
+//    }
+
     @Override
     public String toString() {
         return "QueueManagement [queueId=" + queueId + ", requestTime=" + requestTime + ", requestType=" + requestType
@@ -253,7 +311,144 @@ public class QueueManagement implements Runnable {
 
     @Override
     public void run() {
-        // TODO Auto-generated method stub
+
+        logger.info("Processing:{}", this);
+
+        DocumentSearch documentSearch = null;
+
+        try {
+            setStatus(Config.STATUS_PROCESSING);
+
+            setStartTime(System.currentTimeMillis());
+
+            documentSearch = docRepo.findByDocumentId(getDocumentId());
+            if (getRequestType().equals(Config.ADD_DOCUMENT)) {
+
+                if (documentSearch != null) {
+                    setStatus(Config.STATUS_FAILED);
+                    setReason("document alreday exist");
+                    logger.error("document alreday exist");
+
+                } else {
+                    documentSearch = new DocumentSearch();
+                    documentSearch.setDocumentId(getDocumentId());
+                    documentSearch.setDocumentType(getDocumentType());
+                    documentSearch.setLanguage(getLanguage());
+                    String path = getDocumentPath();
+                    Parser parser = new AutoDetectParser();
+                    String content = contentsfromFile.extractContent(parser, path);
+
+                    documentSearch.setDocumentContent(content);
+
+                    if (getOutlinePath() != null) {
+                        String outlinePath = getOutlinePath();
+                        Parser parser1 = new AutoDetectParser();
+
+                        String outlineContent = contentsfromFile.extractContent(parser1, outlinePath);
+                        documentSearch.setOutlineContent(outlineContent);
+
+                    }
+                    documentSearch.setCreationTime(System.currentTimeMillis());
+
+                    documentSearch.setRank(getRank());
+                    documentSearch.setViewUrl(getViewUrl());
+                    docRepo.save(documentSearch);
+                    setStatus(Config.STATUS_DONE);
+
+                }
+            }
+
+            else if (getRequestType().equals(Config.UPDATE_DOCUMENT)
+                    || getRequestType().equals(Config.UPDATE_DOCUMENT_RANK)
+                    || getRequestType().equals(Config.DELETE_DOCUMENT)) {
+
+                if (documentSearch == null) {
+                    setStatus(Config.STATUS_FAILED);
+                    setReason("document id does not exist");
+                    logger.error("document id does not exist");
+
+                } else if (!getDocumentType().equals(documentSearch.getDocumentType())) {
+                    setStatus(Config.STATUS_FAILED);
+                    setReason("documentType mismatch");
+                    logger.error("documentType mismatch");
+
+                }
+
+                else if (!getLanguage().equals(documentSearch.getLanguage())) {
+                    setStatus(Config.STATUS_FAILED);
+                    setReason("language mismatch");
+                    logger.error("language mismatch");
+
+                }
+
+                else {
+
+                    if (getRequestType().equals(Config.UPDATE_DOCUMENT)) {
+                        String path = getDocumentPath();
+                        Parser parser = new AutoDetectParser();
+
+                        String content = contentsfromFile.extractContent(parser, path);
+                        documentSearch.setDocumentContent(content);
+
+                        if (getOutlinePath() != null) {
+                            String outlinePath = getOutlinePath();
+                            Parser parser1 = new AutoDetectParser();
+
+                            String outlineContent = contentsfromFile.extractContent(parser1, outlinePath);
+                            documentSearch.setOutlineContent(outlineContent);
+
+                        }
+
+                        documentSearch.setModificationTime(System.currentTimeMillis());
+                        if (getRank() != 0) {
+                            documentSearch.setRank(getRank());
+                            documentSearch.setChangeTime(System.currentTimeMillis());
+                        }
+
+                        docRepo.save(documentSearch);
+                        setStatus(Config.STATUS_DONE);
+
+                    }
+
+                    else if (getRequestType().equals(Config.UPDATE_DOCUMENT_RANK)) {
+
+                        if (getRank() != 0) {
+                            documentSearch.setRank(getRank());
+                            documentSearch.setChangeTime(System.currentTimeMillis());
+                        }
+
+                        docRepo.save(documentSearch);
+                        setStatus(Config.STATUS_DONE);
+
+                    }
+
+                    else if (getRequestType().equals(Config.DELETE_DOCUMENT)) {
+                        docRepo.delete(documentSearch);
+                        setStatus(Config.STATUS_DONE);
+
+                    }
+
+                }
+            }
+
+        }
+
+        catch (Exception e) {
+            setStatus(Config.STATUS_FAILED);
+            setReason("Exception Message");
+
+            logger.error("Exception", e);
+        }
+
+        finally {
+
+            setEndTime(System.currentTimeMillis());
+            setProcesingTime(endTime - startTime);
+            logger.info("Done :{}", this);
+
+            queueRepo.save(this);
+            taskProcessingService.getRunningDocuments().remove(documentId);
+        }
 
     }
 

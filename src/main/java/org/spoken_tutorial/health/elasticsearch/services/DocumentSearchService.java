@@ -19,7 +19,10 @@ public class DocumentSearchService {
     private static final Logger logger = LoggerFactory.getLogger(DocumentSearchService.class);
 
     @Autowired
-    DocumentSearchRepository repo;
+    private DocumentSearchRepository repo;
+
+    @Autowired
+    private ContentsfromFile contentsfromFile;
 
     public ResponseEntity<DocumentSearch> addContent(@PathVariable String path, @PathVariable String documentType,
             @PathVariable String documentTypeId) {
@@ -29,7 +32,7 @@ public class DocumentSearchService {
         String docContent = "";
 
         try {
-            docContent = ContentsfromFile.extractContent(parser, path);
+            docContent = contentsfromFile.extractContent(parser, path);
             tut.setDocumentContent(docContent);
             tut.setDocumentType(documentType);
             tut.setDocumentId(documentTypeId);

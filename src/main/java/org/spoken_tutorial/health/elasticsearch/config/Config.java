@@ -1,7 +1,15 @@
 package org.spoken_tutorial.health.elasticsearch.config;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
+@Component
 public class Config {
 
+    @Value("${spring.applicationexternalPath.name}")
+    public String BASE_PATH;
+    @Value("${spring.applicationexternalPath.baseName}")
+    public String BASE_NAME;
     public static final String STATUS = "status";
     public static final String STATUS_QUEUED = "queued";
     public static final String STATUS_PROCESSING = "processing";
@@ -31,5 +39,6 @@ public class Config {
     public static final String SKIPPED_DOCUMENT = "skippedDocument";
     public static final Long NO_TASK_SLEEP_TIME = 30L * 1000;
     public static final Long TASK_SLEEP_TIME = 10L * 1000;
+    public static final int POOL_SIZE = 5;
 
 }
