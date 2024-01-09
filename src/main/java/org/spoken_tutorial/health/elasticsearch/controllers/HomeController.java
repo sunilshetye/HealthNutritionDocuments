@@ -13,6 +13,7 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spoken_tutorial.health.elasticsearch.config.Config;
+import org.spoken_tutorial.health.elasticsearch.contentfile.ContentsfromFile;
 import org.spoken_tutorial.health.elasticsearch.models.DocumentSearch;
 import org.spoken_tutorial.health.elasticsearch.models.QueueManagement;
 import org.spoken_tutorial.health.elasticsearch.repositories.DocumentSearchRepository;
@@ -33,6 +34,9 @@ public class HomeController {
 
     @Autowired
     private DocumentSearchRepository docuSearchRepo;
+
+    @Autowired
+    private ContentsfromFile contentsfromFile;
 
     @Autowired
     private QueueManagementRepository queRepo;
