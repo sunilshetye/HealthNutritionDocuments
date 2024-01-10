@@ -11,13 +11,10 @@ public class Config {
     @Value("${spring.applicationexternalPath.baseName}")
     public String BASE_NAME;
     @Value("${spring.allowed.file.extensions}")
-    public String ALLOWED_EXTENTIONS;
+    public String ALLOWED_EXTENSIONS;
 
     @Value("${spring.scanning.limit}")
     public int SCANNING_LIMIT;
-
-    @Value("${spring.depth.limit}")
-    public int DEPTH_LIMIT;
 
     public static final String STATUS = "status";
     public static final String STATUS_QUEUED = "queued";
