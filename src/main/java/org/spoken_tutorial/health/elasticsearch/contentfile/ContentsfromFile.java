@@ -48,6 +48,7 @@ public class ContentsfromFile {
                 }
 
                 String name = zipEntry.getName().toLowerCase();
+                // InputStream stream = zis.getInputStream(zipEntry);
 
                 if (name.endsWith(".zip")) {
                     continue;
@@ -73,7 +74,6 @@ public class ContentsfromFile {
 
                 if (count == config.SCANNING_LIMIT) {
 
-                    zis.close();
                     break;
                 }
             }
@@ -96,31 +96,31 @@ public class ContentsfromFile {
         Metadata metadata = new Metadata();
         Path path = Paths.get(config.BASE_PATH, filePath);
 
-        try (InputStream inputStream = Files.newInputStream(path);) {
+        String name = filePath.toLowerCase();
 
-            String name = filePath.toLowerCase();
+        int index = name.lastIndexOf(".");
+        if (index == -1) {
+            return "";
+        }
+        if (!allowedExtensions.contains(name.substring(index + 1))) {
+            return "";
+        }
 
-            int index = name.lastIndexOf(".");
-            if (index == -1) {
-                return "";
-            }
-            if (!allowedExtensions.contains(name.substring(index + 1))) {
-                return "";
-            }
+        try (InputStream inputStream = Files.newInputStream(path)) {
 
             if (name.endsWith(".zip")) {
 
                 content = handleZipFile(parser, inputStream);
             }
 
-            else if (filePath.toLowerCase().endsWith(".txt")) {
+            else if (name.endsWith(".txt")) {
 
                 content = new String(Files.readAllBytes(path));
             } else {
 
                 parser.parse(inputStream, handler, metadata, new ParseContext());
                 content = handler.toString();
-                inputStream.close();
+
             }
 
         } catch (Exception e) {
