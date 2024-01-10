@@ -31,7 +31,7 @@ public class ContentsfromFile {
     @Autowired
     private Config config;
 
-    private String hnadleZipFile(final Parser parser, InputStream inputStream) {
+    private String handleZipFile(final Parser parser, InputStream inputStream) {
 
         ZipEntry zipEntry;
         String content = "";
@@ -42,24 +42,37 @@ public class ContentsfromFile {
 
         try (ZipInputStream zis = new ZipInputStream(inputStream)) {
             while ((zipEntry = zis.getNextEntry()) != null) {
-                if (!zipEntry.isDirectory() && !zipEntry.getName().toLowerCase().endsWith(".zip") && allowedExtensions
-                        .contains(zipEntry.getName().substring(zipEntry.getName().lastIndexOf(".") + 1))) {
 
-                    if (zipEntry.getName().toLowerCase().endsWith(".txt")) {
+                if (zipEntry.isDirectory()) {
+                    continue;
+                }
 
-                        content += new String(readFromStream(zis));
-                        count++;
+                String name = zipEntry.getName().toLowerCase();
 
-                    } else {
-                        parser.parse(zis, handler, metadata, new ParseContext());
-                        content += handler.toString();
-                        count++;
+                if (name.endsWith(".zip")) {
+                    continue;
+                }
+                int index = name.lastIndexOf(".");
+                if (index == -1) {
+                    continue;
+                }
+                if (!allowedExtensions.contains(name.substring(index + 1))) {
+                    continue;
+                }
+                if (name.endsWith(".txt")) {
 
-                    }
+                    content += new String(readFromStream(zis));
+                    count++;
+
+                } else {
+                    parser.parse(zis, handler, metadata, new ParseContext());
+                    content += handler.toString();
+                    count++;
 
                 }
+
                 if (count == config.SCANNING_LIMIT) {
-                    logger.info("COUNT VALUE:{}", count);
+
                     zis.close();
                     break;
                 }
@@ -84,23 +97,30 @@ public class ContentsfromFile {
         Path path = Paths.get(config.BASE_PATH, filePath);
 
         try (InputStream inputStream = Files.newInputStream(path);) {
-            if (allowedExtensions.contains(filePath.substring(filePath.lastIndexOf(".") + 1))) {
 
-                if (filePath.toLowerCase().endsWith(".zip")) {
+            String name = filePath.toLowerCase();
 
-                    content += hnadleZipFile(parser, inputStream);
-                }
+            int index = name.lastIndexOf(".");
+            if (index == -1) {
+                return "";
+            }
+            if (!allowedExtensions.contains(name.substring(index + 1))) {
+                return "";
+            }
 
-                else if (filePath.toLowerCase().endsWith(".txt")) {
+            if (name.endsWith(".zip")) {
 
-                    content = new String(Files.readAllBytes(path));
-                } else {
+                content = handleZipFile(parser, inputStream);
+            }
 
-                    parser.parse(inputStream, handler, metadata, new ParseContext());
-                    content += handler.toString();
-                    inputStream.close();
-                }
+            else if (filePath.toLowerCase().endsWith(".txt")) {
 
+                content = new String(Files.readAllBytes(path));
+            } else {
+
+                parser.parse(inputStream, handler, metadata, new ParseContext());
+                content = handler.toString();
+                inputStream.close();
             }
 
         } catch (Exception e) {
@@ -113,7 +133,7 @@ public class ContentsfromFile {
 
     private byte[] readFromStream(ZipInputStream zipInputStream) throws IOException {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        byte[] buffer = new byte[1024];
+        byte[] buffer = new byte[16384];
         int len;
         while ((len = zipInputStream.read(buffer)) > 0) {
             byteArrayOutputStream.write(buffer, 0, len);
