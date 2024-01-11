@@ -85,9 +85,11 @@ public class HomeController {
                 resultMap.put(Config.STATUS, status);
                 resultMap.put(Config.START_TIME, Long.toString(queuemnt.getStartTime()));
                 resultMap.put(Config.CURRENT_TIME, Long.toString(System.currentTimeMillis()));
-            }
-
-            else if (status.equals(Config.STATUS_DONE)) {
+            } else if (status.equals(Config.STATUS_QUEUED)) {
+                resultMap.put(Config.STATUS, status);
+                resultMap.put(Config.QUEUE_TIME, Long.toString(queuemnt.getQueueTime()));
+                resultMap.put(Config.CURRENT_TIME, Long.toString(System.currentTimeMillis()));
+            } else if (status.equals(Config.STATUS_DONE)) {
                 resultMap.put(Config.STATUS, status);
                 resultMap.put(Config.START_TIME, Long.toString(queuemnt.getStartTime()));
                 resultMap.put(Config.END_TIME, Long.toString(queuemnt.getEndTime()));

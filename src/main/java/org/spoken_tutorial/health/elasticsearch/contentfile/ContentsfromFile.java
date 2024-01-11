@@ -36,8 +36,7 @@ public class ContentsfromFile {
         ZipEntry zipEntry;
         String content = "";
         int count = 0;
-        BodyContentHandler handler = new BodyContentHandler(10000000);
-        Metadata metadata = new Metadata();
+
         List<String> allowedExtensions = Arrays.asList(config.ALLOWED_EXTENSIONS.split(","));
 
         try (ZipInputStream zis = new ZipInputStream(inputStream)) {
@@ -48,9 +47,9 @@ public class ContentsfromFile {
                 }
 
                 String name = zipEntry.getName().toLowerCase();
-                // InputStream stream = zis.getInputStream(zipEntry);
 
                 if (name.endsWith(".zip")) {
+                    logger.info("skipping {} in zip", name);
                     continue;
                 }
                 int index = name.lastIndexOf(".");
@@ -60,14 +59,17 @@ public class ContentsfromFile {
                 if (!allowedExtensions.contains(name.substring(index + 1))) {
                     continue;
                 }
+
                 if (name.endsWith(".txt")) {
 
-                    content += new String(readFromStream(zis));
+                    content += " " + new String(readFromStream(zis));
                     count++;
 
                 } else {
+                    BodyContentHandler handler = new BodyContentHandler(config.HANDLER_DATA);
+                    Metadata metadata = new Metadata();
                     parser.parse(zis, handler, metadata, new ParseContext());
-                    content += handler.toString();
+                    content += " " + handler.toString();
                     count++;
 
                 }
@@ -92,8 +94,6 @@ public class ContentsfromFile {
         String content = "";
         List<String> allowedExtensions = Arrays.asList(config.ALLOWED_EXTENSIONS.split(","));
 
-        BodyContentHandler handler = new BodyContentHandler(10000000);
-        Metadata metadata = new Metadata();
         Path path = Paths.get(config.BASE_PATH, filePath);
 
         String name = filePath.toLowerCase();
@@ -117,7 +117,8 @@ public class ContentsfromFile {
 
                 content = new String(Files.readAllBytes(path));
             } else {
-
+                BodyContentHandler handler = new BodyContentHandler(config.HANDLER_DATA);
+                Metadata metadata = new Metadata();
                 parser.parse(inputStream, handler, metadata, new ParseContext());
                 content = handler.toString();
 
