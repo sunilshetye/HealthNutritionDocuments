@@ -15,7 +15,7 @@ public class Config {
 
     @Value("${spring.scanning.limit}")
     public int SCANNING_LIMIT;
-
+    public int HANDLER_DATA = 10000000;
     public static final String STATUS = "status";
     public static final String STATUS_QUEUED = "queued";
     public static final String STATUS_PROCESSING = "processing";
