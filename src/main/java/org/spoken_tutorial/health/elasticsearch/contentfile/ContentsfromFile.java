@@ -49,6 +49,7 @@ public class ContentsfromFile {
                 String name = zipEntry.getName().toLowerCase();
 
                 if (name.endsWith(".zip")) {
+                    logger.info("skipping {} in zip", name);
                     continue;
                 }
                 int index = name.lastIndexOf(".");
@@ -59,11 +60,7 @@ public class ContentsfromFile {
                     continue;
                 }
 
-                if (name.endsWith(".zip")) {
-                    logger.info("skipping {} in zip", name);
-                }
-
-                else if (name.endsWith(".txt")) {
+                if (name.endsWith(".txt")) {
 
                     content += " " + new String(readFromStream(zis));
                     count++;

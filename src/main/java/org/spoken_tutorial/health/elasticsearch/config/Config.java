@@ -41,6 +41,7 @@ public class Config {
     public static final String UPDATE_DOCUMENT_RANK = "updateDocumentRank";
     public static final String DELETE_DOCUMENT = "deleteDocument";
     public static final String QUEUE_ID = "queueId";
+    public static final String QUEUE_TIME = "queueTime";
     public static final String RUNNING_DOCUMENT = "runningDocument";
     public static final String SKIPPED_DOCUMENT = "skippedDocument";
     public static final Long NO_TASK_SLEEP_TIME = 30L * 1000;
