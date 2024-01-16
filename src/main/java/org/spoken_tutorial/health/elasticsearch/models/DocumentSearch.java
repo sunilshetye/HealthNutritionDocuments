@@ -26,6 +26,21 @@ public class DocumentSearch {
     @Field(type = FieldType.Keyword, index = true, store = true)
     private String language;
 
+    @Field(type = FieldType.Integer, index = true, store = true)
+    private int languageId;
+
+    @Field(type = FieldType.Keyword, index = true, store = true)
+    private String category;
+
+    @Field(type = FieldType.Integer, index = true, store = true)
+    private int categoryId;
+
+    @Field(type = FieldType.Keyword, index = true, store = true)
+    private String topic;
+
+    @Field(type = FieldType.Integer, index = true, store = true)
+    private int topicId;
+
     @Field(name = "rankView", type = FieldType.Integer, index = true, store = true)
     private int rank;
 
@@ -49,8 +64,52 @@ public class DocumentSearch {
         this.id = id;
     }
 
+    public int getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(int categoryId) {
+        this.categoryId = categoryId;
+    }
+
+    public int getTopicId() {
+        return topicId;
+    }
+
+    public void setTopicId(int topicId) {
+        this.topicId = topicId;
+    }
+
+    public int getLanguageId() {
+        return languageId;
+    }
+
+    public void setLanguageId(int languageId) {
+        this.languageId = languageId;
+    }
+
     public String getLanguage() {
         return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public String getTopic() {
+        return topic;
+    }
+
+    public void setTopic(String topic) {
+        this.topic = topic;
     }
 
     public String getOutlineContent() {
@@ -59,10 +118,6 @@ public class DocumentSearch {
 
     public void setOutlineContent(String outlineContent) {
         this.outlineContent = outlineContent;
-    }
-
-    public void setLanguage(String language) {
-        this.language = language;
     }
 
     public int getRank() {

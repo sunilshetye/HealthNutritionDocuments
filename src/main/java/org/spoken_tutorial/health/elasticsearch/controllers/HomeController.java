@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +21,11 @@ import org.spoken_tutorial.health.elasticsearch.repositories.QueueManagementRepo
 import org.spoken_tutorial.health.elasticsearch.services.DocumentSearchService;
 import org.spoken_tutorial.health.elasticsearch.services.QueueManagementService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
+import org.springframework.data.elasticsearch.core.SearchHit;
+import org.springframework.data.elasticsearch.core.SearchHits;
+import org.springframework.data.elasticsearch.core.query.Criteria;
+import org.springframework.data.elasticsearch.core.query.CriteriaQuery;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -42,6 +48,9 @@ public class HomeController {
 
     @Autowired
     private Config config;
+
+    @Autowired
+    private ElasticsearchOperations operations;
 
     @Autowired
     DocumentSearchService docuSearchService;
@@ -138,8 +147,9 @@ public class HomeController {
     }
 
     public Map<String, String> addDocument(String documentId, String documentType, String documentPath,
-            String documentUrl, int rank, String view_url, String language, Optional<String> category,
-            Optional<String> topic, Optional<String> outlinePath, String requestType) {
+            String documentUrl, int rank, String view_url, String language, Optional<Integer> languageId,
+            Optional<String> category, Optional<Integer> categoryId, Optional<String> topic, Optional<Integer> topicId,
+            Optional<String> outlinePath, String requestType) {
 
         Map<String, String> resultMap = new HashMap<>();
         long queueId = queuemntService.getNewId();
@@ -178,8 +188,14 @@ public class HomeController {
         queuemnt.setStatus("pending");
         if (category.isPresent())
             queuemnt.setCategory(category.get());
+        if (categoryId.isPresent())
+            queuemnt.setCategoryId(categoryId.get());
         if (topic.isPresent())
             queuemnt.setTopic(topic.get());
+        if (topic.isPresent())
+            queuemnt.setTopicId(topicId.get());
+        if (languageId.isPresent())
+            queuemnt.setLanguageId(languageId.get());
 
         resultMap.put(Config.QUEUE_ID, Long.toString(queueId));
         resultMap.put(Config.STATUS, Config.SUCCESS);
@@ -194,35 +210,85 @@ public class HomeController {
     public Map<String, String> addDocument(@PathVariable String documentId, @PathVariable String documentType,
             @PathVariable String language, @PathVariable int rank, @RequestParam String documentPath,
             @RequestParam String documentUrl, @RequestParam String view_url, @RequestParam Optional<String> category,
-            @RequestParam Optional<String> topic, @RequestParam Optional<String> outlinePath) {
+            @RequestParam Optional<Integer> categoryId, @RequestParam Optional<String> topic,
+            @RequestParam Optional<Integer> topicId, @RequestParam Optional<Integer> languageId,
+            @RequestParam Optional<String> outlinePath) {
 
-        return addDocument(documentId, documentType, documentPath, documentUrl, rank, view_url, language, category,
-                topic, outlinePath, Config.ADD_DOCUMENT);
+        return addDocument(documentId, documentType, documentPath, documentUrl, rank, view_url, language, languageId,
+                category, categoryId, topic, topicId, outlinePath, Config.ADD_DOCUMENT);
     }
 
     @PostMapping("/updateDocument/{documentId}/{documentType}/{language}/{rank}")
     public Map<String, String> updateDocument(@PathVariable String documentId, @PathVariable String documentType,
             @PathVariable String language, @PathVariable int rank, @RequestParam String documentPath,
             @RequestParam String documentUrl, @RequestParam String view_url, @RequestParam Optional<String> category,
-            @RequestParam Optional<String> topic, @RequestParam Optional<String> outlinePath) {
+            @RequestParam Optional<Integer> categoryId, @RequestParam Optional<String> topic,
+            @RequestParam Optional<Integer> topicId, @RequestParam Optional<Integer> languageId,
+            @RequestParam Optional<String> outlinePath) {
 
-        return addDocument(documentId, documentType, documentPath, documentUrl, rank, view_url, language, category,
-                topic, outlinePath, Config.UPDATE_DOCUMENT);
+        return addDocument(documentId, documentType, documentPath, documentUrl, rank, view_url, language, languageId,
+                category, categoryId, topic, topicId, outlinePath, Config.UPDATE_DOCUMENT);
     }
 
     @PostMapping("/updateDocumentRank/{documentId}/{documentType}/{language}/{rank}")
     public Map<String, String> updateDocumentRank(@PathVariable String documentId, @PathVariable String documentType,
             @PathVariable String language, @PathVariable int rank) {
-        return addDocument(documentId, documentType, null, null, rank, null, language, null, null, null,
-                Config.UPDATE_DOCUMENT_RANK);
+        return addDocument(documentId, documentType, null, null, rank, null, language, null, null, null, null, null,
+                null, Config.UPDATE_DOCUMENT_RANK);
     }
 
     @GetMapping("/deleteDocument/{documentId}/{documentType}/{language}")
     public Map<String, String> deleteDocument(@PathVariable String documentId, @PathVariable String documentType,
             @PathVariable String language) {
 
-        return addDocument(documentId, documentType, null, null, 0, null, language, null, null, null,
+        return addDocument(documentId, documentType, null, null, 0, null, language, null, null, null, null, null, null,
                 Config.DELETE_DOCUMENT);
     }
 
+    @GetMapping("/search")
+    List<DocumentSearch> findByDocumentContentTest(@RequestParam Optional<String> category,
+            @RequestParam Optional<Integer> categoryId, @RequestParam Optional<String> topic,
+            @RequestParam Optional<Integer> topicId, @RequestParam Optional<String> language,
+            @RequestParam Optional<Integer> languageId, @RequestParam Optional<String> documentContent,
+            @RequestParam Optional<String> outlineContent) {
+        Criteria criteria = new Criteria();
+
+        if (category.isPresent()) {
+            criteria = criteria.and("category").is(category.get());
+        }
+
+        if (categoryId.isPresent()) {
+            criteria = criteria.and("categoryId").is(categoryId.get());
+        }
+
+        if (topic.isPresent()) {
+            criteria = criteria.and("topic").is(topic.get());
+        }
+
+        if (topicId.isPresent()) {
+            criteria = criteria.and("topicId").is(topicId.get());
+        }
+
+        if (language.isPresent()) {
+            criteria = criteria.and("language").is(language.get());
+        }
+
+        if (languageId.isPresent()) {
+            criteria = criteria.and("languageId").is(languageId.get());
+        }
+
+        if (documentContent.isPresent()) {
+            criteria = criteria.and("documentContent").is(documentContent.get());
+        }
+
+        if (outlineContent.isPresent()) {
+            criteria = criteria.and("outlineContent").is(outlineContent.get());
+        }
+
+        SearchHits<DocumentSearch> searchHits = operations.search(new CriteriaQuery(criteria), DocumentSearch.class);
+
+        // to only get the objects without hit information
+        return searchHits.stream().map(SearchHit::getContent).collect(Collectors.toList());
+
+    }
 }

@@ -88,11 +88,20 @@ public class QueueManagement implements Runnable {
     @Column(name = "language", nullable = true)
     private String language;
 
+    @Column(name = "languageId", nullable = true)
+    private int languageId;
+
     @Column(name = "category", nullable = true)
     private String category;
 
+    @Column(name = "categoryId", nullable = true)
+    private int categoryId;
+
     @Column(name = "topic", nullable = true)
     private String topic;
+
+    @Column(name = "topicId", nullable = true)
+    private int topicId;
 
     @Column(name = "outlinePath", nullable = true)
     private String outlinePath;
@@ -167,6 +176,30 @@ public class QueueManagement implements Runnable {
 
     public void setViewUrl(String viewUrl) {
         this.viewUrl = viewUrl;
+    }
+
+    public int getLanguageId() {
+        return languageId;
+    }
+
+    public void setLanguageId(int languageId) {
+        this.languageId = languageId;
+    }
+
+    public int getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(int categoryId) {
+        this.categoryId = categoryId;
+    }
+
+    public int getTopicId() {
+        return topicId;
+    }
+
+    public void setTopicId(int topicId) {
+        this.topicId = topicId;
     }
 
     public String getLanguage() {
@@ -306,6 +339,11 @@ public class QueueManagement implements Runnable {
                     documentSearch.setDocumentId(getDocumentId());
                     documentSearch.setDocumentType(getDocumentType());
                     documentSearch.setLanguage(getLanguage());
+                    documentSearch.setLanguageId(getLanguageId());
+                    documentSearch.setCategory(getCategory());
+                    documentSearch.setCategoryId(getCategoryId());
+                    documentSearch.setTopic(getTopic());
+                    documentSearch.setTopicId(getTopicId());
                     String path = getDocumentPath();
                     Parser parser = new AutoDetectParser();
                     String content = contentsfromFile.extractContent(parser, path);
