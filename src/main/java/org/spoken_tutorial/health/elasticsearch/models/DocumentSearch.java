@@ -23,19 +23,19 @@ public class DocumentSearch {
     @Field(type = FieldType.Keyword, index = true, store = true)
     private String documentId;
 
-    @Field(type = FieldType.Keyword, index = true, store = true)
+    @Field(type = FieldType.Keyword, index = false, store = true)
     private String language;
 
     @Field(type = FieldType.Integer, index = true, store = true)
     private int languageId;
 
-    @Field(type = FieldType.Keyword, index = true, store = true)
+    @Field(type = FieldType.Keyword, index = false, store = true)
     private String category;
 
     @Field(type = FieldType.Integer, index = true, store = true)
     private int categoryId;
 
-    @Field(type = FieldType.Keyword, index = true, store = true)
+    @Field(type = FieldType.Keyword, index = false, store = true)
     private String topic;
 
     @Field(type = FieldType.Integer, index = true, store = true)
