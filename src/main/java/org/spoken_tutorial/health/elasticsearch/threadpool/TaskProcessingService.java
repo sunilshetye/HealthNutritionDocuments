@@ -3,6 +3,7 @@ package org.spoken_tutorial.health.elasticsearch.threadpool;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +33,7 @@ public class TaskProcessingService {
     @Autowired
     private ApplicationContext applicationContext;
 
-    private final Map<String, Long> runningDocuments = new HashMap<>();
+    private final Map<String, Long> runningDocuments = new ConcurrentHashMap<>();
 
     public void intializeQueue() {
         List<QueueManagement> qmnts = queuemntService.findByStatusOrderByRequestTimeAsc(Config.STATUS_QUEUED);

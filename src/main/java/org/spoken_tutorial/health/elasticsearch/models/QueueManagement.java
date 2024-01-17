@@ -384,7 +384,7 @@ public class QueueManagement implements Runnable {
 
                 }
 
-                else if (!getLanguage().equals(documentSearch.getLanguage())) {
+                else if (getLanguageId() != documentSearch.getLanguageId()) {
                     setStatus(Config.STATUS_FAILED);
                     setReason("language mismatch");
                     logger.error("language mismatch");
