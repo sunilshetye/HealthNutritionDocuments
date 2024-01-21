@@ -57,9 +57,13 @@ public class TaskProcessingService {
     @Async
     public void queueProcessor() {
 
-        logger.info("QueueProcessor method has started");
+        logger.info("starting QueueProcessor thread");
 
         while (true) {
+            if (Thread.interrupted()) {
+                logger.info("Interrupted");
+                break;
+            }
 
             Map<String, Long> skippedDocuments = new HashMap<>();
             skippedDocuments.putAll(getRunningDocuments());
@@ -94,20 +98,12 @@ public class TaskProcessingService {
                 count = count + 1;
 
             }
-            if (count > 0) {
-                try {
-                    Thread.sleep(Config.TASK_SLEEP_TIME);
-                } catch (InterruptedException e) {
-
-                }
-
-            } else {
-                try {
-                    Thread.sleep(Config.NO_TASK_SLEEP_TIME);
-                } catch (InterruptedException e) {
-
-                }
-
+            long sleepTime = count > 0 ? Config.TASK_SLEEP_TIME : Config.NO_TASK_SLEEP_TIME;
+            try {
+                Thread.sleep(sleepTime);
+            } catch (InterruptedException e) {
+                logger.info("Interrupted");
+                break;
             }
         }
 
@@ -115,5 +111,10 @@ public class TaskProcessingService {
 
     public Map<String, Long> getRunningDocuments() {
         return runningDocuments;
+    }
+
+    public void stop() {
+        logger.info("stopping QueueProcessor thread");
+        taskExecutor.shutdown();
     }
 }

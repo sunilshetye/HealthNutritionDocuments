@@ -7,8 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.scheduling.annotation.EnableAsync;
 
 @SpringBootApplication
+@EnableAsync
 public class HealthNutritionElasticSearchApplication implements CommandLineRunner {
 
     private static final Logger logger = LoggerFactory.getLogger(HealthNutritionElasticSearchApplication.class);
@@ -17,12 +19,13 @@ public class HealthNutritionElasticSearchApplication implements CommandLineRunne
     private TaskProcessingService taskProcessingService;
 
     public static void main(String[] args) {
-        SpringApplication.run(HealthNutritionElasticSearchApplication.class, args);
+        SpringApplication.run(HealthNutritionElasticSearchApplication.class, args).close();
 
     }
 
     @Override
     public void run(String... args) throws Exception {
+        logger.info("Starting");
 
         try {
             taskProcessingService.intializeQueue();
