@@ -19,7 +19,6 @@ import org.springframework.scheduling.annotation.EnableAsync;
 
 @EnableAsync
 
-//@PropertySource("classpath:git.properties")
 public class HealthNutritionElasticSearchApplication extends SpringBootServletInitializer implements CommandLineRunner {
 
     private static final Logger logger = LoggerFactory.getLogger(HealthNutritionElasticSearchApplication.class);
