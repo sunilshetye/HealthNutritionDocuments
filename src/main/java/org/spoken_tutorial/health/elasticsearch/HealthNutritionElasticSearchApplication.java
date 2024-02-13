@@ -7,16 +7,30 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.web.servlet.ServletComponentScan;
+import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.scheduling.annotation.EnableAsync;
 
+@ServletComponentScan
+@EnableCaching
 @SpringBootApplication
+
 @EnableAsync
-public class HealthNutritionElasticSearchApplication implements CommandLineRunner {
+
+public class HealthNutritionElasticSearchApplication extends SpringBootServletInitializer implements CommandLineRunner {
 
     private static final Logger logger = LoggerFactory.getLogger(HealthNutritionElasticSearchApplication.class);
 
     @Autowired
     private TaskProcessingService taskProcessingService;
+
+    @Override
+    protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
+
+        return application.sources(HealthNutritionElasticSearchApplication.class);
+    }
 
     public static void main(String[] args) {
         SpringApplication.run(HealthNutritionElasticSearchApplication.class, args).close();
