@@ -1,0 +1,176 @@
+2024-01-24 15:53:07,977 INFO o.s.t.c.s.AnnotationConfigContextLoaderUtils [main] Could not detect default configuration classes for test class [org.spoken_tutorial.health.elasticsearch.HealthNutritionElasticSearchApplicationTests]: HealthNutritionElasticSearchApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2024-01-24 15:53:08,111 INFO o.s.b.t.c.SpringBootTestContextBootstrapper [main] Found @SpringBootConfiguration org.spoken_tutorial.health.elasticsearch.HealthNutritionElasticSearchApplication for test class org.spoken_tutorial.health.elasticsearch.HealthNutritionElasticSearchApplicationTests
+2024-01-24 15:53:08,547 INFO o.s.h.e.HealthNutritionElasticSearchApplicationTests [main] Starting HealthNutritionElasticSearchApplicationTests using Java 17.0.9 with PID 19556 (started by aloks in D:\SpokenTutorial\healthNutritionElasticSearch)
+2024-01-24 15:53:08,548 DEBUG o.s.h.e.HealthNutritionElasticSearchApplicationTests [main] Running with Spring Boot v3.2.0, Spring v6.1.1
+2024-01-24 15:53:08,549 INFO o.s.h.e.HealthNutritionElasticSearchApplicationTests [main] No active profile set, falling back to 1 default profile: "default"
+2024-01-24 15:53:09,452 INFO o.s.d.r.c.RepositoryConfigurationDelegate [main] Multiple Spring Data modules found, entering strict repository configuration mode
+2024-01-24 15:53:09,455 INFO o.s.d.r.c.RepositoryConfigurationDelegate [main] Bootstrapping Spring Data Elasticsearch repositories in DEFAULT mode.
+2024-01-24 15:53:09,512 INFO o.s.d.r.c.RepositoryConfigurationExtensionSupport [main] Spring Data Elasticsearch - Could not safely identify store assignment for repository candidate interface org.spoken_tutorial.health.elasticsearch.repositories.QueueManagementRepository; If you want this repository to be a Elasticsearch repository, consider annotating your entities with one of these annotations: org.springframework.data.elasticsearch.annotations.Document (preferred), or consider extending one of the following types with your repository: org.springframework.data.elasticsearch.repository.ElasticsearchRepository, org.springframework.data.elasticsearch.repository.ElasticsearchRepository
+2024-01-24 15:53:09,527 INFO o.s.d.r.c.RepositoryConfigurationDelegate [main] Finished Spring Data repository scanning in 65 ms. Found 1 Elasticsearch repository interface.
+2024-01-24 15:53:09,534 INFO o.s.d.r.c.RepositoryConfigurationDelegate [main] Multiple Spring Data modules found, entering strict repository configuration mode
+2024-01-24 15:53:09,535 INFO o.s.d.r.c.RepositoryConfigurationDelegate [main] Bootstrapping Spring Data Reactive Elasticsearch repositories in DEFAULT mode.
+2024-01-24 15:53:09,540 INFO o.s.d.r.c.RepositoryConfigurationExtensionSupport [main] Spring Data Reactive Elasticsearch - Could not safely identify store assignment for repository candidate interface org.spoken_tutorial.health.elasticsearch.repositories.QueueManagementRepository; If you want this repository to be a Reactive Elasticsearch repository, consider annotating your entities with one of these annotations: org.springframework.data.elasticsearch.annotations.Document (preferred), or consider extending one of the following types with your repository: org.springframework.data.elasticsearch.repository.ReactiveElasticsearchRepository
+2024-01-24 15:53:09,541 INFO o.s.d.r.c.RepositoryConfigurationDelegate [main] Finished Spring Data repository scanning in 5 ms. Found 0 Reactive Elasticsearch repository interfaces.
+2024-01-24 15:53:09,551 INFO o.s.d.r.c.RepositoryConfigurationDelegate [main] Multiple Spring Data modules found, entering strict repository configuration mode
+2024-01-24 15:53:09,552 INFO o.s.d.r.c.RepositoryConfigurationDelegate [main] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-01-24 15:53:09,564 INFO o.s.d.r.c.RepositoryConfigurationExtensionSupport [main] Spring Data JPA - Could not safely identify store assignment for repository candidate interface org.spoken_tutorial.health.elasticsearch.repositories.DocumentSearchRepository; If you want this repository to be a JPA repository, consider annotating your entities with one of these annotations: jakarta.persistence.Entity, jakarta.persistence.MappedSuperclass (preferred), or consider extending one of the following types with your repository: org.springframework.data.jpa.repository.JpaRepository
+2024-01-24 15:53:09,570 INFO o.s.d.r.c.RepositoryConfigurationDelegate [main] Finished Spring Data repository scanning in 11 ms. Found 1 JPA repository interface.
+2024-01-24 15:53:10,173 INFO o.h.j.i.u.LogHelper [main] HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-01-24 15:53:10,264 INFO o.h.Version [main] HHH000412: Hibernate ORM core version 6.3.1.Final
+2024-01-24 15:53:10,335 INFO o.h.c.i.RegionFactoryInitiator [main] HHH000026: Second-level cache disabled
+2024-01-24 15:53:10,928 INFO o.s.o.j.p.SpringPersistenceUnitInfo [main] No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-01-24 15:53:10,964 INFO c.z.h.HikariDataSource [main] HikariPool-1 - Starting...
+2024-01-24 15:53:11,392 INFO c.z.h.p.HikariPool [main] HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@24068086
+2024-01-24 15:53:11,395 INFO c.z.h.HikariDataSource [main] HikariPool-1 - Start completed.
+2024-01-24 15:53:12,494 INFO o.h.e.t.j.p.i.JtaPlatformInitiator [main] HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-01-24 15:53:12,547 INFO o.s.o.j.LocalContainerEntityManagerFactoryBean [main] Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-01-24 15:53:12,946 INFO o.s.d.j.r.q.QueryEnhancerFactory [main] Hibernate is in classpath; If applicable, HQL parser will be used.
+2024-01-24 15:53:14,398 WARN o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration [main] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-01-24 15:53:14,926 INFO o.s.h.e.HealthNutritionElasticSearchApplicationTests [main] Started HealthNutritionElasticSearchApplicationTests in 6.638 seconds (process running for 8.367)
+2024-01-24 15:53:14,929 INFO o.s.h.e.HealthNutritionElasticSearchApplication [main] Starting
+2024-01-24 15:53:15,088 INFO o.s.h.e.t.TaskProcessingService [task-1] starting QueueProcessor thread
+2024-01-24 15:53:15,868 INFO o.s.h.e.HealthNutritionElasticSearchApplicationTests [main] Stopping
+2024-01-24 15:53:15,868 INFO o.s.h.e.t.TaskProcessingService [main] stopping QueueProcessor thread
+2024-01-24 15:53:15,869 INFO o.s.h.e.t.TaskProcessingService [task-1] Interrupted
+2024-01-24 15:53:15,954 INFO o.s.o.j.LocalContainerEntityManagerFactoryBean [SpringApplicationShutdownHook] Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-01-24 15:53:15,958 INFO c.z.h.HikariDataSource [SpringApplicationShutdownHook] HikariPool-1 - Shutdown initiated...
+2024-01-24 15:53:15,970 INFO c.z.h.HikariDataSource [SpringApplicationShutdownHook] HikariPool-1 - Shutdown completed.
+2024-01-24 16:06:04,485 INFO o.s.t.c.s.AnnotationConfigContextLoaderUtils [main] Could not detect default configuration classes for test class [org.spoken_tutorial.health.elasticsearch.HealthNutritionElasticSearchApplicationTests]: HealthNutritionElasticSearchApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2024-01-24 16:06:04,711 INFO o.s.b.t.c.SpringBootTestContextBootstrapper [main] Found @SpringBootConfiguration org.spoken_tutorial.health.elasticsearch.HealthNutritionElasticSearchApplication for test class org.spoken_tutorial.health.elasticsearch.HealthNutritionElasticSearchApplicationTests
+2024-01-24 16:06:05,189 INFO o.s.h.e.HealthNutritionElasticSearchApplicationTests [main] Starting HealthNutritionElasticSearchApplicationTests using Java 17.0.9 with PID 20380 (started by aloks in D:\SpokenTutorial\healthNutritionElasticSearch)
+2024-01-24 16:06:05,190 DEBUG o.s.h.e.HealthNutritionElasticSearchApplicationTests [main] Running with Spring Boot v3.2.0, Spring v6.1.1
+2024-01-24 16:06:05,191 INFO o.s.h.e.HealthNutritionElasticSearchApplicationTests [main] No active profile set, falling back to 1 default profile: "default"
+2024-01-24 16:06:06,137 INFO o.s.d.r.c.RepositoryConfigurationDelegate [main] Multiple Spring Data modules found, entering strict repository configuration mode
+2024-01-24 16:06:06,137 INFO o.s.d.r.c.RepositoryConfigurationDelegate [main] Bootstrapping Spring Data Elasticsearch repositories in DEFAULT mode.
+2024-01-24 16:06:06,212 INFO o.s.d.r.c.RepositoryConfigurationExtensionSupport [main] Spring Data Elasticsearch - Could not safely identify store assignment for repository candidate interface org.spoken_tutorial.health.elasticsearch.repositories.QueueManagementRepository; If you want this repository to be a Elasticsearch repository, consider annotating your entities with one of these annotations: org.springframework.data.elasticsearch.annotations.Document (preferred), or consider extending one of the following types with your repository: org.springframework.data.elasticsearch.repository.ElasticsearchRepository, org.springframework.data.elasticsearch.repository.ElasticsearchRepository
+2024-01-24 16:06:06,223 INFO o.s.d.r.c.RepositoryConfigurationDelegate [main] Finished Spring Data repository scanning in 77 ms. Found 1 Elasticsearch repository interface.
+2024-01-24 16:06:06,239 INFO o.s.d.r.c.RepositoryConfigurationDelegate [main] Multiple Spring Data modules found, entering strict repository configuration mode
+2024-01-24 16:06:06,239 INFO o.s.d.r.c.RepositoryConfigurationDelegate [main] Bootstrapping Spring Data Reactive Elasticsearch repositories in DEFAULT mode.
+2024-01-24 16:06:06,254 INFO o.s.d.r.c.RepositoryConfigurationExtensionSupport [main] Spring Data Reactive Elasticsearch - Could not safely identify store assignment for repository candidate interface org.spoken_tutorial.health.elasticsearch.repositories.QueueManagementRepository; If you want this repository to be a Reactive Elasticsearch repository, consider annotating your entities with one of these annotations: org.springframework.data.elasticsearch.annotations.Document (preferred), or consider extending one of the following types with your repository: org.springframework.data.elasticsearch.repository.ReactiveElasticsearchRepository
+2024-01-24 16:06:06,254 INFO o.s.d.r.c.RepositoryConfigurationDelegate [main] Finished Spring Data repository scanning in 9 ms. Found 0 Reactive Elasticsearch repository interfaces.
+2024-01-24 16:06:06,270 INFO o.s.d.r.c.RepositoryConfigurationDelegate [main] Multiple Spring Data modules found, entering strict repository configuration mode
+2024-01-24 16:06:06,272 INFO o.s.d.r.c.RepositoryConfigurationDelegate [main] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-01-24 16:06:06,289 INFO o.s.d.r.c.RepositoryConfigurationExtensionSupport [main] Spring Data JPA - Could not safely identify store assignment for repository candidate interface org.spoken_tutorial.health.elasticsearch.repositories.DocumentSearchRepository; If you want this repository to be a JPA repository, consider annotating your entities with one of these annotations: jakarta.persistence.Entity, jakarta.persistence.MappedSuperclass (preferred), or consider extending one of the following types with your repository: org.springframework.data.jpa.repository.JpaRepository
+2024-01-24 16:06:06,291 INFO o.s.d.r.c.RepositoryConfigurationDelegate [main] Finished Spring Data repository scanning in 16 ms. Found 1 JPA repository interface.
+2024-01-24 16:06:07,113 INFO o.h.j.i.u.LogHelper [main] HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-01-24 16:06:07,230 INFO o.h.Version [main] HHH000412: Hibernate ORM core version 6.3.1.Final
+2024-01-24 16:06:07,273 INFO o.h.c.i.RegionFactoryInitiator [main] HHH000026: Second-level cache disabled
+2024-01-24 16:06:07,679 INFO o.s.o.j.p.SpringPersistenceUnitInfo [main] No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-01-24 16:06:07,718 INFO c.z.h.HikariDataSource [main] HikariPool-1 - Starting...
+2024-01-24 16:06:08,105 INFO c.z.h.p.HikariPool [main] HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@73da303e
+2024-01-24 16:06:08,121 INFO c.z.h.HikariDataSource [main] HikariPool-1 - Start completed.
+2024-01-24 16:06:09,245 INFO o.h.e.t.j.p.i.JtaPlatformInitiator [main] HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-01-24 16:06:09,371 INFO o.s.o.j.LocalContainerEntityManagerFactoryBean [main] Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-01-24 16:06:09,881 INFO o.s.d.j.r.q.QueryEnhancerFactory [main] Hibernate is in classpath; If applicable, HQL parser will be used.
+2024-01-24 16:06:11,388 WARN o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration [main] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-01-24 16:06:12,052 INFO o.s.h.e.HealthNutritionElasticSearchApplicationTests [main] Started HealthNutritionElasticSearchApplicationTests in 7.157 seconds (process running for 8.841)
+2024-01-24 16:06:12,052 INFO o.s.h.e.HealthNutritionElasticSearchApplication [main] Starting
+2024-01-24 16:06:12,288 INFO o.s.h.e.t.TaskProcessingService [task-1] starting QueueProcessor thread
+2024-01-24 16:06:13,152 INFO o.s.h.e.HealthNutritionElasticSearchApplicationTests [main] Stopping
+2024-01-24 16:06:13,152 INFO o.s.h.e.t.TaskProcessingService [main] stopping QueueProcessor thread
+2024-01-24 16:06:13,152 INFO o.s.h.e.t.TaskProcessingService [task-1] Interrupted
+2024-01-24 16:06:13,269 INFO o.s.o.j.LocalContainerEntityManagerFactoryBean [SpringApplicationShutdownHook] Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-01-24 16:06:13,269 INFO c.z.h.HikariDataSource [SpringApplicationShutdownHook] HikariPool-1 - Shutdown initiated...
+2024-01-24 16:06:13,294 INFO c.z.h.HikariDataSource [SpringApplicationShutdownHook] HikariPool-1 - Shutdown completed.
+2024-01-24 16:17:18,862 INFO o.s.h.e.HealthNutritionElasticSearchApplication [main] Starting HealthNutritionElasticSearchApplication using Java 17.0.9 with PID 14872 (D:\SpokenTutorial\healthNutritionElasticSearch\target\classes started by aloks in D:\SpokenTutorial\healthNutritionElasticSearch)
+2024-01-24 16:17:18,864 DEBUG o.s.h.e.HealthNutritionElasticSearchApplication [main] Running with Spring Boot v3.2.0, Spring v6.1.1
+2024-01-24 16:17:18,864 INFO o.s.h.e.HealthNutritionElasticSearchApplication [main] No active profile set, falling back to 1 default profile: "default"
+2024-01-24 16:17:19,502 INFO o.s.d.r.c.RepositoryConfigurationDelegate [main] Multiple Spring Data modules found, entering strict repository configuration mode
+2024-01-24 16:17:19,503 INFO o.s.d.r.c.RepositoryConfigurationDelegate [main] Bootstrapping Spring Data Elasticsearch repositories in DEFAULT mode.
+2024-01-24 16:17:19,536 INFO o.s.d.r.c.RepositoryConfigurationExtensionSupport [main] Spring Data Elasticsearch - Could not safely identify store assignment for repository candidate interface org.spoken_tutorial.health.elasticsearch.repositories.QueueManagementRepository; If you want this repository to be a Elasticsearch repository, consider annotating your entities with one of these annotations: org.springframework.data.elasticsearch.annotations.Document (preferred), or consider extending one of the following types with your repository: org.springframework.data.elasticsearch.repository.ElasticsearchRepository, org.springframework.data.elasticsearch.repository.ElasticsearchRepository
+2024-01-24 16:17:19,549 INFO o.s.d.r.c.RepositoryConfigurationDelegate [main] Finished Spring Data repository scanning in 43 ms. Found 1 Elasticsearch repository interface.
+2024-01-24 16:17:19,554 INFO o.s.d.r.c.RepositoryConfigurationDelegate [main] Multiple Spring Data modules found, entering strict repository configuration mode
+2024-01-24 16:17:19,555 INFO o.s.d.r.c.RepositoryConfigurationDelegate [main] Bootstrapping Spring Data Reactive Elasticsearch repositories in DEFAULT mode.
+2024-01-24 16:17:19,559 INFO o.s.d.r.c.RepositoryConfigurationExtensionSupport [main] Spring Data Reactive Elasticsearch - Could not safely identify store assignment for repository candidate interface org.spoken_tutorial.health.elasticsearch.repositories.QueueManagementRepository; If you want this repository to be a Reactive Elasticsearch repository, consider annotating your entities with one of these annotations: org.springframework.data.elasticsearch.annotations.Document (preferred), or consider extending one of the following types with your repository: org.springframework.data.elasticsearch.repository.ReactiveElasticsearchRepository
+2024-01-24 16:17:19,559 INFO o.s.d.r.c.RepositoryConfigurationDelegate [main] Finished Spring Data repository scanning in 4 ms. Found 0 Reactive Elasticsearch repository interfaces.
+2024-01-24 16:17:19,566 INFO o.s.d.r.c.RepositoryConfigurationDelegate [main] Multiple Spring Data modules found, entering strict repository configuration mode
+2024-01-24 16:17:19,567 INFO o.s.d.r.c.RepositoryConfigurationDelegate [main] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-01-24 16:17:19,573 INFO o.s.d.r.c.RepositoryConfigurationExtensionSupport [main] Spring Data JPA - Could not safely identify store assignment for repository candidate interface org.spoken_tutorial.health.elasticsearch.repositories.DocumentSearchRepository; If you want this repository to be a JPA repository, consider annotating your entities with one of these annotations: jakarta.persistence.Entity, jakarta.persistence.MappedSuperclass (preferred), or consider extending one of the following types with your repository: org.springframework.data.jpa.repository.JpaRepository
+2024-01-24 16:17:19,577 INFO o.s.d.r.c.RepositoryConfigurationDelegate [main] Finished Spring Data repository scanning in 6 ms. Found 1 JPA repository interface.
+2024-01-24 16:17:20,074 INFO o.s.b.w.e.t.TomcatWebServer [main] Tomcat initialized with port 8080 (http)
+2024-01-24 16:17:20,075 INFO o.a.c.c.AprLifecycleListener [main] Loaded Apache Tomcat Native library [2.0.6] using APR version [1.7.4].
+2024-01-24 16:17:20,080 INFO o.a.c.c.AprLifecycleListener [main] OpenSSL successfully initialized [OpenSSL 3.0.11 19 Sep 2023]
+2024-01-24 16:17:20,086 INFO o.a.c.h.Http11NioProtocol [main] Initializing ProtocolHandler ["http-nio-8080"]
+2024-01-24 16:17:20,087 INFO o.a.c.c.StandardService [main] Starting service [Tomcat]
+2024-01-24 16:17:20,087 INFO o.a.c.c.StandardEngine [main] Starting Servlet engine: [Apache Tomcat/10.1.16]
+2024-01-24 16:17:20,166 INFO o.a.c.c.C.[.[.[/] [main] Initializing Spring embedded WebApplicationContext
+2024-01-24 16:17:20,166 INFO o.s.b.w.s.c.ServletWebServerApplicationContext [main] Root WebApplicationContext: initialization completed in 1246 ms
+2024-01-24 16:17:20,313 INFO o.h.j.i.u.LogHelper [main] HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-01-24 16:17:20,364 INFO o.h.Version [main] HHH000412: Hibernate ORM core version 6.3.1.Final
+2024-01-24 16:17:20,395 INFO o.h.c.i.RegionFactoryInitiator [main] HHH000026: Second-level cache disabled
+2024-01-24 16:17:20,660 INFO o.s.o.j.p.SpringPersistenceUnitInfo [main] No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-01-24 16:17:20,683 INFO c.z.h.HikariDataSource [main] HikariPool-1 - Starting...
+2024-01-24 16:17:20,973 INFO c.z.h.p.HikariPool [main] HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@41026e5c
+2024-01-24 16:17:20,975 INFO c.z.h.HikariDataSource [main] HikariPool-1 - Start completed.
+2024-01-24 16:17:21,871 INFO o.h.e.t.j.p.i.JtaPlatformInitiator [main] HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-01-24 16:17:21,963 INFO o.s.o.j.LocalContainerEntityManagerFactoryBean [main] Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-01-24 16:17:22,200 INFO o.s.d.j.r.q.QueryEnhancerFactory [main] Hibernate is in classpath; If applicable, HQL parser will be used.
+2024-01-24 16:17:23,023 WARN o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration [main] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-01-24 16:17:23,428 INFO o.a.c.h.Http11NioProtocol [main] Starting ProtocolHandler ["http-nio-8080"]
+2024-01-24 16:17:23,441 INFO o.s.b.w.e.t.TomcatWebServer [main] Tomcat started on port 8080 (http) with context path ''
+2024-01-24 16:17:23,448 INFO o.s.h.e.HealthNutritionElasticSearchApplication [main] Started HealthNutritionElasticSearchApplication in 4.927 seconds (process running for 5.915)
+2024-01-24 16:17:23,449 INFO o.s.h.e.HealthNutritionElasticSearchApplication [main] Starting
+2024-01-24 16:17:23,568 INFO o.s.h.e.t.TaskProcessingService [task-1] starting QueueProcessor thread
+2024-01-24 16:17:53,582 INFO o.s.c.s.DefaultLifecycleProcessor [main] Failed to shut down 1 bean with phase value 2147483647 within timeout of 30000ms: [applicationTaskExecutor]
+2024-01-24 16:17:53,597 INFO o.a.c.h.Http11NioProtocol [main] Stopping ProtocolHandler ["http-nio-8080"]
+2024-01-24 16:17:53,613 INFO o.s.h.e.t.TaskProcessingService [task-1] Interrupted
+2024-01-24 16:17:53,613 INFO o.s.o.j.LocalContainerEntityManagerFactoryBean [main] Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-01-24 16:17:53,613 INFO c.z.h.HikariDataSource [main] HikariPool-1 - Shutdown initiated...
+2024-01-24 16:17:53,628 INFO c.z.h.HikariDataSource [main] HikariPool-1 - Shutdown completed.
+2024-01-24 16:29:40,012 INFO o.s.t.c.s.AnnotationConfigContextLoaderUtils [main] Could not detect default configuration classes for test class [org.spoken_tutorial.health.elasticsearch.HealthNutritionElasticSearchApplicationTests]: HealthNutritionElasticSearchApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2024-01-24 16:29:40,145 INFO o.s.b.t.c.SpringBootTestContextBootstrapper [main] Found @SpringBootConfiguration org.spoken_tutorial.health.elasticsearch.HealthNutritionElasticSearchApplication for test class org.spoken_tutorial.health.elasticsearch.HealthNutritionElasticSearchApplicationTests
+2024-01-24 16:29:40,618 INFO o.s.h.e.HealthNutritionElasticSearchApplicationTests [main] Starting HealthNutritionElasticSearchApplicationTests using Java 17.0.9 with PID 11680 (started by aloks in D:\SpokenTutorial\healthNutritionElasticSearch)
+2024-01-24 16:29:40,618 DEBUG o.s.h.e.HealthNutritionElasticSearchApplicationTests [main] Running with Spring Boot v3.2.0, Spring v6.1.1
+2024-01-24 16:29:40,619 INFO o.s.h.e.HealthNutritionElasticSearchApplicationTests [main] No active profile set, falling back to 1 default profile: "default"
+2024-01-24 16:29:41,524 INFO o.s.d.r.c.RepositoryConfigurationDelegate [main] Multiple Spring Data modules found, entering strict repository configuration mode
+2024-01-24 16:29:41,526 INFO o.s.d.r.c.RepositoryConfigurationDelegate [main] Bootstrapping Spring Data Elasticsearch repositories in DEFAULT mode.
+2024-01-24 16:29:41,579 INFO o.s.d.r.c.RepositoryConfigurationExtensionSupport [main] Spring Data Elasticsearch - Could not safely identify store assignment for repository candidate interface org.spoken_tutorial.health.elasticsearch.repositories.QueueManagementRepository; If you want this repository to be a Elasticsearch repository, consider annotating your entities with one of these annotations: org.springframework.data.elasticsearch.annotations.Document (preferred), or consider extending one of the following types with your repository: org.springframework.data.elasticsearch.repository.ElasticsearchRepository, org.springframework.data.elasticsearch.repository.ElasticsearchRepository
+2024-01-24 16:29:41,594 INFO o.s.d.r.c.RepositoryConfigurationDelegate [main] Finished Spring Data repository scanning in 63 ms. Found 1 Elasticsearch repository interface.
+2024-01-24 16:29:41,601 INFO o.s.d.r.c.RepositoryConfigurationDelegate [main] Multiple Spring Data modules found, entering strict repository configuration mode
+2024-01-24 16:29:41,601 INFO o.s.d.r.c.RepositoryConfigurationDelegate [main] Bootstrapping Spring Data Reactive Elasticsearch repositories in DEFAULT mode.
+2024-01-24 16:29:41,606 INFO o.s.d.r.c.RepositoryConfigurationExtensionSupport [main] Spring Data Reactive Elasticsearch - Could not safely identify store assignment for repository candidate interface org.spoken_tutorial.health.elasticsearch.repositories.QueueManagementRepository; If you want this repository to be a Reactive Elasticsearch repository, consider annotating your entities with one of these annotations: org.springframework.data.elasticsearch.annotations.Document (preferred), or consider extending one of the following types with your repository: org.springframework.data.elasticsearch.repository.ReactiveElasticsearchRepository
+2024-01-24 16:29:41,607 INFO o.s.d.r.c.RepositoryConfigurationDelegate [main] Finished Spring Data repository scanning in 5 ms. Found 0 Reactive Elasticsearch repository interfaces.
+2024-01-24 16:29:41,619 INFO o.s.d.r.c.RepositoryConfigurationDelegate [main] Multiple Spring Data modules found, entering strict repository configuration mode
+2024-01-24 16:29:41,620 INFO o.s.d.r.c.RepositoryConfigurationDelegate [main] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-01-24 16:29:41,633 INFO o.s.d.r.c.RepositoryConfigurationExtensionSupport [main] Spring Data JPA - Could not safely identify store assignment for repository candidate interface org.spoken_tutorial.health.elasticsearch.repositories.DocumentSearchRepository; If you want this repository to be a JPA repository, consider annotating your entities with one of these annotations: jakarta.persistence.Entity, jakarta.persistence.MappedSuperclass (preferred), or consider extending one of the following types with your repository: org.springframework.data.jpa.repository.JpaRepository
+2024-01-24 16:29:41,639 INFO o.s.d.r.c.RepositoryConfigurationDelegate [main] Finished Spring Data repository scanning in 12 ms. Found 1 JPA repository interface.
+2024-01-24 16:29:42,242 INFO o.h.j.i.u.LogHelper [main] HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-01-24 16:29:42,339 INFO o.h.Version [main] HHH000412: Hibernate ORM core version 6.3.1.Final
+2024-01-24 16:29:42,387 INFO o.h.c.i.RegionFactoryInitiator [main] HHH000026: Second-level cache disabled
+2024-01-24 16:29:42,748 INFO o.s.o.j.p.SpringPersistenceUnitInfo [main] No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-01-24 16:29:42,784 INFO c.z.h.HikariDataSource [main] HikariPool-1 - Starting...
+2024-01-24 16:29:43,210 INFO c.z.h.p.HikariPool [main] HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@174e1b99
+2024-01-24 16:29:43,212 INFO c.z.h.HikariDataSource [main] HikariPool-1 - Start completed.
+2024-01-24 16:29:44,231 INFO o.h.e.t.j.p.i.JtaPlatformInitiator [main] HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-01-24 16:29:44,283 INFO o.s.o.j.LocalContainerEntityManagerFactoryBean [main] Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-01-24 16:29:44,627 INFO o.s.d.j.r.q.QueryEnhancerFactory [main] Hibernate is in classpath; If applicable, HQL parser will be used.
+2024-01-24 16:29:45,842 WARN o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration [main] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-01-24 16:29:46,326 INFO o.s.h.e.HealthNutritionElasticSearchApplicationTests [main] Started HealthNutritionElasticSearchApplicationTests in 5.995 seconds (process running for 7.514)
+2024-01-24 16:29:46,328 INFO o.s.h.e.HealthNutritionElasticSearchApplication [main] Starting
+2024-01-24 16:29:46,489 INFO o.s.h.e.t.TaskProcessingService [task-1] starting QueueProcessor thread
+2024-01-24 16:29:46,514 INFO o.s.h.e.t.TaskProcessingService [task-1] Queueing:QueueManagement [queueId=17, requestTime=2024-01-24 16:19:01.711, requestType=addDocument, status=pending, documentId=docId4, documentType=Tutorial, rank=1, language=English]
+2024-01-24 16:29:46,613 INFO o.s.h.e.t.TaskProcessingService [task-1] Queueing:QueueManagement [queueId=18, requestTime=2024-01-24 16:19:01.711, requestType=addDocument, status=pending, documentId=docId2, documentType=Tutorial, rank=1, language=English]
+2024-01-24 16:29:46,613 INFO o.s.h.e.m.QueueManagement [task-2] Processing:QueueManagement [queueId=17, requestTime=2024-01-24 16:19:01.711, requestType=addDocument, status=queued, documentId=docId4, documentType=Tutorial, rank=1, language=English]
+2024-01-24 16:29:46,625 INFO o.s.h.e.t.TaskProcessingService [task-1] Queueing:QueueManagement [queueId=19, requestTime=2024-01-24 16:19:01.711, requestType=addDocument, status=pending, documentId=docId1, documentType=Tutorial, rank=1, language=English]
+2024-01-24 16:29:46,626 INFO o.s.h.e.m.QueueManagement [task-3] Processing:QueueManagement [queueId=18, requestTime=2024-01-24 16:19:01.711, requestType=addDocument, status=queued, documentId=docId2, documentType=Tutorial, rank=1, language=English]
+2024-01-24 16:29:46,639 INFO o.s.h.e.t.TaskProcessingService [task-1] Queueing:QueueManagement [queueId=20, requestTime=2024-01-24 16:19:01.711, requestType=addDocument, status=pending, documentId=docId3, documentType=Tutorial, rank=1, language=English]
+2024-01-24 16:29:46,640 INFO o.s.h.e.m.QueueManagement [task-4] Processing:QueueManagement [queueId=19, requestTime=2024-01-24 16:19:01.711, requestType=addDocument, status=queued, documentId=docId1, documentType=Tutorial, rank=1, language=English]
+2024-01-24 16:29:46,651 INFO o.s.h.e.t.TaskProcessingService [task-1] Queueing:QueueManagement [queueId=21, requestTime=2024-01-24 16:19:01.788, requestType=updateDocument, status=pending, documentId=docId1, documentType=Tutorial, rank=1, language=English]
+2024-01-24 16:29:46,651 INFO o.s.h.e.t.TaskProcessingService [task-1] Queueing:QueueManagement [queueId=22, requestTime=2024-01-24 16:19:01.788, requestType=updateDocument, status=pending, documentId=docId4, documentType=Tutorial, rank=1, language=English]
+2024-01-24 16:29:46,651 INFO o.s.h.e.t.TaskProcessingService [task-1] Queueing:QueueManagement [queueId=23, requestTime=2024-01-24 16:19:01.788, requestType=updateDocument, status=pending, documentId=docId3, documentType=Tutorial, rank=1, language=English]
+2024-01-24 16:29:46,651 INFO o.s.h.e.t.TaskProcessingService [task-1] Queueing:QueueManagement [queueId=24, requestTime=2024-01-24 16:19:01.788, requestType=updateDocument, status=pending, documentId=docId2, documentType=Tutorial, rank=1, language=English]
+2024-01-24 16:29:46,652 INFO o.s.h.e.m.QueueManagement [task-5] Processing:QueueManagement [queueId=20, requestTime=2024-01-24 16:19:01.711, requestType=addDocument, status=queued, documentId=docId3, documentType=Tutorial, rank=1, language=English]
+2024-01-24 16:29:47,093 ERROR o.s.h.e.m.QueueManagement [task-3] document alreday exist
+2024-01-24 16:29:47,093 ERROR o.s.h.e.m.QueueManagement [task-4] document alreday exist
+2024-01-24 16:29:47,093 ERROR o.s.h.e.m.QueueManagement [task-5] document alreday exist
+2024-01-24 16:29:47,094 ERROR o.s.h.e.m.QueueManagement [task-2] document alreday exist
+2024-01-24 16:29:47,094 INFO o.s.h.e.m.QueueManagement [task-3] Done :QueueManagement [queueId=18, requestTime=2024-01-24 16:19:01.711, requestType=addDocument, status=failed, documentId=docId2, documentType=Tutorial, rank=1, language=English]
+2024-01-24 16:29:47,094 INFO o.s.h.e.m.QueueManagement [task-5] Done :QueueManagement [queueId=20, requestTime=2024-01-24 16:19:01.711, requestType=addDocument, status=failed, documentId=docId3, documentType=Tutorial, rank=1, language=English]
+2024-01-24 16:29:47,094 INFO o.s.h.e.m.QueueManagement [task-2] Done :QueueManagement [queueId=17, requestTime=2024-01-24 16:19:01.711, requestType=addDocument, status=failed, documentId=docId4, documentType=Tutorial, rank=1, language=English]
+2024-01-24 16:29:47,094 INFO o.s.h.e.m.QueueManagement [task-4] Done :QueueManagement [queueId=19, requestTime=2024-01-24 16:19:01.711, requestType=addDocument, status=failed, documentId=docId1, documentType=Tutorial, rank=1, language=English]
+2024-01-24 16:29:47,440 INFO o.s.h.e.HealthNutritionElasticSearchApplicationTests [main] Stopping
+2024-01-24 16:29:47,440 INFO o.s.h.e.t.TaskProcessingService [main] stopping QueueProcessor thread
+2024-01-24 16:29:47,441 INFO o.s.h.e.t.TaskProcessingService [task-1] Interrupted
+2024-01-24 16:29:47,538 INFO o.s.o.j.LocalContainerEntityManagerFactoryBean [SpringApplicationShutdownHook] Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-01-24 16:29:47,542 INFO c.z.h.HikariDataSource [SpringApplicationShutdownHook] HikariPool-1 - Shutdown initiated...
+2024-01-24 16:29:47,553 INFO c.z.h.HikariDataSource [SpringApplicationShutdownHook] HikariPool-1 - Shutdown completed.

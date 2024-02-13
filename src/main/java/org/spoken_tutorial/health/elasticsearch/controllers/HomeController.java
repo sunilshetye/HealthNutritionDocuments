@@ -152,7 +152,6 @@ public class HomeController {
             Optional<String> outlinePath, String requestType) {
 
         Map<String, String> resultMap = new HashMap<>();
-        long queueId = queuemntService.getNewId();
 
         logger.info(
                 "RequestType:{} Language:{} View_URL: {} documentId:{} documentPath:{} documentType:{} outlinePath:{}",
@@ -173,8 +172,8 @@ public class HomeController {
         }
 
         QueueManagement queuemnt = new QueueManagement();
-        queuemnt.setQueueId(queueId);
-        if (outlinePath.isPresent())
+
+        if (outlinePath != null && outlinePath.isPresent())
             queuemnt.setOutlinePath(outlinePath.get());
         queuemnt.setRequestTime(getCurrentTime());
         queuemnt.setRequestType(requestType);
@@ -188,19 +187,19 @@ public class HomeController {
         queuemnt.setStatus("pending");
         if (language != null)
             queuemnt.setLanguage(language);
-        if (category.isPresent())
+        if (category != null && category.isPresent())
             queuemnt.setCategory(category.get());
-        if (categoryId.isPresent())
+        if (categoryId != null && categoryId.isPresent())
             queuemnt.setCategoryId(categoryId.get());
-        if (topic.isPresent())
+        if (topic != null && topic.isPresent())
             queuemnt.setTopic(topic.get());
-        if (topic.isPresent())
+        if (topicId != null && topicId.isPresent())
             queuemnt.setTopicId(topicId.get());
 
-        resultMap.put(Config.QUEUE_ID, Long.toString(queueId));
-        resultMap.put(Config.STATUS, Config.SUCCESS);
-
         queRepo.save(queuemnt);
+
+        resultMap.put(Config.QUEUE_ID, Long.toString(queuemnt.getQueueId()));
+        resultMap.put(Config.STATUS, Config.SUCCESS);
 
         return resultMap;
 
@@ -230,7 +229,7 @@ public class HomeController {
                 categoryId, category, topicId, topic, outlinePath, Config.UPDATE_DOCUMENT);
     }
 
-    @PostMapping("/updateDocumentRank/{documentId}/{documentType}/{languageId}/{rank}")
+    @GetMapping("/updateDocumentRank/{documentId}/{documentType}/{languageId}/{rank}")
     public Map<String, String> updateDocumentRank(@PathVariable String documentId, @PathVariable String documentType,
             @PathVariable int languageId, @PathVariable int rank) {
         return addDocument(documentId, documentType, null, null, rank, null, languageId, null, null, null, null, null,

@@ -15,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Transient;
 
@@ -40,6 +42,7 @@ public class QueueManagement implements Runnable {
     private ContentsfromFile contentsfromFile;
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "queueId", nullable = false, updatable = false)
     private long queueId;
 
