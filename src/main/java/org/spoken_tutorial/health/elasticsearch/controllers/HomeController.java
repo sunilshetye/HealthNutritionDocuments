@@ -141,6 +141,11 @@ public class HomeController {
 
     }
 
+    @GetMapping("/")
+    public String Wlecome() {
+        return "Welcome to Health and Nutrition Elastic Search Application";
+    }
+
     @GetMapping("/findAll")
     public List<QueueManagement> findAll() {
         return queRepo.findAll();
