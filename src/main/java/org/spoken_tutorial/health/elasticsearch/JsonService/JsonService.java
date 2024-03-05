@@ -57,13 +57,13 @@ public class JsonService {
 
         String url = CreateJsonSMurl(catId, tutorialId, lanId, version);
         String jsonString = restTemplate.getForObject(url, String.class);
-        System.out.println(jsonString);
+
         String document = "";
         try {
             if (jsonString != null) {
 
                 JSONObject mainJsonObject = new JSONObject(jsonString);
-                JSONArray jsonArrayNarrartions = (JSONArray) mainJsonObject.get("slides");
+                JSONArray jsonArrayNarrations = (JSONArray) mainJsonObject.get("slides");
 
                 StringBuffer sb = new StringBuffer();
                 sb.append("<html>\n<head>\n<title>\n");
@@ -76,8 +76,8 @@ public class JsonService {
                 sb.append(mainJsonObject.get("language"));
                 sb.append("\n</h3>\n");
 
-                for (int i = 0; i < jsonArrayNarrartions.length(); i++) {
-                    JSONObject jsonNarration = (JSONObject) jsonArrayNarrartions.get(i);
+                for (int i = 0; i < jsonArrayNarrations.length(); i++) {
+                    JSONObject jsonNarration = (JSONObject) jsonArrayNarrations.get(i);
                     sb.append("<p>\n");
                     sb.append((String) jsonNarration.get("narration"));
                     sb.append("\n</p>\n");
