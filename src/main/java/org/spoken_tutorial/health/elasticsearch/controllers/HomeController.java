@@ -1,5 +1,6 @@
 package org.spoken_tutorial.health.elasticsearch.controllers;
 
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -11,8 +12,10 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.apache.tomcat.util.json.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.spoken_tutorial.health.elasticsearch.JsonService.JsonService;
 import org.spoken_tutorial.health.elasticsearch.config.Config;
 import org.spoken_tutorial.health.elasticsearch.models.DocumentSearch;
 import org.spoken_tutorial.health.elasticsearch.models.QueueManagement;
@@ -53,7 +56,10 @@ public class HomeController {
     private ElasticsearchOperations operations;
 
     @Autowired
-    DocumentSearchService docuSearchService;
+    private DocumentSearchService docuSearchService;
+
+    @Autowired
+    private JsonService jsonService;
 
     private Timestamp getCurrentTime() {
 
@@ -139,6 +145,24 @@ public class HomeController {
         }
         return resultMap;
 
+    }
+
+    @GetMapping("/HtmlFileofScriptJsonUrl/{catId}/{tutorialId}/{lanId}/{version}")
+    public Map<String, String> CreateHtmlFileofJsonSMUrl(@PathVariable int catId, @PathVariable int tutorialId,
+            @PathVariable int lanId, @PathVariable int version) {
+        Map<String, String> resultMap = new HashMap<>();
+        String document = "";
+        try {
+            document = jsonService.saveNarrationToFile(catId, tutorialId, lanId, version);
+        } catch (ParseException | IOException e) {
+            logger.error("Exception Error", e);
+        }
+        if (!document.isEmpty()) {
+            resultMap.put(Config.STATUS_DONE, document);
+        } else {
+            resultMap.put(Config.STATUS_FAILED, "document is not created");
+        }
+        return resultMap;
     }
 
     @GetMapping("/")
