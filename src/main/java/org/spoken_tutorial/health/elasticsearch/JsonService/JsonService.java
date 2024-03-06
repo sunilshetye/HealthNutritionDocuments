@@ -23,9 +23,6 @@ public class JsonService {
 
     private final RestTemplate restTemplate;
 
-    @Value("${scriptmanager_url_for_json}")
-    private String scriptmanager_url_for_json;
-
     @Value("${spring.applicationexternalPath.name}")
     private String mediaRoot;
 
@@ -34,28 +31,8 @@ public class JsonService {
         this.restTemplate = restTemplate;
     }
 
-    private String CreateJsonSMurl(int catId, int tutorialId, int lanId, int version) {
+    public String saveNarrationToFile(String url, String documentId) throws ParseException, IOException {
 
-        StringBuilder sb = new StringBuilder();
-
-        sb.append(scriptmanager_url_for_json);
-        sb.append(String.valueOf(catId));
-        sb.append("/tutorial/");
-        sb.append(String.valueOf(tutorialId));
-        sb.append("/language/");
-        sb.append(String.valueOf(lanId));
-        sb.append("/scripts/");
-        sb.append(String.valueOf(version));
-        sb.append("/healthnutrition/");
-        String sm_url_json = sb.toString();
-        return sm_url_json;
-
-    }
-
-    public String saveNarrationToFile(int catId, int tutorialId, int lanId, int version)
-            throws ParseException, IOException {
-
-        String url = CreateJsonSMurl(catId, tutorialId, lanId, version);
         String jsonString = restTemplate.getForObject(url, String.class);
 
         String document = "";
@@ -89,7 +66,7 @@ public class JsonService {
 
                 Files.createDirectories(path);
 
-                Path filePath = Paths.get(mediaRoot, Config.uploadDirectoryScriptHtmlFile, tutorialId + ".html");
+                Path filePath = Paths.get(mediaRoot, Config.uploadDirectoryScriptHtmlFile, documentId + ".html");
 
                 Files.writeString(filePath, narration);
 

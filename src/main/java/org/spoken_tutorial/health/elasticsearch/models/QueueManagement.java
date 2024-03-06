@@ -6,6 +6,7 @@ import org.apache.tika.parser.AutoDetectParser;
 import org.apache.tika.parser.Parser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.spoken_tutorial.health.elasticsearch.JsonService.JsonService;
 import org.spoken_tutorial.health.elasticsearch.config.Config;
 import org.spoken_tutorial.health.elasticsearch.contentfile.ContentsfromFile;
 import org.spoken_tutorial.health.elasticsearch.repositories.DocumentSearchRepository;
@@ -40,6 +41,10 @@ public class QueueManagement implements Runnable {
     @Autowired
     @Transient
     private ContentsfromFile contentsfromFile;
+
+    @Autowired
+    @Transient
+    private JsonService jsonService;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -348,6 +353,13 @@ public class QueueManagement implements Runnable {
                     documentSearch.setTopic(getTopic());
                     documentSearch.setTopicId(getTopicId());
                     String path = getDocumentPath();
+
+                    if (path.startsWith("https://")) {
+                        logger.info("url: {}", path);
+                        path = jsonService.saveNarrationToFile(path, getDocumentId());
+
+                    }
+                    logger.info("path: {}", path);
                     Parser parser = new AutoDetectParser();
                     String content = contentsfromFile.extractContent(parser, path);
 
@@ -398,6 +410,9 @@ public class QueueManagement implements Runnable {
 
                     if (getRequestType().equals(Config.UPDATE_DOCUMENT)) {
                         String path = getDocumentPath();
+                        if (path.startsWith("https://")) {
+                            path = jsonService.saveNarrationToFile(path, getDocumentId());
+                        }
                         Parser parser = new AutoDetectParser();
 
                         String content = contentsfromFile.extractContent(parser, path);
