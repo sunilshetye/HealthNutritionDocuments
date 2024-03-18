@@ -355,8 +355,11 @@ public class QueueManagement implements Runnable {
                     String path = getDocumentPath();
 
                     if (path.startsWith("https://")) {
-                        logger.info("url: {}", path);
-                        path = jsonService.saveNarrationToFile(path, getDocumentId());
+                        if (taskProcessingService.isURLWorking(path)) {
+                            logger.info("url: {}", path);
+                            path = jsonService.saveNarrationToFile(path, getDocumentId());
+
+                        }
 
                     }
                     logger.info("path: {}", path);
@@ -411,7 +414,10 @@ public class QueueManagement implements Runnable {
                     if (getRequestType().equals(Config.UPDATE_DOCUMENT)) {
                         String path = getDocumentPath();
                         if (path.startsWith("https://")) {
-                            path = jsonService.saveNarrationToFile(path, getDocumentId());
+                            if (taskProcessingService.isURLWorking(path)) {
+                                path = jsonService.saveNarrationToFile(path, getDocumentId());
+                            }
+
                         }
                         Parser parser = new AutoDetectParser();
 
