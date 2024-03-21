@@ -122,6 +122,13 @@ public class TaskProcessingService {
                     continue;
                 }
 
+                String path = qmnt.getDocumentPath();
+                if (path.startsWith("https://")) {
+                    if (!isURLWorking(path)) {
+                        continue;
+                    }
+
+                }
                 skippedDocuments.put(qmnt.getDocumentId(), System.currentTimeMillis());
                 getRunningDocuments().put(qmnt.getDocumentId(), System.currentTimeMillis());
                 qmnt.setStatus(Config.STATUS_QUEUED);
