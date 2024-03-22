@@ -1,5 +1,8 @@
 package org.spoken_tutorial.health.elasticsearch.threadpool;
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -54,6 +57,38 @@ public class TaskProcessingService {
 
     }
 
+    public boolean isURLWorking(String url) {
+        boolean flag = false;
+
+        try {
+
+            URL url1 = new URL(url);
+
+            HttpURLConnection connection = (HttpURLConnection) url1.openConnection();
+
+            // connection.setRequestMethod("GET");
+
+            int responseCode = connection.getResponseCode();
+
+            // Check if the response code is OK (200)
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+                flag = true;
+                logger.info("Connection Request successful");
+            } else {
+
+                logger.info("Request failed with status code:{} ", responseCode);
+            }
+
+            connection.disconnect();
+
+        } catch (IOException e) {
+
+            logger.error("Request failed due to I/O error: " + e);
+        }
+        return flag;
+
+    }
+
     @Async
     public void queueProcessor() {
 
@@ -87,6 +122,13 @@ public class TaskProcessingService {
                     continue;
                 }
 
+                String path = qmnt.getDocumentPath();
+                if (path.startsWith("https://")) {
+                    if (!isURLWorking(path)) {
+                        continue;
+                    }
+
+                }
                 skippedDocuments.put(qmnt.getDocumentId(), System.currentTimeMillis());
                 getRunningDocuments().put(qmnt.getDocumentId(), System.currentTimeMillis());
                 qmnt.setStatus(Config.STATUS_QUEUED);

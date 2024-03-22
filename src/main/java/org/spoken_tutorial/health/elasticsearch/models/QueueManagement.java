@@ -355,9 +355,7 @@ public class QueueManagement implements Runnable {
                     String path = getDocumentPath();
 
                     if (path.startsWith("https://")) {
-                        logger.info("url: {}", path);
                         path = jsonService.saveNarrationToFile(path, getDocumentId());
-
                     }
                     logger.info("path: {}", path);
                     Parser parser = new AutoDetectParser();
