@@ -1,5 +1,6 @@
 package org.spoken_tutorial.health.elasticsearch.JsonService;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -83,4 +84,165 @@ public class JsonService {
         }
         return document;
     }
+
+    public String saveNarrationAndCuefScriptoHtmlFile(String url, int tutorialId, int lanId)
+            throws ParseException, IOException {
+
+        String jsonString = "";
+        boolean flag = true;
+        jsonString = restTemplate.getForObject(url, String.class);
+
+        String document = "";
+
+        Path jsonDir = Paths.get(mediaRoot, Config.uploadDirectoryScriptJsonFile);
+        Files.createDirectories(jsonDir);
+        Path jsonfilePath = Paths.get(mediaRoot, Config.uploadDirectoryScriptJsonFile, tutorialId + ".json");
+        File jsonfile = jsonfilePath.toFile();
+        if (jsonfile.exists()) {
+            jsonString = new String(Files.readAllBytes(Paths.get(jsonfilePath.toString())));
+
+        } else {
+            Files.writeString(jsonfilePath, jsonString);
+        }
+
+        Path htmlDir = Paths.get(mediaRoot, Config.uploadDirectoryScriptHtmlFileforDownload);
+        Files.createDirectories(htmlDir);
+
+        Path htmlFilePath = Paths.get(mediaRoot, Config.uploadDirectoryScriptHtmlFileforDownload, tutorialId + ".html");
+        File htmlfile = htmlFilePath.toFile();
+        if (htmlfile.exists()) {
+            if (Files.getLastModifiedTime(jsonfilePath).toMillis() < Files.getLastModifiedTime(htmlFilePath)
+                    .toMillis()) {
+                flag = false;
+            }
+        }
+
+        try {
+            if (jsonString != null && flag) {
+
+                JSONObject mainJsonObject = new JSONObject(jsonString);
+                JSONArray jsonArrayNarrations = (JSONArray) mainJsonObject.get("slides");
+
+                StringBuffer sb = new StringBuffer();
+                sb.append("<html>\n<head>\n");
+                if (lanId == 22) {
+                    sb.append("  <style type=\"text/css\">\r\n"
+                            + "    @page { size: 240.59cm 424.94cm; margin: 2.54cm }\r\n"
+                            + "    p { line-height: 115%; margin-bottom: 0.25cm; background: transparent }\r\n"
+                            + "th, td {\r\n" + "  border-style:solid;\r\n" + "  border-color: #96D4D4;\r\n" + "}\r\n"
+                            + "\r\n" + "  </style>");
+                } else {
+                    sb.append("  <style type=\"text/css\">\r\n"
+                            + "    @page { size: 38.59cm 626.94cm; margin: 2.54cm }\r\n"
+                            + "    p { line-height: 115%; margin-bottom: 0.25cm; background: transparent }\r\n"
+                            + "th, td {\r\n" + "  border-style:solid;\r\n" + "  border-color: #96D4D4;\r\n" + "}\r\n"
+                            + "\r\n" + "  </style>");
+                }
+
+                sb.append("\n</head>\n<body>\n");
+
+                sb.append("\n<table>\n");
+                if (lanId == 22) {
+                    sb.append("<tr>\n<th>\n");
+                    sb.append("Visual Cue");
+                    sb.append("\n</th>\n<th>\n");
+                    sb.append("Narration");
+                    sb.append("\n</th>\n</tr>");
+
+                } else {
+                    sb.append("<tr>\n<th>\n");
+                    sb.append("Time");
+                    sb.append("\n</th>\n<th>\n");
+                    sb.append("Narration");
+                    sb.append("\n</th>\n</tr>");
+                }
+
+                for (int i = 0; i < jsonArrayNarrations.length(); i++) {
+                    JSONObject jsonNarration = (JSONObject) jsonArrayNarrations.get(i);
+                    sb.append("\n<tr>");
+
+                    sb.append((String) jsonNarration.get("cue"));
+
+                    sb.append((String) jsonNarration.get("narration"));
+                    sb.append("\n</tr>");
+
+                }
+                sb.append("\n</table>\n");
+                sb.append("<br>\n");
+                sb.append("</body>\n</html>");
+                String narration = sb.toString();
+
+                Files.writeString(htmlFilePath, narration);
+
+                String temp = htmlFilePath.toString();
+
+                int indexToStart = temp.indexOf("Media");
+
+                document = temp.substring(indexToStart, temp.length());
+
+            }
+
+        } catch (Exception e) {
+            logger.error("Exception Error", e);
+        }
+        return document;
+    }
+
+    public String convertHtmltoOdt(String htmlFie, int tutorialId) {
+
+        String document = "";
+        boolean flag = true;
+
+        try {
+
+            Path odtDir = Paths.get(mediaRoot, Config.uploadDirectoryScriptOdtFileforDownload);
+            Files.createDirectories(odtDir);
+            Path odtfilePath = Paths.get(mediaRoot, Config.uploadDirectoryScriptOdtFileforDownload,
+                    tutorialId + ".odt");
+            File odtfile = odtfilePath.toFile();
+
+            Path htmlDir = Paths.get(mediaRoot, Config.uploadDirectoryScriptHtmlFileforDownload);
+            Files.createDirectories(htmlDir);
+            Path htmlFilePath = Paths.get(mediaRoot, Config.uploadDirectoryScriptHtmlFileforDownload, htmlFie);
+
+            File htmlfile = htmlFilePath.toFile();
+            if (htmlfile.exists() && odtfile.exists()) {
+                if (Files.getLastModifiedTime(odtfilePath).toMillis() > Files.getLastModifiedTime(htmlFilePath)
+                        .toMillis()) {
+                    flag = false;
+                }
+            }
+
+            if (flag) {
+                Path htmlfilePath = Paths.get(mediaRoot, htmlFie);
+                String htmlInputPath = htmlfilePath.toString();
+
+                String odtdirstr = odtDir.toString();
+
+                ProcessBuilder processBuilder = new ProcessBuilder("soffice", "--headless", "--convert-to", "odt",
+                        "--outdir", odtdirstr, htmlInputPath);
+
+                Process process = processBuilder.start();
+
+                int exitCode = process.waitFor();
+                if (exitCode == 0) {
+
+                    String temp = odtfilePath.toString();
+
+                    int indexToStart = temp.indexOf("Media");
+                    document = temp.substring(indexToStart, temp.length());
+                    logger.info(document);
+
+                    logger.info("Conversion successful");
+                } else {
+                    logger.info("Conversion failed");
+                }
+            }
+        } catch (IOException | InterruptedException e) {
+            logger.error("Exception Error", e);
+        }
+
+        return document;
+    }
+
 }
