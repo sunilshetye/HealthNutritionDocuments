@@ -26,6 +26,9 @@ public class JsonService {
     @Value("${spring.applicationexternalPath.name}")
     private String mediaRoot;
 
+    @Value("${spring.libreoffice}")
+    private String libreoffice;
+
     @Autowired
     public JsonService(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
@@ -89,7 +92,6 @@ public class JsonService {
 
         String jsonString = "";
         boolean flag = true;
-        jsonString = restTemplate.getForObject(url, String.class);
 
         String document = "";
 
@@ -102,6 +104,7 @@ public class JsonService {
             jsonString = new String(Files.readAllBytes(jsonfilePath));
 
         } else {
+            jsonString = restTemplate.getForObject(url, String.class);
             Files.writeString(jsonfilePath, jsonString);
         }
 
@@ -217,7 +220,7 @@ public class JsonService {
 
                 String odtdirstr = odtDir.toString();
 
-                ProcessBuilder processBuilder = new ProcessBuilder("soffice", "--headless", "--convert-to", "odt",
+                ProcessBuilder processBuilder = new ProcessBuilder(libreoffice, "--headless", "--convert-to", "odt",
                         "--outdir", odtdirstr, htmlInputPath);
 
                 Process process = processBuilder.start();
