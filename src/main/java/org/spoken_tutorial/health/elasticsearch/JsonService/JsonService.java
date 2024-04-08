@@ -203,7 +203,7 @@ public class JsonService {
 
             Path htmlDir = Paths.get(mediaRoot, Config.uploadDirectoryScriptHtmlFileforDownload);
             Files.createDirectories(htmlDir);
-            Path htmlFilePath = Paths.get(mediaRoot, Config.uploadDirectoryScriptHtmlFileforDownload, htmlFie);
+            Path htmlFilePath = Paths.get(mediaRoot, htmlFie);
 
             File htmlfile = htmlFilePath.toFile();
             if (htmlfile.exists() && odtfile.exists()) {
