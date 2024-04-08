@@ -1,6 +1,5 @@
 package org.spoken_tutorial.health.elasticsearch.JsonService;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -97,9 +96,10 @@ public class JsonService {
         Path jsonDir = Paths.get(mediaRoot, Config.uploadDirectoryScriptJsonFile);
         Files.createDirectories(jsonDir);
         Path jsonfilePath = Paths.get(mediaRoot, Config.uploadDirectoryScriptJsonFile, tutorialId + ".json");
-        File jsonfile = jsonfilePath.toFile();
-        if (jsonfile.exists()) {
-            jsonString = new String(Files.readAllBytes(Paths.get(jsonfilePath.toString())));
+
+        if (Files.exists(jsonfilePath)) {
+
+            jsonString = new String(Files.readAllBytes(jsonfilePath));
 
         } else {
             Files.writeString(jsonfilePath, jsonString);
@@ -109,8 +109,8 @@ public class JsonService {
         Files.createDirectories(htmlDir);
 
         Path htmlFilePath = Paths.get(mediaRoot, Config.uploadDirectoryScriptHtmlFileforDownload, tutorialId + ".html");
-        File htmlfile = htmlFilePath.toFile();
-        if (htmlfile.exists()) {
+
+        if (Files.exists(htmlFilePath)) {
             if (Files.getLastModifiedTime(jsonfilePath).toMillis() < Files.getLastModifiedTime(htmlFilePath)
                     .toMillis()) {
                 flag = false;
@@ -174,17 +174,17 @@ public class JsonService {
 
                 Files.writeString(htmlFilePath, narration);
 
-                String temp = htmlFilePath.toString();
-
-                int indexToStart = temp.indexOf("Media");
-
-                document = temp.substring(indexToStart, temp.length());
-
             }
 
         } catch (Exception e) {
             logger.error("Exception Error", e);
         }
+        String temp = htmlFilePath.toString();
+
+        int indexToStart = temp.indexOf("Media");
+
+        document = temp.substring(indexToStart, temp.length());
+
         return document;
     }
 
@@ -199,14 +199,12 @@ public class JsonService {
             Files.createDirectories(odtDir);
             Path odtfilePath = Paths.get(mediaRoot, Config.uploadDirectoryScriptOdtFileforDownload,
                     tutorialId + ".odt");
-            File odtfile = odtfilePath.toFile();
 
             Path htmlDir = Paths.get(mediaRoot, Config.uploadDirectoryScriptHtmlFileforDownload);
             Files.createDirectories(htmlDir);
             Path htmlFilePath = Paths.get(mediaRoot, htmlFie);
 
-            File htmlfile = htmlFilePath.toFile();
-            if (htmlfile.exists() && odtfile.exists()) {
+            if (Files.exists(htmlFilePath) && Files.exists(odtfilePath)) {
                 if (Files.getLastModifiedTime(odtfilePath).toMillis() > Files.getLastModifiedTime(htmlFilePath)
                         .toMillis()) {
                     flag = false;
