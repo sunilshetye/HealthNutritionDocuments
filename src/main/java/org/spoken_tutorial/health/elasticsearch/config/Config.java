@@ -47,5 +47,8 @@ public class Config {
     public static final Long NO_TASK_SLEEP_TIME = 30L * 1000;
     public static final Long TASK_SLEEP_TIME = 10L * 1000;
     public static String uploadDirectoryScriptHtmlFile = "Media/Content/Tutorial/ScriptHtmlFile/";
+    public static String uploadDirectoryScriptHtmlFileforDownload = "Media/Content/Tutorial/ScriptDownloadHtmlFile/";
+    public static String uploadDirectoryScriptOdtFileforDownload = "Media/Content/Tutorial/ScriptDownloadOdtFile/";
+    public static String uploadDirectoryScriptJsonFile = "Media/Content/Tutorial/ScriptJsonFile/";
 
 }

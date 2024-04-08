@@ -355,6 +355,15 @@ public class QueueManagement implements Runnable {
                     String path = getDocumentPath();
 
                     if (path.startsWith("https://")) {
+
+                        String tutorialIdString = getDocumentId().replaceAll("[^0-9]", "");
+                        int tutorialId = Integer.parseInt(tutorialIdString);
+                        String htmlUrlString = jsonService.saveNarrationAndCuefScriptoHtmlFile(path, tutorialId,
+                                languageId);
+                        if (!htmlUrlString.isEmpty()) {
+                            jsonService.convertHtmltoOdt(htmlUrlString, tutorialId);
+                        }
+
                         path = jsonService.saveNarrationToFile(path, getDocumentId());
                     }
                     logger.info("path: {}", path);
@@ -409,6 +418,13 @@ public class QueueManagement implements Runnable {
                     if (getRequestType().equals(Config.UPDATE_DOCUMENT)) {
                         String path = getDocumentPath();
                         if (path.startsWith("https://")) {
+                            String tutorialIdString = getDocumentId().replaceAll("[^0-9]", "");
+                            int tutorialId = Integer.parseInt(tutorialIdString);
+                            String htmlUrlString = jsonService.saveNarrationAndCuefScriptoHtmlFile(path, tutorialId,
+                                    languageId);
+                            if (!htmlUrlString.isEmpty()) {
+                                jsonService.convertHtmltoOdt(htmlUrlString, tutorialId);
+                            }
                             path = jsonService.saveNarrationToFile(path, getDocumentId());
                         }
                         Parser parser = new AutoDetectParser();
