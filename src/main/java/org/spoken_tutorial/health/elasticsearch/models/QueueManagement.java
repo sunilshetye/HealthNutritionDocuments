@@ -486,9 +486,9 @@ public class QueueManagement implements Runnable {
 
             setEndTime(System.currentTimeMillis());
             setProcesingTime(endTime - startTime);
-            logger.info("Done :{}", this);
 
             queueRepo.save(this);
+            logger.info("Done :{}", getStatus());
             taskProcessingService.getRunningDocuments().remove(documentId);
         }
 

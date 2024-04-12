@@ -236,7 +236,7 @@ public class JsonService {
 
                     logger.info("Conversion successful");
                 } else {
-                    logger.info("Conversion failed");
+                    logger.info("Conversion failed:{}", tutorialId);
                 }
             }
         } catch (IOException | InterruptedException e) {

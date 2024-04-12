@@ -13,6 +13,9 @@ public interface QueueManagementRepository extends JpaRepository<QueueManagement
 
     QueueManagement findByQueueId(Long queueId);
 
+    // List<QueueManagement> findByStatusOrderByRequestTimeAscLimitedTo(String
+    // status, int n);
+
     List<QueueManagement> findByStatusOrderByRequestTimeAsc(String status);
 
 }

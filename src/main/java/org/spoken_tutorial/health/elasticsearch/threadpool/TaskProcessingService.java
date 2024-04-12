@@ -45,6 +45,7 @@ public class TaskProcessingService {
             qmnt.setStatus(Config.STATUS_PENDING);
             qmnt.setQueueTime(0);
             repo.save(qmnt);
+            logger.info("from queued to  pending status is:{}", qmnt.getStatus());
         }
 
         qmnts = queuemntService.findByStatusOrderByRequestTimeAsc(Config.STATUS_PROCESSING);
@@ -53,6 +54,7 @@ public class TaskProcessingService {
             qmnt.setStatus(Config.STATUS_PENDING);
             qmnt.setQueueTime(0);
             repo.save(qmnt);
+            logger.info("from processing to pending status is:{}", qmnt.getStatus());
         }
 
     }
@@ -104,7 +106,8 @@ public class TaskProcessingService {
             skippedDocuments.putAll(getRunningDocuments());
             int count = 0;
 
-            List<QueueManagement> qmnts = queuemntService.findByStatusOrderByRequestTimeAsc(Config.STATUS_PENDING);
+            List<QueueManagement> qmnts = queuemntService
+                    .findByStatusOrderByRequestTimeAscWithNqueries(Config.STATUS_PENDING);
             if (qmnts == null) {
                 try {
                     Thread.sleep(Config.NO_TASK_SLEEP_TIME);
@@ -114,35 +117,42 @@ public class TaskProcessingService {
 
                 }
             }
-
+            logger.info("QueryResultSize:{}", qmnts.size());
             for (QueueManagement qmnt : qmnts) {
                 logger.info("Queueing:{}", qmnt);
-                if (skippedDocuments.containsKey(qmnt.getDocumentId())) {
+                try {
+                    if (skippedDocuments.containsKey(qmnt.getDocumentId())) {
 
-                    continue;
-                }
-
-                String path = qmnt.getDocumentPath();
-                if (path.startsWith("https://")) {
-                    if (!isURLWorking(path)) {
                         continue;
                     }
 
+                    String path = qmnt.getDocumentPath();
+                    if (path.startsWith("https://")) {
+                        if (!isURLWorking(path)) {
+                            continue;
+                        }
+
+                    }
+                    skippedDocuments.put(qmnt.getDocumentId(), System.currentTimeMillis());
+                    getRunningDocuments().put(qmnt.getDocumentId(), System.currentTimeMillis());
+                    qmnt.setStatus(Config.STATUS_QUEUED);
+                    qmnt.setQueueTime(System.currentTimeMillis());
+
+                    applicationContext.getAutowireCapableBeanFactory().autowireBean(qmnt);
+                    taskExecutor.submit(qmnt);
+                    logger.info("from pending to queued status is {}", qmnt.getStatus());
+                    repo.save(qmnt);
+                    count = count + 1;
+
+                } catch (Exception e) {
+                    logger.error("Exception Error", e);
+                    break;
                 }
-                skippedDocuments.put(qmnt.getDocumentId(), System.currentTimeMillis());
-                getRunningDocuments().put(qmnt.getDocumentId(), System.currentTimeMillis());
-                qmnt.setStatus(Config.STATUS_QUEUED);
-                qmnt.setQueueTime(System.currentTimeMillis());
-                repo.save(qmnt);
-
-                applicationContext.getAutowireCapableBeanFactory().autowireBean(qmnt);
-                taskExecutor.submit(qmnt);
-                count = count + 1;
-
             }
             long sleepTime = count > 0 ? Config.TASK_SLEEP_TIME : Config.NO_TASK_SLEEP_TIME;
             try {
                 Thread.sleep(sleepTime);
+
             } catch (InterruptedException e) {
                 logger.info("Interrupted");
                 break;
