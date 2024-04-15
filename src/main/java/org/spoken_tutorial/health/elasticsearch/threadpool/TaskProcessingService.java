@@ -117,7 +117,9 @@ public class TaskProcessingService {
 
                 }
             }
-            logger.info("QueryResultSize:{}", qmnts.size());
+            if (qmnts.size() != 0) {
+                logger.info("QueryResultSize:{}", qmnts.size());
+            }
             for (QueueManagement qmnt : qmnts) {
                 logger.info("Queueing:{}", qmnt);
                 try {
@@ -129,6 +131,10 @@ public class TaskProcessingService {
                     String path = qmnt.getDocumentPath();
                     if (path.startsWith("https://")) {
                         if (!isURLWorking(path)) {
+                            logger.info("The documentPath url is not working: " + path);
+                            qmnt.setStatus(Config.STATUS_FAILED);
+                            qmnt.setReason("The documentPath url is not working");
+                            repo.save(qmnt);
                             continue;
                         }
 
@@ -150,6 +156,9 @@ public class TaskProcessingService {
                 }
             }
             long sleepTime = count > 0 ? Config.TASK_SLEEP_TIME : Config.NO_TASK_SLEEP_TIME;
+            if (count > 0) {
+                logger.info("Task_SLEEP_TIME: " + Config.TASK_SLEEP_TIME);
+            }
             try {
                 Thread.sleep(sleepTime);
 
