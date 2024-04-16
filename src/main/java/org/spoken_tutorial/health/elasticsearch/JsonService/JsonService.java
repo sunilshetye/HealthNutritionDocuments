@@ -1,6 +1,9 @@
 package org.spoken_tutorial.health.elasticsearch.JsonService;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -225,7 +228,25 @@ public class JsonService {
 
                 Process process = processBuilder.start();
 
+                InputStream errorStream = process.getErrorStream();
+                InputStream inputStream = process.getInputStream();
+
                 int exitCode = process.waitFor();
+
+                try (InputStreamReader isr1 = new InputStreamReader(inputStream);
+                        BufferedReader bReader1 = new BufferedReader(isr1)) {
+                    String lineString1;
+                    while ((lineString1 = bReader1.readLine()) != null)
+                        logger.info("BReader for inputStream :{}", lineString1);
+                }
+
+                try (InputStreamReader isr2 = new InputStreamReader(errorStream);
+                        BufferedReader bReader2 = new BufferedReader(isr2)) {
+                    String lineString2;
+                    while ((lineString2 = bReader2.readLine()) != null)
+                        logger.info("BReader for errorStream :{}", lineString2);
+                }
+
                 if (exitCode == 0) {
 
                     String temp = odtfilePath.toString();
