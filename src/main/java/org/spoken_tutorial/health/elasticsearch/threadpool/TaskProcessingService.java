@@ -122,7 +122,7 @@ public class TaskProcessingService {
                 logger.info("QueryResultSize:{}", qmnts.size());
             }
             for (QueueManagement qmnt : qmnts) {
-                MDC.put("queueId", Long.toString(qmnt.getQueueId()));
+                MDC.put("queueId", '#' + Long.toString(qmnt.getQueueId()));
                 logger.info("Queueing:{}", qmnt);
                 try {
                     if (skippedDocuments.containsKey(qmnt.getDocumentId())) {
@@ -159,7 +159,8 @@ public class TaskProcessingService {
                 MDC.remove("queueId");
             }
             long sleepTime = count > 0 ? Config.TASK_SLEEP_TIME : Config.NO_TASK_SLEEP_TIME;
-            logger.info("Task_SLEEP_TIME: " + Config.TASK_SLEEP_TIME);
+            if (count > 0)
+                logger.info("Task_SLEEP_TIME: " + Config.TASK_SLEEP_TIME);
             try {
                 Thread.sleep(sleepTime);
 
