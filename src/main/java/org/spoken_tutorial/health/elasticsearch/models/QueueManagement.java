@@ -6,6 +6,7 @@ import org.apache.tika.parser.AutoDetectParser;
 import org.apache.tika.parser.Parser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import org.spoken_tutorial.health.elasticsearch.JsonService.JsonService;
 import org.spoken_tutorial.health.elasticsearch.config.Config;
 import org.spoken_tutorial.health.elasticsearch.contentfile.ContentsfromFile;
@@ -59,6 +60,9 @@ public class QueueManagement implements Runnable {
 
     @Column(name = "status", nullable = true)
     private String status;
+
+    @Column(name = "oldstatus", nullable = true)
+    private String oldStatus;
 
     @Column(name = "reason", nullable = true)
     private String reason;
@@ -262,7 +266,12 @@ public class QueueManagement implements Runnable {
         return status;
     }
 
+    public String getStatusLog() {
+        return "from " + oldStatus + " to new " + status;
+    }
+
     public void setStatus(String status) {
+        this.oldStatus = this.status;
         this.status = status;
     }
 
@@ -324,7 +333,7 @@ public class QueueManagement implements Runnable {
 
     @Override
     public void run() {
-
+        MDC.put("queueId", '#' + Long.toString(getQueueId()));
         logger.info("Processing:{}", this);
 
         DocumentSearch documentSearch = null;
@@ -490,6 +499,7 @@ public class QueueManagement implements Runnable {
             queueRepo.save(this);
             logger.info("Done :{}", getStatus());
             taskProcessingService.getRunningDocuments().remove(documentId);
+            MDC.remove("queueId");
         }
 
     }
