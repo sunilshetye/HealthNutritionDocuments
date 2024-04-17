@@ -167,9 +167,24 @@ public class JsonService {
                     JSONObject jsonNarration = (JSONObject) jsonArrayNarrations.get(i);
                     sb.append("\n<tr>");
 
-                    sb.append((String) jsonNarration.get("cue"));
+                    if (((String) jsonNarration.get("cue")).toLowerCase().startsWith("<td")) {
+                        sb.append((String) jsonNarration.get("cue"));
+                    } else {
+                        sb.append("<td>");
+                        sb.append((String) jsonNarration.get("cue"));
+                        sb.append("</td>");
 
-                    sb.append((String) jsonNarration.get("narration"));
+                    }
+
+                    if (((String) jsonNarration.get("narration")).toLowerCase().startsWith("<td")) {
+                        sb.append((String) jsonNarration.get("narration"));
+                    } else {
+                        sb.append("<td>");
+                        sb.append((String) jsonNarration.get("narration"));
+                        sb.append("</td>");
+
+                    }
+
                     sb.append("\n</tr>");
 
                 }

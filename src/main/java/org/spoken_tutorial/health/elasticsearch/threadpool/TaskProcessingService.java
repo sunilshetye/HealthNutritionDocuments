@@ -117,7 +117,8 @@ public class TaskProcessingService {
                     continue;
 
                 } catch (InterruptedException e) {
-
+                    logger.info("Interrupted");
+                    break;
                 }
             }
             if (qmnts.size() != 0) {
