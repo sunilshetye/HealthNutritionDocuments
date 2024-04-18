@@ -149,45 +149,98 @@ public class JsonService {
 
                 sb.append("\n<table>\n");
                 if (lanId == 22) {
-                    sb.append("<tr>\n<th>\n");
+                    sb.append(
+                            "<tr>\n<th bgcolor=\"#ffffff\" height=\"27\" style=\"border: 1.00pt solid #000001; padding-top: 0.04in; padding-bottom: 0.04in; padding-left: 0.03in; padding-right: 0.04in\" width=\"245\" >\n");
                     sb.append("Visual Cue");
-                    sb.append("\n</th>\n<th>\n");
+                    sb.append(
+                            "\n</th>\n<th bgcolor=\"#ffffff\" height=\"27\" style=\"border: 1.00pt solid #000001; padding-top: 0.04in; padding-bottom: 0.04in; padding-left: 0.03in; padding-right: 0.04in\" width=\"245\" >\n");
                     sb.append("Narration");
                     sb.append("\n</th>\n</tr>");
+
+                    for (int i = 0; i < jsonArrayNarrations.length(); i++) {
+                        JSONObject jsonNarration = (JSONObject) jsonArrayNarrations.get(i);
+                        sb.append("\n<tr>");
+
+                        String cue = (String) jsonNarration.get("cue");
+                        if (cue.toLowerCase().startsWith("<td")) {
+
+                            if (cue.toLowerCase().startsWith("<td>"))
+                                cue = cue.replace("<td>",
+                                        "<td bgcolor=\"#ffffff\" height=\"27\" style=\"border: 1.00pt solid #000001; padding-top: 0.04in; padding-bottom: 0.04in; padding-left: 0.03in; padding-right: 0.04in\" width=\"245\" >");
+                            sb.append(cue);
+                        } else {
+                            sb.append(
+                                    "<td bgcolor=\"#ffffff\" height=\"27\" style=\"border: 1.00pt solid #000001; padding-top: 0.04in; padding-bottom: 0.04in; padding-left: 0.03in; padding-right: 0.04in\" width=\"245\" >");
+                            sb.append((String) jsonNarration.get("cue"));
+                            sb.append("</td>");
+
+                        }
+
+                        String narration = (String) jsonNarration.get("narration");
+
+                        if (narration.toLowerCase().startsWith("<td")) {
+                            if (narration.toLowerCase().startsWith("<td>"))
+                                narration = narration.replace("<td>",
+                                        "<td bgcolor=\"#ffffff\" height=\"27\" style=\"border: 1.00pt solid #000001; padding-top: 0.04in; padding-bottom: 0.04in; padding-left: 0.03in; padding-right: 0.04in\" width=\"245\" >");
+                            sb.append(narration);
+                        } else {
+                            sb.append(
+                                    "<td bgcolor=\"#ffffff\" height=\"27\" style=\"border: 1.00pt solid #000001; padding-top: 0.04in; padding-bottom: 0.04in; padding-left: 0.03in; padding-right: 0.04in\" width=\"245\" >");
+                            sb.append((String) jsonNarration.get("narration"));
+                            sb.append("</td>");
+
+                        }
+
+                        sb.append("\n</tr>");
+
+                    }
 
                 } else {
-                    sb.append("<tr>\n<th>\n");
+                    sb.append(
+                            "<tr>\n<th bgcolor=\"#ffffff\" style=\"border: 1px solid #808080; padding-top: 0in; padding-bottom: 0in; padding-left: 0.08in; padding-right: 0.08in\" width=\"40\" >\n");
                     sb.append("Time");
-                    sb.append("\n</th>\n<th>\n");
+                    sb.append(
+                            "\n</th>\n<th bgcolor=\"#ffffff\" style=\"border: 1px solid #808080; padding-top: 0in; padding-bottom: 0in; padding-left: 0.08in; padding-right: 0.08in\" width=\"532\" >\n");
                     sb.append("Narration");
                     sb.append("\n</th>\n</tr>");
-                }
 
-                for (int i = 0; i < jsonArrayNarrations.length(); i++) {
-                    JSONObject jsonNarration = (JSONObject) jsonArrayNarrations.get(i);
-                    sb.append("\n<tr>");
+                    for (int i = 0; i < jsonArrayNarrations.length(); i++) {
+                        JSONObject jsonNarration = (JSONObject) jsonArrayNarrations.get(i);
+                        sb.append("\n<tr>");
+                        String cue = (String) jsonNarration.get("cue");
+                        if (cue.toLowerCase().startsWith("<td")) {
+                            if (cue.toLowerCase().startsWith("<td>"))
+                                cue = cue.replace("<td>",
+                                        "<td bgcolor=\"#ffffff\" style=\"border: 1px solid #808080; padding-top: 0in; padding-bottom: 0in; padding-left: 0.08in; padding-right: 0.08in\" width=\"40\" >");
 
-                    if (((String) jsonNarration.get("cue")).toLowerCase().startsWith("<td")) {
-                        sb.append((String) jsonNarration.get("cue"));
-                    } else {
-                        sb.append("<td>");
-                        sb.append((String) jsonNarration.get("cue"));
-                        sb.append("</td>");
+                            sb.append(cue);
+                        } else {
+                            sb.append(
+                                    "<td bgcolor=\"#ffffff\" style=\"border: 1px solid #808080; padding-top: 0in; padding-bottom: 0in; padding-left: 0.08in; padding-right: 0.08in\" width=\"40\" >");
+                            sb.append((String) jsonNarration.get("cue"));
+                            sb.append("</td>");
+
+                        }
+
+                        String narration = (String) jsonNarration.get("narration");
+                        if (narration.toLowerCase().startsWith("<td")) {
+                            if (narration.toLowerCase().startsWith("<td>"))
+                                narration = narration.replace("<td>",
+                                        "<td bgcolor=\"#ffffff\" style=\"border: 1px solid #808080; padding-top: 0in; padding-bottom: 0in; padding-left: 0.08in; padding-right: 0.08in\" width=\"532\" >");
+                            sb.append(narration);
+                        } else {
+                            sb.append(
+                                    "<td bgcolor=\"#ffffff\" style=\"border: 1px solid #808080; padding-top: 0in; padding-bottom: 0in; padding-left: 0.08in; padding-right: 0.08in\" width=\"532\" >");
+                            sb.append((String) jsonNarration.get("narration"));
+                            sb.append("</td>");
+
+                        }
+
+                        sb.append("\n</tr>");
 
                     }
-
-                    if (((String) jsonNarration.get("narration")).toLowerCase().startsWith("<td")) {
-                        sb.append((String) jsonNarration.get("narration"));
-                    } else {
-                        sb.append("<td>");
-                        sb.append((String) jsonNarration.get("narration"));
-                        sb.append("</td>");
-
-                    }
-
-                    sb.append("\n</tr>");
-
                 }
+
                 sb.append("\n</table>\n");
                 sb.append("<br>\n");
                 sb.append("</body>\n</html>");
