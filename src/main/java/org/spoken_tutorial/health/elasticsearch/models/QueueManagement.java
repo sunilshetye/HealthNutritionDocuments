@@ -267,7 +267,7 @@ public class QueueManagement implements Runnable {
     }
 
     public String getStatusLog() {
-        return "from " + oldStatus + " to new " + status;
+        return "from " + oldStatus + " to " + status;
     }
 
     public void setStatus(String status) {
@@ -497,7 +497,7 @@ public class QueueManagement implements Runnable {
             setProcesingTime(endTime - startTime);
 
             queueRepo.save(this);
-            logger.info("Done :{}", getStatus());
+            logger.info("{}", getStatusLog());
             taskProcessingService.getRunningDocuments().remove(documentId);
             MDC.remove("queueId");
         }

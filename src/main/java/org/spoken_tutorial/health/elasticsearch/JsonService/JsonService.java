@@ -153,7 +153,7 @@ public class JsonService {
                             "<tr>\n<th bgcolor=\"#ffffff\" height=\"27\" style=\"border: 1.00pt solid #000001; padding-top: 0.04in; padding-bottom: 0.04in; padding-left: 0.03in; padding-right: 0.04in\" width=\"245\" >\n");
                     sb.append("Visual Cue");
                     sb.append(
-                            "\n</th>\n<th bgcolor=\"#ffffff\" height=\"27\" style=\"border: 1.00pt solid #000001; padding-top: 0.04in; padding-bottom: 0.04in; padding-left: 0.03in; padding-right: 0.04in\" width=\"245\" >\n");
+                            "\n</th>\n<th bgcolor=\"#ffffff\" height=\"27\" style=\"border: 1.00pt solid #000001; padding-top: 0.04in; padding-bottom: 0.04in; padding-left: 0.03in; padding-right: 0.04in\" width=\"300\" >\n");
                     sb.append("Narration");
                     sb.append("\n</th>\n</tr>");
 

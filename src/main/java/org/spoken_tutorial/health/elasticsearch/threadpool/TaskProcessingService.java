@@ -137,9 +137,9 @@ public class TaskProcessingService {
                     if (path.startsWith("https://")) {
                         if (!isURLWorking(path)) {
                             logger.info("The documentPath url is not working: " + path);
-                            qmnt.setStatus(Config.STATUS_FAILED);
-                            qmnt.setReason("The documentPath url is not working");
+                            qmnt.setStatus(Config.STATUS_PENDING);
                             repo.save(qmnt);
+                            MDC.remove("queueId");
                             continue;
                         }
 
@@ -158,7 +158,8 @@ public class TaskProcessingService {
 
                 } catch (Exception e) {
                     logger.error("Exception Error", e);
-                    break;
+                    continue;
+
                 }
                 MDC.remove("queueId");
             }
@@ -170,6 +171,7 @@ public class TaskProcessingService {
 
             } catch (InterruptedException e) {
                 logger.info("Interrupted");
+
                 break;
             }
         }
