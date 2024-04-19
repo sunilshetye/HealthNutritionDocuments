@@ -150,10 +150,10 @@ public class JsonService {
                 sb.append("\n<table>\n");
                 if (lanId == 22) {
                     sb.append(
-                            "<tr>\n<th bgcolor=\"#ffffff\" height=\"27\" style=\"border: 1.00pt solid #000001; padding-top: 0.04in; padding-bottom: 0.04in; padding-left: 0.03in; padding-right: 0.04in\" width=\"245\" >\n");
+                            "<tr>\n<th bgcolor=\"#ffffff\" height=\"27\" style=\"border: 1.00pt solid #000001; padding-top: 0.04in; padding-bottom: 0.04in; padding-left: 0.03in; padding-right: 0.04in\" width=\"300\" >\n");
                     sb.append("Visual Cue");
                     sb.append(
-                            "\n</th>\n<th bgcolor=\"#ffffff\" height=\"27\" style=\"border: 1.00pt solid #000001; padding-top: 0.04in; padding-bottom: 0.04in; padding-left: 0.03in; padding-right: 0.04in\" width=\"300\" >\n");
+                            "\n</th>\n<th bgcolor=\"#ffffff\" height=\"27\" style=\"border: 1.00pt solid #000001; padding-top: 0.04in; padding-bottom: 0.04in; padding-left: 0.03in; padding-right: 0.04in\" width=\"500\" >\n");
                     sb.append("Narration");
                     sb.append("\n</th>\n</tr>");
 
@@ -166,11 +166,11 @@ public class JsonService {
 
                             if (cue.toLowerCase().startsWith("<td>"))
                                 cue = cue.replace("<td>",
-                                        "<td bgcolor=\"#ffffff\" height=\"27\" style=\"border: 1.00pt solid #000001; padding-top: 0.04in; padding-bottom: 0.04in; padding-left: 0.03in; padding-right: 0.04in\" width=\"245\" >");
+                                        "<td bgcolor=\"#ffffff\" height=\"27\" style=\"border: 1.00pt solid #000001; padding-top: 0.04in; padding-bottom: 0.04in; padding-left: 0.03in; padding-right: 0.04in\" width=\"300\" >");
                             sb.append(cue);
                         } else {
                             sb.append(
-                                    "<td bgcolor=\"#ffffff\" height=\"27\" style=\"border: 1.00pt solid #000001; padding-top: 0.04in; padding-bottom: 0.04in; padding-left: 0.03in; padding-right: 0.04in\" width=\"245\" >");
+                                    "<td bgcolor=\"#ffffff\" height=\"27\" style=\"border: 1.00pt solid #000001; padding-top: 0.04in; padding-bottom: 0.04in; padding-left: 0.03in; padding-right: 0.04in\" width=\"300\" >");
                             sb.append((String) jsonNarration.get("cue"));
                             sb.append("</td>");
 
@@ -179,13 +179,14 @@ public class JsonService {
                         String narration = (String) jsonNarration.get("narration");
 
                         if (narration.toLowerCase().startsWith("<td")) {
+
                             if (narration.toLowerCase().startsWith("<td>"))
                                 narration = narration.replace("<td>",
-                                        "<td bgcolor=\"#ffffff\" height=\"27\" style=\"border: 1.00pt solid #000001; padding-top: 0.04in; padding-bottom: 0.04in; padding-left: 0.03in; padding-right: 0.04in\" width=\"245\" >");
+                                        "<td bgcolor=\"#ffffff\" height=\"27\" style=\"border: 1.00pt solid #000001; padding-top: 0.04in; padding-bottom: 0.04in; padding-left: 0.03in; padding-right: 0.04in\" width=\"500\" >");
                             sb.append(narration);
                         } else {
                             sb.append(
-                                    "<td bgcolor=\"#ffffff\" height=\"27\" style=\"border: 1.00pt solid #000001; padding-top: 0.04in; padding-bottom: 0.04in; padding-left: 0.03in; padding-right: 0.04in\" width=\"245\" >");
+                                    "<td bgcolor=\"#ffffff\" height=\"27\" style=\"border: 1.00pt solid #000001; padding-top: 0.04in; padding-bottom: 0.04in; padding-left: 0.03in; padding-right: 0.04in\" width=\"500\" >");
                             sb.append((String) jsonNarration.get("narration"));
                             sb.append("</td>");
 
@@ -197,7 +198,7 @@ public class JsonService {
 
                 } else {
                     sb.append(
-                            "<tr>\n<th bgcolor=\"#ffffff\" style=\"border: 1px solid #808080; padding-top: 0in; padding-bottom: 0in; padding-left: 0.08in; padding-right: 0.08in\" width=\"40\" >\n");
+                            "<tr>\n<th bgcolor=\"#ffffff\" style=\"border: 1px solid #808080; padding-top: 0in; padding-bottom: 0in; padding-left: 0.08in; padding-right: 0.08in\" width=\"80\" >\n");
                     sb.append("Time");
                     sb.append(
                             "\n</th>\n<th bgcolor=\"#ffffff\" style=\"border: 1px solid #808080; padding-top: 0in; padding-bottom: 0in; padding-left: 0.08in; padding-right: 0.08in\" width=\"532\" >\n");
@@ -209,14 +210,17 @@ public class JsonService {
                         sb.append("\n<tr>");
                         String cue = (String) jsonNarration.get("cue");
                         if (cue.toLowerCase().startsWith("<td")) {
+                            if (cue.contains("border: none")) {
+                                cue = cue.replaceFirst("border: none", "border: 1px solid #808080");
+                            }
                             if (cue.toLowerCase().startsWith("<td>"))
                                 cue = cue.replace("<td>",
-                                        "<td bgcolor=\"#ffffff\" style=\"border: 1px solid #808080; padding-top: 0in; padding-bottom: 0in; padding-left: 0.08in; padding-right: 0.08in\" width=\"40\" >");
+                                        "<td bgcolor=\"#ffffff\" style=\"border: 1px solid #808080; padding-top: 0in; padding-bottom: 0in; padding-left: 0.08in; padding-right: 0.08in\" width=\"80\" >");
 
                             sb.append(cue);
                         } else {
                             sb.append(
-                                    "<td bgcolor=\"#ffffff\" style=\"border: 1px solid #808080; padding-top: 0in; padding-bottom: 0in; padding-left: 0.08in; padding-right: 0.08in\" width=\"40\" >");
+                                    "<td bgcolor=\"#ffffff\" style=\"border: 1px solid #808080; padding-top: 0in; padding-bottom: 0in; padding-left: 0.08in; padding-right: 0.08in\" width=\"80\" >");
                             sb.append((String) jsonNarration.get("cue"));
                             sb.append("</td>");
 
@@ -224,6 +228,9 @@ public class JsonService {
 
                         String narration = (String) jsonNarration.get("narration");
                         if (narration.toLowerCase().startsWith("<td")) {
+                            if (narration.contains("border: none")) {
+                                narration = narration.replaceFirst("border: none", "border: 1px solid #808080");
+                            }
                             if (narration.toLowerCase().startsWith("<td>"))
                                 narration = narration.replace("<td>",
                                         "<td bgcolor=\"#ffffff\" style=\"border: 1px solid #808080; padding-top: 0in; padding-bottom: 0in; padding-left: 0.08in; padding-right: 0.08in\" width=\"532\" >");

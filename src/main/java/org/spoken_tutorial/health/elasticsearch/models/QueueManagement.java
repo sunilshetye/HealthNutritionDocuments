@@ -340,7 +340,7 @@ public class QueueManagement implements Runnable {
 
         try {
             setStatus(Config.STATUS_PROCESSING);
-
+            logger.info("{}", getStatusLog());
             setStartTime(System.currentTimeMillis());
 
             documentSearch = docRepo.findByDocumentId(getDocumentId());
@@ -348,8 +348,9 @@ public class QueueManagement implements Runnable {
 
                 if (documentSearch != null) {
                     setStatus(Config.STATUS_FAILED);
-                    setReason("document alreday exist");
-                    logger.error("document alreday exist");
+                    logger.info("{}", getStatusLog());
+                    setReason("document already exists");
+                    logger.error("document already exists");
 
                 } else {
                     documentSearch = new DocumentSearch();
@@ -395,6 +396,7 @@ public class QueueManagement implements Runnable {
                     documentSearch.setViewUrl(getViewUrl());
                     docRepo.save(documentSearch);
                     setStatus(Config.STATUS_DONE);
+                    logger.info("{}", getStatusLog());
 
                 }
             }
@@ -405,11 +407,13 @@ public class QueueManagement implements Runnable {
 
                 if (documentSearch == null) {
                     setStatus(Config.STATUS_FAILED);
+                    logger.info("{}", getStatusLog());
                     setReason("document id does not exist");
                     logger.error("document id does not exist");
 
                 } else if (!getDocumentType().equals(documentSearch.getDocumentType())) {
                     setStatus(Config.STATUS_FAILED);
+                    logger.info("{}", getStatusLog());
                     setReason("documentType mismatch");
                     logger.error("documentType mismatch");
 
@@ -417,6 +421,7 @@ public class QueueManagement implements Runnable {
 
                 else if (getLanguageId() != documentSearch.getLanguageId()) {
                     setStatus(Config.STATUS_FAILED);
+                    logger.info("{}", getStatusLog());
                     setReason("language mismatch");
                     logger.error("language mismatch");
 
@@ -425,6 +430,7 @@ public class QueueManagement implements Runnable {
                 else {
 
                     if (getRequestType().equals(Config.UPDATE_DOCUMENT)) {
+
                         String path = getDocumentPath();
                         if (path.startsWith("https://")) {
                             String tutorialIdString = getDocumentId().replaceAll("[^0-9]", "");
@@ -458,6 +464,7 @@ public class QueueManagement implements Runnable {
 
                         docRepo.save(documentSearch);
                         setStatus(Config.STATUS_DONE);
+                        logger.info("{}", getStatusLog());
 
                     }
 
@@ -470,12 +477,14 @@ public class QueueManagement implements Runnable {
 
                         docRepo.save(documentSearch);
                         setStatus(Config.STATUS_DONE);
+                        logger.info("{}", getStatusLog());
 
                     }
 
                     else if (getRequestType().equals(Config.DELETE_DOCUMENT)) {
                         docRepo.delete(documentSearch);
                         setStatus(Config.STATUS_DONE);
+                        logger.info("{}", getStatusLog());
 
                     }
 
@@ -486,6 +495,7 @@ public class QueueManagement implements Runnable {
 
         catch (Exception e) {
             setStatus(Config.STATUS_FAILED);
+            logger.info("{}", getStatusLog());
             setReason("Exception Message");
 
             logger.error("Exception", e);
