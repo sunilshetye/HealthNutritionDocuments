@@ -48,7 +48,7 @@ public class TaskProcessingService {
             qmnt.setQueueTime(0);
             repo.save(qmnt);
             logger.info("{}", qmnt.getStatusLog());
-            logger.info("Removing MDC");
+
             MDC.remove("queueId");
 
         }
@@ -60,7 +60,7 @@ public class TaskProcessingService {
             qmnt.setQueueTime(0);
             repo.save(qmnt);
             logger.info("{}", qmnt.getStatusLog());
-            logger.info("Removing MDC");
+
             MDC.remove("queueId");
 
         }
@@ -135,7 +135,7 @@ public class TaskProcessingService {
                 try {
                     if (skippedDocuments.containsKey(qmnt.getDocumentId())) {
                         logger.info("skipDocument contains the DocumentID: {}", qmnt.getDocumentId());
-                        logger.info("Removing MDC");
+
                         MDC.remove("queueId");
                         continue;
                     }
@@ -146,7 +146,7 @@ public class TaskProcessingService {
                             logger.info("The documentPath url is not working: " + path);
                             qmnt.setStatus(Config.STATUS_PENDING);
                             repo.save(qmnt);
-                            logger.info("Removing MDC");
+
                             MDC.remove("queueId");
                             continue;
                         }
@@ -158,9 +158,9 @@ public class TaskProcessingService {
                     qmnt.setQueueTime(System.currentTimeMillis());
 
                     applicationContext.getAutowireCapableBeanFactory().autowireBean(qmnt);
-                    taskExecutor.submit(qmnt);
                     repo.save(qmnt);
                     logger.info("{}", qmnt.getStatusLog());
+                    taskExecutor.submit(qmnt);
 
                     count = count + 1;
 
@@ -169,7 +169,7 @@ public class TaskProcessingService {
                     continue;
 
                 }
-                logger.info("Removing MDC");
+
                 MDC.remove("queueId");
             }
             long sleepTime = count > 0 ? Config.TASK_SLEEP_TIME : Config.NO_TASK_SLEEP_TIME;

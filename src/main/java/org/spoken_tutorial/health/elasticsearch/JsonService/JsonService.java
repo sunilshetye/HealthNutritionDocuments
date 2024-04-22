@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.tomcat.util.json.ParseException;
 import org.json.JSONArray;
@@ -306,7 +307,11 @@ public class JsonService {
                 InputStream errorStream = process.getErrorStream();
                 InputStream inputStream = process.getInputStream();
 
-                int exitCode = process.waitFor();
+                int exitCode = 0;
+                if (!process.waitFor(Config.TIME_UNIT_FOR_WAIT, TimeUnit.SECONDS)) {
+                    exitCode = 1;
+                    process.destroy();
+                }
 
                 try (InputStreamReader isr1 = new InputStreamReader(inputStream);
                         BufferedReader bReader1 = new BufferedReader(isr1)) {
@@ -328,9 +333,7 @@ public class JsonService {
 
                     int indexToStart = temp.indexOf("Media");
                     document = temp.substring(indexToStart, temp.length());
-                    logger.info(document);
 
-                    logger.info("Conversion successful");
                 } else {
                     logger.info("Conversion failed:{}", tutorialId);
                 }
