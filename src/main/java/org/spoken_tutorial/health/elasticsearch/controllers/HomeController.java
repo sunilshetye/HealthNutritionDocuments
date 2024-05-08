@@ -256,32 +256,40 @@ public class HomeController {
                 null, Config.DELETE_DOCUMENT);
     }
 
-    @GetMapping("/search")
-    List<DocumentSearch> findByDocumentContentTest(@RequestParam Optional<Integer> categoryId,
+    @PostMapping("/search")
+    Map<String, List<String>> findByDocumentContent(@RequestParam Optional<Integer> categoryId,
             @RequestParam Optional<Integer> topicId, @RequestParam Optional<Integer> languageId,
-            @RequestParam Optional<String> documentContent) {
+            @RequestParam Optional<String> query) {
+        Map<String, List<String>> documnetIdMap = new HashMap<String, List<String>>();
         Criteria criteria = new Criteria();
 
-        if (categoryId.isPresent()) {
+        logger.info("categoryId: {} , topicId: {} , lanId : {}, query: {}  ", categoryId, topicId, languageId, query);
+
+        if (categoryId != null && categoryId.isPresent() && categoryId.get() != 0) {
             criteria = criteria.and("categoryId").is(categoryId.get());
         }
 
-        if (topicId.isPresent()) {
+        if (topicId != null && topicId.isPresent() && topicId.get() != 0) {
             criteria = criteria.and("topicId").is(topicId.get());
         }
 
-        if (languageId.isPresent()) {
+        if (languageId != null && languageId.isPresent() && languageId.get() != 0) {
             criteria = criteria.and("languageId").is(languageId.get());
         }
 
-        if (documentContent.isPresent()) {
-            criteria = criteria.and("documentContent").is(documentContent.get());
+        if (query != null && query.isPresent() && !query.get().isEmpty()) {
+            criteria = criteria.and("documentContent").is(query.get());
         }
 
         SearchHits<DocumentSearch> searchHits = operations.search(new CriteriaQuery(criteria), DocumentSearch.class);
 
         // to only get the objects without hit information
-        return searchHits.stream().map(SearchHit::getContent).collect(Collectors.toList());
-
+        // List<DocumentSearch> list=
+        // searchHits.stream().map(SearchHit::getContent).collect(Collectors.toList());
+        List<String> documentIdList = searchHits.stream().map(SearchHit::getContent).map(DocumentSearch::getDocumentId)
+                .collect(Collectors.toList());
+        documnetIdMap.put("documentIds", documentIdList);
+        logger.info("documnetIdMap:{}", documnetIdMap);
+        return documnetIdMap;
     }
 }
