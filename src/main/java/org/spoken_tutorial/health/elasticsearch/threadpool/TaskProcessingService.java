@@ -164,7 +164,9 @@ public class TaskProcessingService {
 
                     count = count + 1;
 
-                } catch (Exception e) {
+                }
+
+                catch (Exception e) {
                     logger.error("Exception Error", e);
                     continue;
 

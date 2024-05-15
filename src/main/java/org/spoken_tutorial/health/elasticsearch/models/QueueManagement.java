@@ -115,6 +115,9 @@ public class QueueManagement implements Runnable {
     @Column(name = "topicId", nullable = true)
     private int topicId;
 
+    @Column(name = "videoPath", nullable = true)
+    private String videoPath;
+
     @Column(name = "outlinePath", nullable = true)
     private String outlinePath;
 
@@ -128,6 +131,14 @@ public class QueueManagement implements Runnable {
 
     public String getDocumentId() {
         return documentId;
+    }
+
+    public String getVideoPath() {
+        return videoPath;
+    }
+
+    public void setVideoPath(String videoPath) {
+        this.videoPath = videoPath;
     }
 
     public void setDocumentId(String documentId) {
@@ -317,6 +328,20 @@ public class QueueManagement implements Runnable {
 
     }
 
+    public QueueManagement(long queueId, Timestamp request, String requestType, String status, long startTime,
+            long endTime, long procesingTime, String videoPath) {
+        super();
+        this.queueId = queueId;
+        this.requestTime = request;
+        this.requestType = requestType;
+        this.status = status;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.procesingTime = procesingTime;
+        this.videoPath = videoPath;
+
+    }
+
     public QueueManagement(long queueId, Timestamp requestTime, String requestType) {
         super();
         this.queueId = queueId;
@@ -362,6 +387,7 @@ public class QueueManagement implements Runnable {
                     documentSearch.setCategoryId(getCategoryId());
                     documentSearch.setTopic(getTopic());
                     documentSearch.setTopicId(getTopicId());
+                    documentSearch.setVideoPath(videoPath);
                     String path = getDocumentPath();
 
                     if (path.startsWith("https://")) {
@@ -388,6 +414,7 @@ public class QueueManagement implements Runnable {
 
                         String outlineContent = contentsfromFile.extractContent(parser1, outlinePath);
                         documentSearch.setOutlineContent(outlineContent);
+                        documentSearch.setOutlineIndex(outlineContent);
 
                     }
                     documentSearch.setCreationTime(System.currentTimeMillis());
@@ -453,7 +480,11 @@ public class QueueManagement implements Runnable {
 
                             String outlineContent = contentsfromFile.extractContent(parser1, outlinePath);
                             documentSearch.setOutlineContent(outlineContent);
+                            documentSearch.setOutlineIndex(outlineContent);
 
+                        }
+                        if (getVideoPath() != null) {
+                            documentSearch.setVideoPath(getVideoPath());
                         }
 
                         documentSearch.setModificationTime(System.currentTimeMillis());

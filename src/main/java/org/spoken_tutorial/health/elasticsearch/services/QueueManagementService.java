@@ -1,6 +1,5 @@
 package org.spoken_tutorial.health.elasticsearch.services;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -9,6 +8,7 @@ import org.spoken_tutorial.health.elasticsearch.models.QueueManagement;
 import org.spoken_tutorial.health.elasticsearch.repositories.QueueManagementRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Limit;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -39,16 +39,8 @@ public class QueueManagementService {
     }
 
     public List<QueueManagement> findByStatusOrderByRequestTimeAscWithNqueries(String status) {
-        List<QueueManagement> queueList = repo.findByStatusOrderByRequestTimeAsc(status);
-        List<QueueManagement> resultList = new ArrayList<QueueManagement>();
-        if (queueList.size() > limitQuery) {
-            for (int i = 0; i < limitQuery; i++) {
-                resultList.add(queueList.get(i));
-            }
-            return resultList;
-        } else {
-            return queueList;
-        }
+        List<QueueManagement> queueList = repo.findByStatusOrderByRequestTimeAsc(status, Limit.of(limitQuery));
+        return queueList;
     }
 
 }
