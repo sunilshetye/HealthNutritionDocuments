@@ -112,6 +112,12 @@ public class QueueManagement implements Runnable {
     @Column(name = "topic", nullable = true)
     private String topic;
 
+    @Column(name = "title", nullable = true)
+    private String title;
+
+    @Column(name = "description", nullable = true)
+    private String description;
+
     @Column(name = "topicId", nullable = true)
     private int topicId;
 
@@ -131,6 +137,22 @@ public class QueueManagement implements Runnable {
 
     public String getDocumentId() {
         return documentId;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getVideoPath() {
@@ -387,7 +409,16 @@ public class QueueManagement implements Runnable {
                     documentSearch.setCategoryId(getCategoryId());
                     documentSearch.setTopic(getTopic());
                     documentSearch.setTopicId(getTopicId());
-                    documentSearch.setVideoPath(videoPath);
+                    documentSearch.setVideoPath(getVideoPath());
+                    documentSearch.setDocumentUrl(getDocumentUrl());
+
+                    if (getTitle() != null) {
+                        documentSearch.setTitle(getTitle());
+                    }
+                    if (getDescription() != null) {
+                        documentSearch.setDescription(getDescription());
+                    }
+
                     String path = getDocumentPath();
 
                     if (path.startsWith("https://")) {
@@ -491,6 +522,19 @@ public class QueueManagement implements Runnable {
                         if (getRank() != 0) {
                             documentSearch.setRank(getRank());
                             documentSearch.setChangeTime(System.currentTimeMillis());
+                        }
+
+                        if (getDocumentUrl() != null) {
+                            documentSearch.setDocumentUrl(getDocumentUrl());
+                        }
+                        if (getViewUrl() != null) {
+                            documentSearch.setViewUrl(getViewUrl());
+                        }
+                        if (getTitle() != null) {
+                            documentSearch.setTitle(getTitle());
+                        }
+                        if (getDescription() != null) {
+                            documentSearch.setDescription(getDescription());
                         }
 
                         docRepo.save(documentSearch);

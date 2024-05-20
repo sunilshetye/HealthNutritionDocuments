@@ -53,6 +53,15 @@ public class DocumentSearch {
     @Field(type = FieldType.Keyword, index = true, store = true)
     private String viewUrl;
 
+    @Field(type = FieldType.Keyword, index = true, store = true)
+    private String documentUrl;
+
+    @Field(type = FieldType.Keyword, index = true, store = true)
+    private String title;
+
+    @Field(type = FieldType.Keyword, index = true, store = true)
+    private String description;
+
     @Field(type = FieldType.Long, index = true, store = true)
     private Long creationTime;
 
@@ -68,6 +77,30 @@ public class DocumentSearch {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getDocumentUrl() {
+        return documentUrl;
+    }
+
+    public void setDocumentUrl(String documentUrl) {
+        this.documentUrl = documentUrl;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getOutlineIndex() {
