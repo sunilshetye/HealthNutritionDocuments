@@ -310,7 +310,8 @@ public class HomeController {
 
         if (query != null && query.isPresent() && !query.get().isEmpty()) {
 
-            criteria.or("documentContent").is(query.get()).or("outlineIndex").is(query.get());
+            criteria = criteria.or("documentContent").is(query.get()).or("outlineIndex").is(query.get());
+
 //            Criteria queryCriteria = new Criteria().or("documentContent").is(query.get()).or("outlineIndex")
 //                    .is(query.get());
 //            criteria = criteria.and(queryCriteria);
