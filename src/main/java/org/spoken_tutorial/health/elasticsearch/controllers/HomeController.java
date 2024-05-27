@@ -270,59 +270,73 @@ public class HomeController {
     }
 
     @PostMapping("/search")
-    Map<String, List<DocumentSearch>> findByDocumentContent(@RequestParam Optional<Integer> categoryId,
+    public Map<String, List<DocumentSearch>> findByDocumentContent(@RequestParam Optional<Integer> categoryId,
             @RequestParam Optional<Integer> topicId, @RequestParam Optional<Integer> languageId,
             @RequestParam Optional<String> query, @RequestParam Optional<String> typeTutorial,
             @RequestParam Optional<String> typeTimeScript, @RequestParam Optional<String> typeBrochure,
             @RequestParam Optional<String> typeResearchPaper) {
-        Map<String, List<DocumentSearch>> documnetSearchMap = new HashMap<String, List<DocumentSearch>>();
+
+        Map<String, List<DocumentSearch>> documentSearchMap = new HashMap<>();
         Criteria criteria = new Criteria();
 
-        logger.info("categoryId: {} , topicId: {} , lanId : {}, query: {}  ", categoryId, topicId, languageId, query);
+        logger.info("categoryId: {} , topicId: {} , languageId : {}, query: {}  ", categoryId.orElse(null),
+                topicId.orElse(null), languageId.orElse(null), query.orElse(null));
 
-        if (categoryId != null && categoryId.isPresent() && categoryId.get() != 0) {
+        if (categoryId.isPresent() && categoryId.get() != 0) {
             criteria = criteria.and("categoryId").is(categoryId.get());
         }
 
-        if (topicId != null && topicId.isPresent() && topicId.get() != 0) {
+        if (topicId.isPresent() && topicId.get() != 0) {
             criteria = criteria.and("topicId").is(topicId.get());
         }
 
-        if (languageId != null && languageId.isPresent() && languageId.get() != 0) {
+        if (languageId.isPresent() && languageId.get() != 0) {
             criteria = criteria.and("languageId").is(languageId.get());
         }
 
-        if (typeTutorial != null && typeTutorial.isPresent() && !typeTutorial.get().isEmpty()) {
-            criteria = criteria.or("documentType").is(typeTutorial.get());
+        if (query.isPresent() && !query.get().isEmpty()) {
+            Criteria subCriteria1 = new Criteria().or("documentContent").is(query.get()).or("outlineIndex")
+                    .is(query.get());
+            criteria = criteria.subCriteria(subCriteria1);
+
         }
 
-        if (typeTimeScript != null && typeTimeScript.isPresent() && !typeTimeScript.get().isEmpty()) {
-            criteria = criteria.or("documentType").is(typeTimeScript.get());
+        Criteria subCriteria2 = new Criteria();
+
+        if (typeTutorial.isPresent() && !typeTutorial.get().isEmpty()) {
+            subCriteria2 = subCriteria2.or("documentType").is(typeTutorial.get());
+
         }
 
-        if (typeBrochure != null && typeBrochure.isPresent() && !typeBrochure.get().isEmpty()) {
-            criteria = criteria.or("documentType").is(typeBrochure.get());
+        if (typeTimeScript.isPresent() && !typeTimeScript.get().isEmpty()) {
+
+            subCriteria2 = subCriteria2.or("documentType").is(typeTimeScript.get());
+
         }
 
-        if (typeResearchPaper != null && typeResearchPaper.isPresent() && !typeResearchPaper.get().isEmpty()) {
-            criteria = criteria.or("documentType").is(typeResearchPaper.get());
+        if (typeBrochure.isPresent() && !typeBrochure.get().isEmpty()) {
+
+            subCriteria2 = subCriteria2.or("documentType").is(typeBrochure.get());
+
         }
 
-        if (query != null && query.isPresent() && !query.get().isEmpty()) {
+        if (typeResearchPaper.isPresent() && !typeResearchPaper.get().isEmpty()) {
 
-            criteria = criteria.or("documentContent").is(query.get()).or("outlineIndex").is(query.get());
+            subCriteria2 = subCriteria2.or("documentType").is(typeResearchPaper.get());
 
-//            Criteria queryCriteria = new Criteria().or("documentContent").is(query.get()).or("outlineIndex")
-//                    .is(query.get());
-//            criteria = criteria.and(queryCriteria);
         }
 
+        criteria = criteria.subCriteria(subCriteria2);
+
+        logger.info("Criteria: {}", criteria);
         SearchHits<DocumentSearch> searchHits = operations.search(new CriteriaQuery(criteria), DocumentSearch.class);
 
         List<DocumentSearch> documentSearchList = searchHits.stream().map(SearchHit::getContent)
                 .collect(Collectors.toList());
-        documnetSearchMap.put("documentSearchList", documentSearchList);
-        logger.info("documnetIdMap:{}", documentSearchList);
-        return documnetSearchMap;
+
+        documentSearchMap.put("documentSearchList", documentSearchList);
+        logger.info("documentSearchList size: {}", documentSearchList.size());
+        return documentSearchMap;
     }
+
 }

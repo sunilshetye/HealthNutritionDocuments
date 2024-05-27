@@ -168,6 +168,7 @@ public class TaskProcessingService {
 
                 catch (Exception e) {
                     logger.error("Exception Error", e);
+                    MDC.remove("queueId");
                     continue;
 
                 }

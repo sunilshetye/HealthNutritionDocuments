@@ -50,16 +50,16 @@ public class DocumentSearch {
     @Field(name = "rankView", type = FieldType.Integer, index = true, store = true)
     private int rank;
 
-    @Field(type = FieldType.Keyword, index = true, store = true)
+    @Field(type = FieldType.Keyword, index = false, store = true)
     private String viewUrl;
 
-    @Field(type = FieldType.Keyword, index = true, store = true)
+    @Field(type = FieldType.Keyword, index = false, store = true)
     private String documentUrl;
 
-    @Field(type = FieldType.Keyword, index = true, store = true)
+    @Field(type = FieldType.Keyword, index = false, store = true)
     private String title;
 
-    @Field(type = FieldType.Keyword, index = true, store = true)
+    @Field(type = FieldType.Keyword, index = false, store = true)
     private String description;
 
     @Field(type = FieldType.Long, index = true, store = true)
