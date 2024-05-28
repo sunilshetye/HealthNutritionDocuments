@@ -7,6 +7,8 @@ import org.slf4j.LoggerFactory;
 import org.spoken_tutorial.health.elasticsearch.models.QueueManagement;
 import org.spoken_tutorial.health.elasticsearch.repositories.QueueManagementRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Limit;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -15,6 +17,9 @@ public class QueueManagementService {
 
     @Autowired
     private QueueManagementRepository repo;
+
+    @Value("${spring.queryResult}")
+    private int limitQuery;
 
     public long getNewId() {
 
@@ -31,6 +36,11 @@ public class QueueManagementService {
 
         return repo.findByStatusOrderByRequestTimeAsc(status);
 
+    }
+
+    public List<QueueManagement> findByStatusOrderByRequestTimeAscWithNqueries(String status) {
+        List<QueueManagement> queueList = repo.findByStatusOrderByRequestTimeAsc(status, Limit.of(limitQuery));
+        return queueList;
     }
 
 }

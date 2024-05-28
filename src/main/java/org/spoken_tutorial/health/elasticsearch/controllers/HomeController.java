@@ -161,7 +161,8 @@ public class HomeController {
     public Map<String, String> addDocument(String documentId, String documentType, String documentPath,
             String documentUrl, int rank, String view_url, int languageId, String language,
             Optional<Integer> categoryId, Optional<String> category, Optional<Integer> topicId, Optional<String> topic,
-            Optional<String> outlinePath, String requestType) {
+            Optional<String> outlinePath, String requestType, Optional<String> videoPath, Optional<String> title,
+            Optional<String> description) {
 
         Map<String, String> resultMap = new HashMap<>();
 
@@ -208,6 +209,15 @@ public class HomeController {
         if (topicId != null && topicId.isPresent())
             queuemnt.setTopicId(topicId.get());
 
+        if (videoPath != null && videoPath.isPresent())
+            queuemnt.setVideoPath(videoPath.get());
+
+        if (title != null && title.isPresent())
+            queuemnt.setTitle(title.get());
+
+        if (description != null && description.isPresent())
+            queuemnt.setDescription(description.get());
+
         queRepo.save(queuemnt);
 
         resultMap.put(Config.QUEUE_ID, Long.toString(queuemnt.getQueueId()));
@@ -223,10 +233,11 @@ public class HomeController {
             @RequestParam String documentPath, @RequestParam String documentUrl, @RequestParam String view_url,
             @RequestParam Optional<Integer> categoryId, @RequestParam Optional<String> category,
             @RequestParam Optional<Integer> topicId, @RequestParam Optional<String> topic,
-            @RequestParam Optional<String> outlinePath) {
+            @RequestParam Optional<String> outlinePath, @RequestParam Optional<String> videoPath,
+            @RequestParam Optional<String> title, @RequestParam Optional<String> description) {
 
         return addDocument(documentId, documentType, documentPath, documentUrl, rank, view_url, languageId, language,
-                categoryId, category, topicId, topic, outlinePath, Config.ADD_DOCUMENT);
+                categoryId, category, topicId, topic, outlinePath, Config.ADD_DOCUMENT, videoPath, title, description);
     }
 
     @PostMapping("/updateDocument/{documentId}/{documentType}/{languageId}/{language}/{rank}")
@@ -235,17 +246,19 @@ public class HomeController {
             @RequestParam String documentPath, @RequestParam String documentUrl, @RequestParam String view_url,
             @RequestParam Optional<String> category, @RequestParam Optional<Integer> categoryId,
             @RequestParam Optional<String> topic, @RequestParam Optional<Integer> topicId,
-            @RequestParam Optional<String> outlinePath) {
+            @RequestParam Optional<String> outlinePath, Optional<String> videoPath,
+            @RequestParam Optional<String> title, @RequestParam Optional<String> description) {
 
         return addDocument(documentId, documentType, documentPath, documentUrl, rank, view_url, languageId, language,
-                categoryId, category, topicId, topic, outlinePath, Config.UPDATE_DOCUMENT);
+                categoryId, category, topicId, topic, outlinePath, Config.UPDATE_DOCUMENT, videoPath, title,
+                description);
     }
 
     @GetMapping("/updateDocumentRank/{documentId}/{documentType}/{languageId}/{rank}")
     public Map<String, String> updateDocumentRank(@PathVariable String documentId, @PathVariable String documentType,
             @PathVariable int languageId, @PathVariable int rank) {
         return addDocument(documentId, documentType, null, null, rank, null, languageId, null, null, null, null, null,
-                null, Config.UPDATE_DOCUMENT_RANK);
+                null, Config.UPDATE_DOCUMENT_RANK, null, null, null);
     }
 
     @GetMapping("/deleteDocument/{documentId}/{documentType}/{languageId}")
@@ -253,35 +266,92 @@ public class HomeController {
             @PathVariable int languageId) {
 
         return addDocument(documentId, documentType, null, null, 0, null, languageId, null, null, null, null, null,
-                null, Config.DELETE_DOCUMENT);
+                null, Config.DELETE_DOCUMENT, null, null, null);
     }
 
-    @GetMapping("/search")
-    List<DocumentSearch> findByDocumentContentTest(@RequestParam Optional<Integer> categoryId,
+    @PostMapping("/search")
+    public Map<String, List<DocumentSearch>> findByDocumentContent(@RequestParam Optional<Integer> categoryId,
             @RequestParam Optional<Integer> topicId, @RequestParam Optional<Integer> languageId,
-            @RequestParam Optional<String> documentContent) {
+            @RequestParam Optional<String> query, @RequestParam Optional<String> typeTutorial,
+            @RequestParam Optional<String> typeTimeScript, @RequestParam Optional<String> typeBrochure,
+            @RequestParam Optional<String> typeResearchPaper) {
+
+        Map<String, List<DocumentSearch>> documentSearchMap = new HashMap<>();
         Criteria criteria = new Criteria();
 
-        if (categoryId.isPresent()) {
+        logger.info("categoryId: {} , topicId: {} , languageId : {}, query: {}  ", categoryId.orElse(null),
+                topicId.orElse(null), languageId.orElse(null), query.orElse(null));
+
+        if (categoryId.isPresent() && categoryId.get() != 0) {
             criteria = criteria.and("categoryId").is(categoryId.get());
         }
 
-        if (topicId.isPresent()) {
+        if (topicId.isPresent() && topicId.get() != 0) {
             criteria = criteria.and("topicId").is(topicId.get());
         }
 
-        if (languageId.isPresent()) {
+        if (languageId.isPresent() && languageId.get() != 0) {
             criteria = criteria.and("languageId").is(languageId.get());
         }
 
-        if (documentContent.isPresent()) {
-            criteria = criteria.and("documentContent").is(documentContent.get());
+        if (query.isPresent() && !query.get().isEmpty()) {
+            Criteria subCriteria1 = new Criteria().or("documentContent").is(query.get()).or("outlineIndex")
+                    .is(query.get());
+            criteria = criteria.subCriteria(subCriteria1);
+
         }
 
+        Criteria subCriteria2 = null;
+
+        if (typeTutorial.isPresent() && !typeTutorial.get().isEmpty()) {
+
+            subCriteria2 = new Criteria("documentType").is(typeTutorial.get());
+
+        }
+
+        if (typeTimeScript.isPresent() && !typeTimeScript.get().isEmpty()) {
+
+            if (subCriteria2 != null) {
+                subCriteria2 = subCriteria2.or("documentType").is(typeTimeScript.get());
+            } else {
+                subCriteria2 = new Criteria("documentType").is(typeTimeScript.get());
+            }
+
+        }
+
+        if (typeBrochure.isPresent() && !typeBrochure.get().isEmpty()) {
+
+            if (subCriteria2 != null) {
+                subCriteria2 = subCriteria2.or("documentType").is(typeBrochure.get());
+            } else {
+                subCriteria2 = new Criteria("documentType").is(typeBrochure.get());
+            }
+
+        }
+
+        if (typeResearchPaper.isPresent() && !typeResearchPaper.get().isEmpty()) {
+
+            if (subCriteria2 != null) {
+                subCriteria2 = subCriteria2.or("documentType").is(typeResearchPaper.get());
+            } else {
+                subCriteria2 = new Criteria("documentType").is(typeResearchPaper.get());
+            }
+
+        }
+
+        if (subCriteria2 != null) {
+            criteria = criteria.subCriteria(subCriteria2);
+        }
+
+        logger.info("Criteria: {}", criteria);
         SearchHits<DocumentSearch> searchHits = operations.search(new CriteriaQuery(criteria), DocumentSearch.class);
 
-        // to only get the objects without hit information
-        return searchHits.stream().map(SearchHit::getContent).collect(Collectors.toList());
+        List<DocumentSearch> documentSearchList = searchHits.stream().map(SearchHit::getContent)
+                .collect(Collectors.toList());
 
+        documentSearchMap.put("documentSearchList", documentSearchList);
+        logger.info("documentSearchList size: {}", documentSearchList.size());
+        return documentSearchMap;
     }
+
 }

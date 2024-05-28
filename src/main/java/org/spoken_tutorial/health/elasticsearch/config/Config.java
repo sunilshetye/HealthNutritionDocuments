@@ -44,8 +44,10 @@ public class Config {
     public static final String QUEUE_TIME = "queueTime";
     public static final String RUNNING_DOCUMENT = "runningDocument";
     public static final String SKIPPED_DOCUMENT = "skippedDocument";
-    public static final Long NO_TASK_SLEEP_TIME = 30L * 1000;
-    public static final Long TASK_SLEEP_TIME = 10L * 1000;
+    public static final Long NO_TASK_SLEEP_TIME = 30L * 1000 * 2 * 3;
+    public static final Long TASK_SLEEP_TIME = 10L * 1000 * 6;
+    public static final int TIME_UNIT_FOR_WAIT = 60;
+
     public static String uploadDirectoryScriptHtmlFile = "Media/Content/Tutorial/ScriptHtmlFile/";
     public static String uploadDirectoryScriptHtmlFileforDownload = "Media/Content/Tutorial/ScriptDownloadHtmlFile/";
     public static String uploadDirectoryScriptOdtFileforDownload = "Media/Content/Tutorial/ScriptDownloadOdtFile/";

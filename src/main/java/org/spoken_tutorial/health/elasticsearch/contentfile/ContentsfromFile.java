@@ -3,6 +3,7 @@ package org.spoken_tutorial.health.elasticsearch.contentfile;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -115,7 +116,7 @@ public class ContentsfromFile {
 
             else if (name.endsWith(".txt")) {
 
-                content = new String(Files.readAllBytes(path));
+                content = new String(Files.readAllBytes(path), StandardCharsets.UTF_8);
             } else {
                 BodyContentHandler handler = new BodyContentHandler(config.HANDLER_DATA);
                 Metadata metadata = new Metadata();

@@ -10,6 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import org.spoken_tutorial.health.elasticsearch.config.Config;
 import org.spoken_tutorial.health.elasticsearch.models.QueueManagement;
 import org.spoken_tutorial.health.elasticsearch.repositories.QueueManagementRepository;
@@ -41,10 +42,15 @@ public class TaskProcessingService {
     public void intializeQueue() {
         List<QueueManagement> qmnts = queuemntService.findByStatusOrderByRequestTimeAsc(Config.STATUS_QUEUED);
         for (QueueManagement qmnt : qmnts) {
+            MDC.put("queueId", '#' + Long.toString(qmnt.getQueueId()));
             logger.info("Pending:{}", qmnt);
             qmnt.setStatus(Config.STATUS_PENDING);
             qmnt.setQueueTime(0);
             repo.save(qmnt);
+            logger.info("{}", qmnt.getStatusLog());
+
+            MDC.remove("queueId");
+
         }
 
         qmnts = queuemntService.findByStatusOrderByRequestTimeAsc(Config.STATUS_PROCESSING);
@@ -53,6 +59,10 @@ public class TaskProcessingService {
             qmnt.setStatus(Config.STATUS_PENDING);
             qmnt.setQueueTime(0);
             repo.save(qmnt);
+            logger.info("{}", qmnt.getStatusLog());
+
+            MDC.remove("queueId");
+
         }
 
     }
@@ -104,47 +114,76 @@ public class TaskProcessingService {
             skippedDocuments.putAll(getRunningDocuments());
             int count = 0;
 
-            List<QueueManagement> qmnts = queuemntService.findByStatusOrderByRequestTimeAsc(Config.STATUS_PENDING);
+            List<QueueManagement> qmnts = queuemntService
+                    .findByStatusOrderByRequestTimeAscWithNqueries(Config.STATUS_PENDING);
             if (qmnts == null) {
                 try {
                     Thread.sleep(Config.NO_TASK_SLEEP_TIME);
                     continue;
 
                 } catch (InterruptedException e) {
-
+                    logger.info("Interrupted");
+                    break;
                 }
             }
-
+            if (qmnts.size() != 0) {
+                logger.info("QueryResultSize:{}", qmnts.size());
+            }
             for (QueueManagement qmnt : qmnts) {
+                MDC.put("queueId", '#' + Long.toString(qmnt.getQueueId()));
                 logger.info("Queueing:{}", qmnt);
-                if (skippedDocuments.containsKey(qmnt.getDocumentId())) {
+                try {
+                    if (skippedDocuments.containsKey(qmnt.getDocumentId())) {
+                        logger.info("skipDocument contains the DocumentID: {}", qmnt.getDocumentId());
 
-                    continue;
-                }
-
-                String path = qmnt.getDocumentPath();
-                if (path.startsWith("https://")) {
-                    if (!isURLWorking(path)) {
+                        MDC.remove("queueId");
                         continue;
                     }
 
+                    String path = qmnt.getDocumentPath();
+                    if (path.startsWith("https://")) {
+                        if (!isURLWorking(path)) {
+                            logger.info("The documentPath url is not working: " + path);
+                            qmnt.setStatus(Config.STATUS_PENDING);
+                            repo.save(qmnt);
+
+                            MDC.remove("queueId");
+                            continue;
+                        }
+
+                    }
+                    skippedDocuments.put(qmnt.getDocumentId(), System.currentTimeMillis());
+                    getRunningDocuments().put(qmnt.getDocumentId(), System.currentTimeMillis());
+                    qmnt.setStatus(Config.STATUS_QUEUED);
+                    qmnt.setQueueTime(System.currentTimeMillis());
+
+                    applicationContext.getAutowireCapableBeanFactory().autowireBean(qmnt);
+                    repo.save(qmnt);
+                    logger.info("{}", qmnt.getStatusLog());
+                    taskExecutor.submit(qmnt);
+
+                    count = count + 1;
+
                 }
-                skippedDocuments.put(qmnt.getDocumentId(), System.currentTimeMillis());
-                getRunningDocuments().put(qmnt.getDocumentId(), System.currentTimeMillis());
-                qmnt.setStatus(Config.STATUS_QUEUED);
-                qmnt.setQueueTime(System.currentTimeMillis());
-                repo.save(qmnt);
 
-                applicationContext.getAutowireCapableBeanFactory().autowireBean(qmnt);
-                taskExecutor.submit(qmnt);
-                count = count + 1;
+                catch (Exception e) {
+                    logger.error("Exception Error", e);
+                    MDC.remove("queueId");
+                    continue;
 
+                }
+
+                MDC.remove("queueId");
             }
             long sleepTime = count > 0 ? Config.TASK_SLEEP_TIME : Config.NO_TASK_SLEEP_TIME;
+            if (count > 0)
+                logger.info("Task_SLEEP_TIME: " + Config.TASK_SLEEP_TIME);
             try {
                 Thread.sleep(sleepTime);
+
             } catch (InterruptedException e) {
                 logger.info("Interrupted");
+
                 break;
             }
         }

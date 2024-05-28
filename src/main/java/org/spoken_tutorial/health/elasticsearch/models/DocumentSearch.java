@@ -14,6 +14,9 @@ public class DocumentSearch {
     @Field(type = FieldType.Text, index = true, store = false)
     private String documentContent;
 
+    @Field(type = FieldType.Text, index = true, store = false)
+    private String outlineIndex;
+
     @Field(type = FieldType.Text, index = false, store = true)
     private String outlineContent;
 
@@ -38,14 +41,26 @@ public class DocumentSearch {
     @Field(type = FieldType.Keyword, index = false, store = true)
     private String topic;
 
+    @Field(type = FieldType.Keyword, index = false, store = true)
+    private String videoPath;
+
     @Field(type = FieldType.Integer, index = true, store = true)
     private int topicId;
 
     @Field(name = "rankView", type = FieldType.Integer, index = true, store = true)
     private int rank;
 
-    @Field(type = FieldType.Keyword, index = true, store = true)
+    @Field(type = FieldType.Keyword, index = false, store = true)
     private String viewUrl;
+
+    @Field(type = FieldType.Keyword, index = false, store = true)
+    private String documentUrl;
+
+    @Field(type = FieldType.Keyword, index = false, store = true)
+    private String title;
+
+    @Field(type = FieldType.Keyword, index = false, store = true)
+    private String description;
 
     @Field(type = FieldType.Long, index = true, store = true)
     private Long creationTime;
@@ -64,8 +79,48 @@ public class DocumentSearch {
         this.id = id;
     }
 
+    public String getDocumentUrl() {
+        return documentUrl;
+    }
+
+    public void setDocumentUrl(String documentUrl) {
+        this.documentUrl = documentUrl;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getOutlineIndex() {
+        return outlineIndex;
+    }
+
+    public void setOutlineIndex(String outlineIndex) {
+        this.outlineIndex = outlineIndex;
+    }
+
     public int getCategoryId() {
         return categoryId;
+    }
+
+    public String getVideoPath() {
+        return videoPath;
+    }
+
+    public void setVideoPath(String videoPath) {
+        this.videoPath = videoPath;
     }
 
     public void setCategoryId(int categoryId) {
@@ -196,6 +251,15 @@ public class DocumentSearch {
         this.documentId = documentId;
     }
 
+    public DocumentSearch(String id, String documentContent, String documentType, String documentId, String videoPath) {
+        super();
+        this.id = id;
+        this.documentContent = documentContent;
+        this.documentType = documentType;
+        this.documentId = documentId;
+        this.videoPath = videoPath;
+    }
+
     public DocumentSearch(String id, String documentContent) {
         super();
         this.id = id;
@@ -205,8 +269,8 @@ public class DocumentSearch {
     @Override
     public String toString() {
         return "DocumentSearch [documentType=" + documentType + ", documentId=" + documentId + ", language=" + language
-                + ", rank=" + rank + ", viewUrl=" + viewUrl + ", creationTime=" + creationTime + ", modificationTime="
-                + modificationTime + ", changeTime=" + changeTime + "]";
+                + ", rank=" + rank + ", viewUrl=" + viewUrl + ", videoPath=" + videoPath + ", creationTime="
+                + creationTime + ", modificationTime=" + modificationTime + ", changeTime=" + changeTime + "]";
     }
 
 }

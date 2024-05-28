@@ -6,6 +6,7 @@ import org.apache.tika.parser.AutoDetectParser;
 import org.apache.tika.parser.Parser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import org.spoken_tutorial.health.elasticsearch.JsonService.JsonService;
 import org.spoken_tutorial.health.elasticsearch.config.Config;
 import org.spoken_tutorial.health.elasticsearch.contentfile.ContentsfromFile;
@@ -60,6 +61,9 @@ public class QueueManagement implements Runnable {
     @Column(name = "status", nullable = true)
     private String status;
 
+    @Column(name = "oldstatus", nullable = true)
+    private String oldStatus;
+
     @Column(name = "reason", nullable = true)
     private String reason;
 
@@ -108,8 +112,17 @@ public class QueueManagement implements Runnable {
     @Column(name = "topic", nullable = true)
     private String topic;
 
+    @Column(name = "title", nullable = true)
+    private String title;
+
+    @Column(name = "description", nullable = true)
+    private String description;
+
     @Column(name = "topicId", nullable = true)
     private int topicId;
+
+    @Column(name = "videoPath", nullable = true)
+    private String videoPath;
 
     @Column(name = "outlinePath", nullable = true)
     private String outlinePath;
@@ -124,6 +137,30 @@ public class QueueManagement implements Runnable {
 
     public String getDocumentId() {
         return documentId;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getVideoPath() {
+        return videoPath;
+    }
+
+    public void setVideoPath(String videoPath) {
+        this.videoPath = videoPath;
     }
 
     public void setDocumentId(String documentId) {
@@ -262,7 +299,12 @@ public class QueueManagement implements Runnable {
         return status;
     }
 
+    public String getStatusLog() {
+        return "from " + oldStatus + " to " + status;
+    }
+
     public void setStatus(String status) {
+        this.oldStatus = this.status;
         this.status = status;
     }
 
@@ -308,6 +350,20 @@ public class QueueManagement implements Runnable {
 
     }
 
+    public QueueManagement(long queueId, Timestamp request, String requestType, String status, long startTime,
+            long endTime, long procesingTime, String videoPath) {
+        super();
+        this.queueId = queueId;
+        this.requestTime = request;
+        this.requestType = requestType;
+        this.status = status;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.procesingTime = procesingTime;
+        this.videoPath = videoPath;
+
+    }
+
     public QueueManagement(long queueId, Timestamp requestTime, String requestType) {
         super();
         this.queueId = queueId;
@@ -324,14 +380,14 @@ public class QueueManagement implements Runnable {
 
     @Override
     public void run() {
-
+        MDC.put("queueId", '#' + Long.toString(getQueueId()));
         logger.info("Processing:{}", this);
 
         DocumentSearch documentSearch = null;
 
         try {
             setStatus(Config.STATUS_PROCESSING);
-
+            logger.info("{}", getStatusLog());
             setStartTime(System.currentTimeMillis());
 
             documentSearch = docRepo.findByDocumentId(getDocumentId());
@@ -339,8 +395,9 @@ public class QueueManagement implements Runnable {
 
                 if (documentSearch != null) {
                     setStatus(Config.STATUS_FAILED);
-                    setReason("document alreday exist");
-                    logger.error("document alreday exist");
+                    logger.info("{}", getStatusLog());
+                    setReason("document already exists");
+                    logger.error("document already exists");
 
                 } else {
                     documentSearch = new DocumentSearch();
@@ -352,6 +409,16 @@ public class QueueManagement implements Runnable {
                     documentSearch.setCategoryId(getCategoryId());
                     documentSearch.setTopic(getTopic());
                     documentSearch.setTopicId(getTopicId());
+                    documentSearch.setVideoPath(getVideoPath());
+                    documentSearch.setDocumentUrl(getDocumentUrl());
+
+                    if (getTitle() != null) {
+                        documentSearch.setTitle(getTitle());
+                    }
+                    if (getDescription() != null) {
+                        documentSearch.setDescription(getDescription());
+                    }
+
                     String path = getDocumentPath();
 
                     if (path.startsWith("https://")) {
@@ -378,6 +445,7 @@ public class QueueManagement implements Runnable {
 
                         String outlineContent = contentsfromFile.extractContent(parser1, outlinePath);
                         documentSearch.setOutlineContent(outlineContent);
+                        documentSearch.setOutlineIndex(outlineContent);
 
                     }
                     documentSearch.setCreationTime(System.currentTimeMillis());
@@ -386,6 +454,7 @@ public class QueueManagement implements Runnable {
                     documentSearch.setViewUrl(getViewUrl());
                     docRepo.save(documentSearch);
                     setStatus(Config.STATUS_DONE);
+                    logger.info("{}", getStatusLog());
 
                 }
             }
@@ -396,11 +465,13 @@ public class QueueManagement implements Runnable {
 
                 if (documentSearch == null) {
                     setStatus(Config.STATUS_FAILED);
+                    logger.info("{}", getStatusLog());
                     setReason("document id does not exist");
                     logger.error("document id does not exist");
 
                 } else if (!getDocumentType().equals(documentSearch.getDocumentType())) {
                     setStatus(Config.STATUS_FAILED);
+                    logger.info("{}", getStatusLog());
                     setReason("documentType mismatch");
                     logger.error("documentType mismatch");
 
@@ -408,6 +479,7 @@ public class QueueManagement implements Runnable {
 
                 else if (getLanguageId() != documentSearch.getLanguageId()) {
                     setStatus(Config.STATUS_FAILED);
+                    logger.info("{}", getStatusLog());
                     setReason("language mismatch");
                     logger.error("language mismatch");
 
@@ -416,6 +488,7 @@ public class QueueManagement implements Runnable {
                 else {
 
                     if (getRequestType().equals(Config.UPDATE_DOCUMENT)) {
+
                         String path = getDocumentPath();
                         if (path.startsWith("https://")) {
                             String tutorialIdString = getDocumentId().replaceAll("[^0-9]", "");
@@ -438,7 +511,11 @@ public class QueueManagement implements Runnable {
 
                             String outlineContent = contentsfromFile.extractContent(parser1, outlinePath);
                             documentSearch.setOutlineContent(outlineContent);
+                            documentSearch.setOutlineIndex(outlineContent);
 
+                        }
+                        if (getVideoPath() != null) {
+                            documentSearch.setVideoPath(getVideoPath());
                         }
 
                         documentSearch.setModificationTime(System.currentTimeMillis());
@@ -447,8 +524,22 @@ public class QueueManagement implements Runnable {
                             documentSearch.setChangeTime(System.currentTimeMillis());
                         }
 
+                        if (getDocumentUrl() != null) {
+                            documentSearch.setDocumentUrl(getDocumentUrl());
+                        }
+                        if (getViewUrl() != null) {
+                            documentSearch.setViewUrl(getViewUrl());
+                        }
+                        if (getTitle() != null) {
+                            documentSearch.setTitle(getTitle());
+                        }
+                        if (getDescription() != null) {
+                            documentSearch.setDescription(getDescription());
+                        }
+
                         docRepo.save(documentSearch);
                         setStatus(Config.STATUS_DONE);
+                        logger.info("{}", getStatusLog());
 
                     }
 
@@ -461,12 +552,14 @@ public class QueueManagement implements Runnable {
 
                         docRepo.save(documentSearch);
                         setStatus(Config.STATUS_DONE);
+                        logger.info("{}", getStatusLog());
 
                     }
 
                     else if (getRequestType().equals(Config.DELETE_DOCUMENT)) {
                         docRepo.delete(documentSearch);
                         setStatus(Config.STATUS_DONE);
+                        logger.info("{}", getStatusLog());
 
                     }
 
@@ -477,6 +570,7 @@ public class QueueManagement implements Runnable {
 
         catch (Exception e) {
             setStatus(Config.STATUS_FAILED);
+            logger.info("{}", getStatusLog());
             setReason("Exception Message");
 
             logger.error("Exception", e);
@@ -486,10 +580,11 @@ public class QueueManagement implements Runnable {
 
             setEndTime(System.currentTimeMillis());
             setProcesingTime(endTime - startTime);
-            logger.info("Done :{}", this);
 
             queueRepo.save(this);
+            logger.info("{}", getStatusLog());
             taskProcessingService.getRunningDocuments().remove(documentId);
+            MDC.remove("queueId");
         }
 
     }
