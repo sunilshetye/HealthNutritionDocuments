@@ -301,32 +301,47 @@ public class HomeController {
 
         }
 
-        Criteria subCriteria2 = new Criteria();
+        Criteria subCriteria2 = null;
 
         if (typeTutorial.isPresent() && !typeTutorial.get().isEmpty()) {
-            subCriteria2 = subCriteria2.or("documentType").is(typeTutorial.get());
+
+            subCriteria2 = new Criteria("documentType").is(typeTutorial.get());
 
         }
 
         if (typeTimeScript.isPresent() && !typeTimeScript.get().isEmpty()) {
 
-            subCriteria2 = subCriteria2.or("documentType").is(typeTimeScript.get());
+            if (subCriteria2 != null) {
+                subCriteria2 = subCriteria2.or("documentType").is(typeTimeScript.get());
+            } else {
+                subCriteria2 = new Criteria("documentType").is(typeTimeScript.get());
+            }
 
         }
 
         if (typeBrochure.isPresent() && !typeBrochure.get().isEmpty()) {
 
-            subCriteria2 = subCriteria2.or("documentType").is(typeBrochure.get());
+            if (subCriteria2 != null) {
+                subCriteria2 = subCriteria2.or("documentType").is(typeBrochure.get());
+            } else {
+                subCriteria2 = new Criteria("documentType").is(typeBrochure.get());
+            }
 
         }
 
         if (typeResearchPaper.isPresent() && !typeResearchPaper.get().isEmpty()) {
 
-            subCriteria2 = subCriteria2.or("documentType").is(typeResearchPaper.get());
+            if (subCriteria2 != null) {
+                subCriteria2 = subCriteria2.or("documentType").is(typeResearchPaper.get());
+            } else {
+                subCriteria2 = new Criteria("documentType").is(typeResearchPaper.get());
+            }
 
         }
 
-        criteria = criteria.subCriteria(subCriteria2);
+        if (subCriteria2 != null) {
+            criteria = criteria.subCriteria(subCriteria2);
+        }
 
         logger.info("Criteria: {}", criteria);
         SearchHits<DocumentSearch> searchHits = operations.search(new CriteriaQuery(criteria), DocumentSearch.class);
