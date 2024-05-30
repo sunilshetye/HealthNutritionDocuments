@@ -162,7 +162,7 @@ public class HomeController {
             String documentUrl, int rank, String view_url, int languageId, String language,
             Optional<Integer> categoryId, Optional<String> category, Optional<Integer> topicId, Optional<String> topic,
             Optional<String> outlinePath, String requestType, Optional<String> videoPath, Optional<String> title,
-            Optional<String> description) {
+            Optional<String> description, Optional<String> thumbnailPath) {
 
         Map<String, String> resultMap = new HashMap<>();
 
@@ -218,6 +218,9 @@ public class HomeController {
         if (description != null && description.isPresent())
             queuemnt.setDescription(description.get());
 
+        if (thumbnailPath != null && thumbnailPath.isPresent())
+            queuemnt.setThumbnailPath(thumbnailPath.get());
+
         queRepo.save(queuemnt);
 
         resultMap.put(Config.QUEUE_ID, Long.toString(queuemnt.getQueueId()));
@@ -234,10 +237,12 @@ public class HomeController {
             @RequestParam Optional<Integer> categoryId, @RequestParam Optional<String> category,
             @RequestParam Optional<Integer> topicId, @RequestParam Optional<String> topic,
             @RequestParam Optional<String> outlinePath, @RequestParam Optional<String> videoPath,
-            @RequestParam Optional<String> title, @RequestParam Optional<String> description) {
+            @RequestParam Optional<String> title, @RequestParam Optional<String> description,
+            @RequestParam Optional<String> thumbnailPath) {
 
         return addDocument(documentId, documentType, documentPath, documentUrl, rank, view_url, languageId, language,
-                categoryId, category, topicId, topic, outlinePath, Config.ADD_DOCUMENT, videoPath, title, description);
+                categoryId, category, topicId, topic, outlinePath, Config.ADD_DOCUMENT, videoPath, title, description,
+                thumbnailPath);
     }
 
     @PostMapping("/updateDocument/{documentId}/{documentType}/{languageId}/{language}/{rank}")
@@ -247,18 +252,19 @@ public class HomeController {
             @RequestParam Optional<String> category, @RequestParam Optional<Integer> categoryId,
             @RequestParam Optional<String> topic, @RequestParam Optional<Integer> topicId,
             @RequestParam Optional<String> outlinePath, Optional<String> videoPath,
-            @RequestParam Optional<String> title, @RequestParam Optional<String> description) {
+            @RequestParam Optional<String> title, @RequestParam Optional<String> description,
+            @RequestParam Optional<String> thumbnailPath) {
 
         return addDocument(documentId, documentType, documentPath, documentUrl, rank, view_url, languageId, language,
                 categoryId, category, topicId, topic, outlinePath, Config.UPDATE_DOCUMENT, videoPath, title,
-                description);
+                description, thumbnailPath);
     }
 
     @GetMapping("/updateDocumentRank/{documentId}/{documentType}/{languageId}/{rank}")
     public Map<String, String> updateDocumentRank(@PathVariable String documentId, @PathVariable String documentType,
             @PathVariable int languageId, @PathVariable int rank) {
         return addDocument(documentId, documentType, null, null, rank, null, languageId, null, null, null, null, null,
-                null, Config.UPDATE_DOCUMENT_RANK, null, null, null);
+                null, Config.UPDATE_DOCUMENT_RANK, null, null, null, null);
     }
 
     @GetMapping("/deleteDocument/{documentId}/{documentType}/{languageId}")
@@ -266,7 +272,7 @@ public class HomeController {
             @PathVariable int languageId) {
 
         return addDocument(documentId, documentType, null, null, 0, null, languageId, null, null, null, null, null,
-                null, Config.DELETE_DOCUMENT, null, null, null);
+                null, Config.DELETE_DOCUMENT, null, null, null, null);
     }
 
     @PostMapping("/search")
