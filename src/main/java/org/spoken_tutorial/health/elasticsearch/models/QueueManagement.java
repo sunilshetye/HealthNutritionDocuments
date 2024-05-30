@@ -124,6 +124,9 @@ public class QueueManagement implements Runnable {
     @Column(name = "videoPath", nullable = true)
     private String videoPath;
 
+    @Column(name = "thumbnailPath", nullable = true)
+    private String thumbnailPath;
+
     @Column(name = "outlinePath", nullable = true)
     private String outlinePath;
 
@@ -193,6 +196,14 @@ public class QueueManagement implements Runnable {
 
     public String getOutlinePath() {
         return outlinePath;
+    }
+
+    public String getThumbnailPath() {
+        return thumbnailPath;
+    }
+
+    public void setThumbnailPath(String thumbnailPath) {
+        this.thumbnailPath = thumbnailPath;
     }
 
     public void setOutlinePath(String outlinePath) {
@@ -418,6 +429,9 @@ public class QueueManagement implements Runnable {
                     if (getDescription() != null) {
                         documentSearch.setDescription(getDescription());
                     }
+                    if (getThumbnailPath() != null) {
+                        documentSearch.setThumbnailPath(getThumbnailPath());
+                    }
 
                     String path = getDocumentPath();
 
@@ -535,6 +549,9 @@ public class QueueManagement implements Runnable {
                         }
                         if (getDescription() != null) {
                             documentSearch.setDescription(getDescription());
+                        }
+                        if (getThumbnailPath() != null) {
+                            documentSearch.setThumbnailPath(getThumbnailPath());
                         }
 
                         docRepo.save(documentSearch);

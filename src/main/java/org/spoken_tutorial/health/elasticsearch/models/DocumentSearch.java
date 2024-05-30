@@ -62,6 +62,9 @@ public class DocumentSearch {
     @Field(type = FieldType.Keyword, index = false, store = true)
     private String description;
 
+    @Field(type = FieldType.Keyword, index = false, store = true)
+    private String thumbnailPath;
+
     @Field(type = FieldType.Long, index = true, store = true)
     private Long creationTime;
 
@@ -81,6 +84,14 @@ public class DocumentSearch {
 
     public String getDocumentUrl() {
         return documentUrl;
+    }
+
+    public String getThumbnailPath() {
+        return thumbnailPath;
+    }
+
+    public void setThumbnailPath(String thumbnailPath) {
+        this.thumbnailPath = thumbnailPath;
     }
 
     public void setDocumentUrl(String documentUrl) {
