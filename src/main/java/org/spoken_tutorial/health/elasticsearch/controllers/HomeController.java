@@ -22,6 +22,7 @@ import org.spoken_tutorial.health.elasticsearch.repositories.QueueManagementRepo
 import org.spoken_tutorial.health.elasticsearch.services.DocumentSearchService;
 import org.spoken_tutorial.health.elasticsearch.services.QueueManagementService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.SearchHit;
 import org.springframework.data.elasticsearch.core.SearchHits;
@@ -162,7 +163,7 @@ public class HomeController {
             String documentUrl, int rank, String view_url, int languageId, String language,
             Optional<Integer> categoryId, Optional<String> category, Optional<Integer> topicId, Optional<String> topic,
             Optional<String> outlinePath, String requestType, Optional<String> videoPath, Optional<String> title,
-            Optional<String> description, Optional<String> thumbnailPath) {
+            Optional<String> description, Optional<String> thumbnailPath, Optional<Integer> orderValue) {
 
         Map<String, String> resultMap = new HashMap<>();
 
@@ -221,6 +222,9 @@ public class HomeController {
         if (thumbnailPath != null && thumbnailPath.isPresent())
             queuemnt.setThumbnailPath(thumbnailPath.get());
 
+        if (orderValue != null && orderValue.isPresent())
+            queuemnt.setOrderValue(orderValue.get());
+
         queRepo.save(queuemnt);
 
         resultMap.put(Config.QUEUE_ID, Long.toString(queuemnt.getQueueId()));
@@ -238,11 +242,11 @@ public class HomeController {
             @RequestParam Optional<Integer> topicId, @RequestParam Optional<String> topic,
             @RequestParam Optional<String> outlinePath, @RequestParam Optional<String> videoPath,
             @RequestParam Optional<String> title, @RequestParam Optional<String> description,
-            @RequestParam Optional<String> thumbnailPath) {
+            @RequestParam Optional<String> thumbnailPath, Optional<Integer> orderValue) {
 
         return addDocument(documentId, documentType, documentPath, documentUrl, rank, view_url, languageId, language,
                 categoryId, category, topicId, topic, outlinePath, Config.ADD_DOCUMENT, videoPath, title, description,
-                thumbnailPath);
+                thumbnailPath, orderValue);
     }
 
     @PostMapping("/updateDocument/{documentId}/{documentType}/{languageId}/{language}/{rank}")
@@ -253,18 +257,18 @@ public class HomeController {
             @RequestParam Optional<String> topic, @RequestParam Optional<Integer> topicId,
             @RequestParam Optional<String> outlinePath, Optional<String> videoPath,
             @RequestParam Optional<String> title, @RequestParam Optional<String> description,
-            @RequestParam Optional<String> thumbnailPath) {
+            @RequestParam Optional<String> thumbnailPath, Optional<Integer> orderValue) {
 
         return addDocument(documentId, documentType, documentPath, documentUrl, rank, view_url, languageId, language,
                 categoryId, category, topicId, topic, outlinePath, Config.UPDATE_DOCUMENT, videoPath, title,
-                description, thumbnailPath);
+                description, thumbnailPath, orderValue);
     }
 
     @GetMapping("/updateDocumentRank/{documentId}/{documentType}/{languageId}/{rank}")
     public Map<String, String> updateDocumentRank(@PathVariable String documentId, @PathVariable String documentType,
             @PathVariable int languageId, @PathVariable int rank) {
         return addDocument(documentId, documentType, null, null, rank, null, languageId, null, null, null, null, null,
-                null, Config.UPDATE_DOCUMENT_RANK, null, null, null, null);
+                null, Config.UPDATE_DOCUMENT_RANK, null, null, null, null, null);
     }
 
     @GetMapping("/deleteDocument/{documentId}/{documentType}/{languageId}")
@@ -272,7 +276,7 @@ public class HomeController {
             @PathVariable int languageId) {
 
         return addDocument(documentId, documentType, null, null, 0, null, languageId, null, null, null, null, null,
-                null, Config.DELETE_DOCUMENT, null, null, null, null);
+                null, Config.DELETE_DOCUMENT, null, null, null, null, null);
     }
 
     @PostMapping("/search")
@@ -349,14 +353,23 @@ public class HomeController {
             criteria = criteria.subCriteria(subCriteria2);
         }
 
+        CriteriaQuery criteriaQuery = new CriteriaQuery(criteria);
+        if (categoryId.isPresent() && categoryId.get() != 0) {
+            criteriaQuery.addSort(Sort.by(Sort.Order.desc("orderValue")));
+        }
+
         logger.info("Criteria: {}", criteria);
-        SearchHits<DocumentSearch> searchHits = operations.search(new CriteriaQuery(criteria), DocumentSearch.class);
+        SearchHits<DocumentSearch> searchHits = operations.search(criteriaQuery, DocumentSearch.class);
 
         List<DocumentSearch> documentSearchList = searchHits.stream().map(SearchHit::getContent)
                 .collect(Collectors.toList());
 
         documentSearchMap.put("documentSearchList", documentSearchList);
         logger.info("documentSearchList size: {}", documentSearchList.size());
+
+        for (DocumentSearch ds : documentSearchList) {
+            logger.info("Order Value:{}", ds.getOrderValue());
+        }
         return documentSearchMap;
     }
 
