@@ -94,6 +94,9 @@ public class QueueManagement implements Runnable {
     @Column(name = "rankView", nullable = true)
     private int rank;
 
+    @Column(name = "orderValue", nullable = true)
+    private int orderValue;
+
     @Column(name = "viewUrl", nullable = true)
     private String viewUrl;
 
@@ -148,6 +151,14 @@ public class QueueManagement implements Runnable {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public int getOrderValue() {
+        return orderValue;
+    }
+
+    public void setOrderValue(int orderValue) {
+        this.orderValue = orderValue;
     }
 
     public String getDescription() {
@@ -362,7 +373,7 @@ public class QueueManagement implements Runnable {
     }
 
     public QueueManagement(long queueId, Timestamp request, String requestType, String status, long startTime,
-            long endTime, long procesingTime, String videoPath) {
+            long endTime, long procesingTime, String videoPath, int orderValue) {
         super();
         this.queueId = queueId;
         this.requestTime = request;
@@ -372,6 +383,7 @@ public class QueueManagement implements Runnable {
         this.endTime = endTime;
         this.procesingTime = procesingTime;
         this.videoPath = videoPath;
+        this.orderValue = orderValue;
 
     }
 
@@ -386,7 +398,7 @@ public class QueueManagement implements Runnable {
     public String toString() {
         return "QueueManagement [queueId=" + queueId + ", requestTime=" + requestTime + ", requestType=" + requestType
                 + ", status=" + status + ", documentId=" + documentId + ", documentType=" + documentType + ", rank="
-                + rank + ", language=" + language + "]";
+                + rank + ", language=" + language + ", orderValue=" + orderValue + "]";
     }
 
     @Override
@@ -422,6 +434,7 @@ public class QueueManagement implements Runnable {
                     documentSearch.setTopicId(getTopicId());
                     documentSearch.setVideoPath(getVideoPath());
                     documentSearch.setDocumentUrl(getDocumentUrl());
+                    documentSearch.setOrderValue(getOrderValue());
 
                     if (getTitle() != null) {
                         documentSearch.setTitle(getTitle());
@@ -553,6 +566,8 @@ public class QueueManagement implements Runnable {
                         if (getThumbnailPath() != null) {
                             documentSearch.setThumbnailPath(getThumbnailPath());
                         }
+                        if (getOrderValue() != 0)
+                            documentSearch.setOrderValue(getOrderValue());
 
                         docRepo.save(documentSearch);
                         setStatus(Config.STATUS_DONE);

@@ -50,6 +50,9 @@ public class DocumentSearch {
     @Field(name = "rankView", type = FieldType.Integer, index = true, store = true)
     private int rank;
 
+    @Field(type = FieldType.Integer, index = true, store = true)
+    private int orderValue;
+
     @Field(type = FieldType.Keyword, index = false, store = true)
     private String viewUrl;
 
@@ -104,6 +107,14 @@ public class DocumentSearch {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public int getOrderValue() {
+        return orderValue;
+    }
+
+    public void setOrderValue(int orderValue) {
+        this.orderValue = orderValue;
     }
 
     public String getDescription() {
@@ -262,13 +273,15 @@ public class DocumentSearch {
         this.documentId = documentId;
     }
 
-    public DocumentSearch(String id, String documentContent, String documentType, String documentId, String videoPath) {
+    public DocumentSearch(String id, String documentContent, String documentType, String documentId, String videoPath,
+            int orderValue) {
         super();
         this.id = id;
         this.documentContent = documentContent;
         this.documentType = documentType;
         this.documentId = documentId;
         this.videoPath = videoPath;
+        this.orderValue = orderValue;
     }
 
     public DocumentSearch(String id, String documentContent) {
@@ -281,7 +294,8 @@ public class DocumentSearch {
     public String toString() {
         return "DocumentSearch [documentType=" + documentType + ", documentId=" + documentId + ", language=" + language
                 + ", rank=" + rank + ", viewUrl=" + viewUrl + ", videoPath=" + videoPath + ", creationTime="
-                + creationTime + ", modificationTime=" + modificationTime + ", changeTime=" + changeTime + "]";
+                + creationTime + ", modificationTime=" + modificationTime + ", changeTime=" + changeTime
+                + ", orderValue=" + orderValue + "]";
     }
 
 }
