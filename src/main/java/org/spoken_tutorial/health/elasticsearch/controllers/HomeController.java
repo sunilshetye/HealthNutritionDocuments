@@ -4,11 +4,14 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -279,6 +282,109 @@ public class HomeController {
                 null, Config.DELETE_DOCUMENT, null, null, null, null, null);
     }
 
+    @PostMapping("/autoSearchSuggest")
+    public Map<String, List<String>> autoSearchSuggest(@RequestParam Optional<Integer> categoryId,
+            @RequestParam Optional<Integer> topicId, @RequestParam Optional<Integer> languageId,
+            @RequestParam Optional<String> query, @RequestParam Optional<String> typeTutorial,
+            @RequestParam Optional<String> typeTimeScript, @RequestParam Optional<String> typeBrochure,
+            @RequestParam Optional<String> typeResearchPaper) {
+
+        Map<String, List<String>> suggestedQueries = new HashMap<>();
+        List<String> suggestedQuriesList = new ArrayList<>();
+        Criteria criteria = new Criteria();
+
+        if (categoryId.isPresent() && categoryId.get() != 0) {
+            criteria = criteria.and("categoryId").is(categoryId.get());
+        }
+
+        if (topicId.isPresent() && topicId.get() != 0) {
+            criteria = criteria.and("topicId").is(topicId.get());
+        }
+
+        if (languageId.isPresent() && languageId.get() != 0) {
+            criteria = criteria.and("languageId").is(languageId.get());
+        }
+
+        if (query.isPresent() && !query.get().isEmpty()) {
+            Criteria subCriteria1 = new Criteria().or("documentContent").is(query.get()).or("outlineIndex")
+                    .is(query.get());
+            criteria = criteria.subCriteria(subCriteria1);
+
+        }
+
+        Criteria subCriteria2 = null;
+
+        if (typeTutorial.isPresent() && !typeTutorial.get().isEmpty()) {
+
+            subCriteria2 = new Criteria("documentType").is(typeTutorial.get());
+
+        }
+
+        if (typeTimeScript.isPresent() && !typeTimeScript.get().isEmpty()) {
+
+            if (subCriteria2 != null) {
+                subCriteria2 = subCriteria2.or("documentType").is(typeTimeScript.get());
+            } else {
+                subCriteria2 = new Criteria("documentType").is(typeTimeScript.get());
+            }
+
+        }
+
+        if (typeBrochure.isPresent() && !typeBrochure.get().isEmpty()) {
+
+            if (subCriteria2 != null) {
+                subCriteria2 = subCriteria2.or("documentType").is(typeBrochure.get());
+            } else {
+                subCriteria2 = new Criteria("documentType").is(typeBrochure.get());
+            }
+
+        }
+
+        if (typeResearchPaper.isPresent() && !typeResearchPaper.get().isEmpty()) {
+
+            if (subCriteria2 != null) {
+                subCriteria2 = subCriteria2.or("documentType").is(typeResearchPaper.get());
+            } else {
+                subCriteria2 = new Criteria("documentType").is(typeResearchPaper.get());
+            }
+
+        }
+
+        if (subCriteria2 != null) {
+            criteria = criteria.subCriteria(subCriteria2);
+        }
+
+        CriteriaQuery criteriaQuery = new CriteriaQuery(criteria);
+        if (categoryId.isPresent() && categoryId.get() != 0) {
+            criteriaQuery.addSort(Sort.by(Sort.Order.asc("orderValue")));
+        }
+
+        logger.info("Criteria: {}", criteria);
+        SearchHits<DocumentSearch> searchHits = operations.search(criteriaQuery, DocumentSearch.class);
+        List<DocumentSearch> documentSearchList = searchHits.stream().map(SearchHit::getContent)
+                .collect(Collectors.toList());
+
+        for (DocumentSearch doc : documentSearchList) {
+            if (doc.getDocumentType().equals(Config.DOCUMENT_TYPE_TUTORIAL_ORIGINAL_SCRIPT)) {
+                int count = 0;
+                String oultlineString = doc.getOutlineContent();
+                Pattern pattern = Pattern.compile(query.get() + "[^<]*", Pattern.CASE_INSENSITIVE);
+                Matcher matcher = pattern.matcher(oultlineString);
+                while (matcher.find()) {
+
+                    suggestedQuriesList.add(matcher.group());
+                    count++;
+                    if (count == 2)
+                        break;
+                }
+            }
+        }
+
+        suggestedQueries.put("suggestedQueries", suggestedQuriesList);
+
+        return suggestedQueries;
+    }
+
     @PostMapping("/search")
     public Map<String, List<DocumentSearch>> findByDocumentContent(@RequestParam Optional<Integer> categoryId,
             @RequestParam Optional<Integer> topicId, @RequestParam Optional<Integer> languageId,
@@ -355,7 +461,7 @@ public class HomeController {
 
         CriteriaQuery criteriaQuery = new CriteriaQuery(criteria);
         if (categoryId.isPresent() && categoryId.get() != 0) {
-            criteriaQuery.addSort(Sort.by(Sort.Order.desc("orderValue")));
+            criteriaQuery.addSort(Sort.by(Sort.Order.asc("orderValue")));
         }
 
         logger.info("Criteria: {}", criteria);

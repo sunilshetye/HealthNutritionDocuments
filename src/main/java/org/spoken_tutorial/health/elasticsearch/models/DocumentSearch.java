@@ -50,7 +50,7 @@ public class DocumentSearch {
     @Field(name = "rankView", type = FieldType.Integer, index = true, store = true)
     private int rank;
 
-    @Field(type = FieldType.Integer, index = true, store = true)
+    @Field(type = FieldType.Integer, index = true, store = false)
     private int orderValue;
 
     @Field(type = FieldType.Keyword, index = false, store = true)

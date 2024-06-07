@@ -40,6 +40,13 @@ public class Config {
     public static final String UPDATE_DOCUMENT = "updateDocument";
     public static final String UPDATE_DOCUMENT_RANK = "updateDocumentRank";
     public static final String DELETE_DOCUMENT = "deleteDocument";
+    public static final String DOCUMENT_TYPE_TUTORIAL_ORIGINAL_SCRIPT = "Tutorial_for_Original_Script";
+    public static final String DOCUMENT_TYPE_TUTORIAL_TIME_SCRIPT = "Tutorial_for_Time_Script";
+    public static final String DOCUMENT_TYPE_BROCHURE = "Brochure";
+    public static final String DOCUMENT_TYPE_VERSION = "Version";
+    public static final String DOCUMENT_TYPE_FILES_OF_BROCHURE = "Files_Of_Brochure";
+    public static final String DOCUMENT_TYPE_RESEARCHPAPER = "ResearchPaper";
+
     public static final String QUEUE_ID = "queueId";
     public static final String QUEUE_TIME = "queueTime";
     public static final String RUNNING_DOCUMENT = "runningDocument";
