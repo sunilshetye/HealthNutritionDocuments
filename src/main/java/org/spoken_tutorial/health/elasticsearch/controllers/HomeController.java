@@ -355,7 +355,7 @@ public class HomeController {
 
         CriteriaQuery criteriaQuery = new CriteriaQuery(criteria);
         if (categoryId.isPresent() && categoryId.get() != 0) {
-            criteriaQuery.addSort(Sort.by(Sort.Order.desc("orderValue")));
+            criteriaQuery.addSort(Sort.by(Sort.Order.asc("orderValue")));
         }
 
         logger.info("Criteria: {}", criteria);
