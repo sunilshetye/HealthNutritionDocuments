@@ -1,6 +1,7 @@
 package org.spoken_tutorial.health.elasticsearch.JsonService;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -9,16 +10,19 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.tika.exception.TikaException;
 import org.apache.tomcat.util.json.ParseException;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spoken_tutorial.health.elasticsearch.config.Config;
+import org.spoken_tutorial.health.elasticsearch.config.ServiceUtility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.xml.sax.SAXException;
 
 @Service
 public class JsonService {
@@ -343,6 +347,43 @@ public class JsonService {
         }
 
         return document;
+    }
+
+    public void convertScriptFileToVtt(int tutorialId, String path, String documentType, int lanId) {
+
+        Path odtFilePath = null;
+        if (lanId == 22 && documentType.equals(Config.DOCUMENT_TYPE_TUTORIAL_TIME_SCRIPT)) {
+
+            if (path == null) {
+                return;
+            }
+            odtFilePath = Paths.get(mediaRoot, path);
+
+        } else if (documentType.equals(Config.DOCUMENT_TYPE_TUTORIAL_ORIGINAL_SCRIPT) && lanId != 22) {
+            odtFilePath = Paths.get(mediaRoot, Config.uploadDirectoryScriptOdtFileforDownload, tutorialId + ".odt");
+
+        }
+        if (odtFilePath != null) {
+            File odtFile = odtFilePath.toFile();
+
+            if (odtFile.exists()) {
+
+                Path vttDir = Paths.get(mediaRoot, Config.uploadDirectoryTimeScriptvttFile);
+
+                try {
+                    Files.createDirectories(vttDir);
+                    Path vttPath = Paths.get(mediaRoot, Config.uploadDirectoryTimeScriptvttFile, tutorialId + ".vtt");
+                    String extractedText;
+                    extractedText = ServiceUtility.extractTextFromFile(odtFilePath);
+                    ServiceUtility.writeTextToVtt(extractedText, vttPath);
+                } catch (IOException | TikaException | SAXException e) {
+
+                    e.printStackTrace();
+                }
+
+            }
+
+        }
     }
 
 }
