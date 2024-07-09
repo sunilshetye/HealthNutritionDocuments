@@ -1,7 +1,6 @@
 package org.spoken_tutorial.health.elasticsearch.JsonService;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -350,6 +349,7 @@ public class JsonService {
     }
 
     public void convertScriptFileToVtt(int tutorialId, String path, String documentType, int lanId) {
+        logger.info("Entered into convertScriptFileToVtt function}");
 
         Path odtFilePath = null;
         if (lanId == 22 && documentType.equals(Config.DOCUMENT_TYPE_TUTORIAL_TIME_SCRIPT)) {
@@ -364,13 +364,14 @@ public class JsonService {
 
         }
         if (odtFilePath != null) {
-            File odtFile = odtFilePath.toFile();
 
-            if (odtFile.exists()) {
+            if (Files.exists(odtFilePath)) {
+                logger.info("Conversion of odt to vtt file for tutorialId: {}", tutorialId);
 
                 Path vttDir = Paths.get(mediaRoot, Config.uploadDirectoryTimeScriptvttFile);
 
                 try {
+                    logger.info("Converting odt file to vtt file.....");
                     Files.createDirectories(vttDir);
                     Path vttPath = Paths.get(mediaRoot, Config.uploadDirectoryTimeScriptvttFile, tutorialId + ".vtt");
                     String extractedText;
