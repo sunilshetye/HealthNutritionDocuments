@@ -9,7 +9,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.tika.exception.TikaException;
 import org.apache.tomcat.util.json.ParseException;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -21,7 +20,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import org.xml.sax.SAXException;
 
 @Service
 public class JsonService {
@@ -371,15 +369,18 @@ public class JsonService {
                 Path vttDir = Paths.get(mediaRoot, Config.uploadDirectoryTimeScriptvttFile);
 
                 try {
-                    logger.info("Converting odt file to vtt file.....");
+
                     Files.createDirectories(vttDir);
                     Path vttPath = Paths.get(mediaRoot, Config.uploadDirectoryTimeScriptvttFile, tutorialId + ".vtt");
+                    logger.info("Converting odt file to vtt file.... scriptPath:{}, vttPath:{}", odtFilePath.toString(),
+                            vttPath.toString());
                     String extractedText;
                     extractedText = ServiceUtility.extractTextFromFile(odtFilePath);
                     ServiceUtility.writeTextToVtt(extractedText, vttPath);
-                } catch (IOException | TikaException | SAXException e) {
+                } catch (Exception e) {
 
-                    e.printStackTrace();
+                    logger.error("Exception Error in convertScriptFileToVtt method scriptpath:{},  tutorialId:{}",
+                            odtFilePath, tutorialId, e);
                 }
 
             }

@@ -1,10 +1,7 @@
 package org.spoken_tutorial.health.elasticsearch.config;
 
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStreamWriter;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalTime;
@@ -31,6 +28,7 @@ public class ServiceUtility {
     /********** srt file conversion start **********/
 
     public static String extractTextFromFile(Path timeScriptPath) throws IOException, TikaException, SAXException {
+        logger.info("Entered into extractTextFromFile method timeScriptPath:{}", timeScriptPath.toString());
 
         String content = "";
         try (InputStream inputStream = Files.newInputStream(timeScriptPath)) {
@@ -42,15 +40,17 @@ public class ServiceUtility {
             parser.parse(inputStream, handler, metadata, pcontext);
             content = handler.toString();
         } catch (Exception e) {
-            logger.error("InputStream Exception Error", e);
+            logger.error("InputStream Exception Error in extractTextFromFile method timeScriptPath :{}, content:{}",
+                    timeScriptPath.toString(), content, e);
         }
 
         return content;
     }
 
     public static void writeTextToVtt(String text, Path vttFilePath) throws IOException {
-        try (BufferedWriter writer = new BufferedWriter(
-                new OutputStreamWriter(Files.newOutputStream(vttFilePath), StandardCharsets.UTF_8))) {
+        logger.info("Entered into writeTextToVtt method vttFilePath:{}", vttFilePath.toString());
+        try {
+            StringBuffer sb = new StringBuffer();
             String[] lines = text.split("\n");
             int index = 1;
 
@@ -59,20 +59,21 @@ public class ServiceUtility {
             boolean textFlag = true;
 
             for (String line : lines) {
-                if (line.trim().isEmpty()) {
+                line = line.replace("\u00A0", "").trim();
+                if (line.isEmpty()) {
                     continue;
                 }
-                if (line.trim().equalsIgnoreCase("Time"))
+                if (line.equalsIgnoreCase("Time"))
                     continue;
-                if (line.trim().equalsIgnoreCase("Narration")) {
-                    writer.write("WEBVTT" + "\n\n");
+                if (line.equalsIgnoreCase("Narration")) {
+                    sb.append("WEBVTT" + "\n\n");
                     continue;
                 }
-                if (line.replace("\u00A0", "").trim().matches("^([01]?\\d|2[0-3]):([0-5]?\\d)$")
-                        || line.replace("\u00A0", "").trim().matches("^([01]?\\d|2[0-3])\\.([0-5]?\\d)$")) {
+                if (line.matches("^([01]?\\d|2[0-3]):([0-5]?\\d)$")
+                        || line.matches("^([01]?\\d|2[0-3])\\.([0-5]?\\d)$")) {
                     textFlag = false;
 
-                    String newtimeValue = "00:" + formatToTimeScript(line.replace("\u00A0", "").trim());
+                    String newtimeValue = "00:" + formatToTimeScript(line);
 
                     if (!startTimeString.equals("00:")) {
                         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
@@ -81,8 +82,8 @@ public class ServiceUtility {
                         endTime = endTime.minusNanos(500_000_000);
 
                         String endTimeString = endTime.toString();
-                        writer.write(startTimeString + " --> " + endTimeString + "\n");
-                        writer.write(textValue + "\n\n");
+                        sb.append(startTimeString + " --> " + endTimeString + "\n");
+                        sb.append(textValue + "\n\n");
                         index++;
                     }
                     startTimeString = newtimeValue + ".000";
@@ -102,8 +103,12 @@ public class ServiceUtility {
             LocalTime newTime = startTime.plusSeconds(7);
 
             String endTimeString = formatter.format(newTime);
-            writer.write(startTimeString + " --> " + endTimeString + "\n");
-            writer.write(textValue + "\n\n");
+            sb.append(startTimeString + " --> " + endTimeString + "\n");
+            sb.append(textValue + "\n\n");
+            Files.writeString(vttFilePath, sb.toString());
+            logger.info("VttFile is created filePath:{}", vttFilePath.toString());
+        } catch (Exception e) {
+            logger.error("Exception in writeTextToVtt method filePath:{}, text:{}", vttFilePath.toString(), text, e);
         }
     }
 
