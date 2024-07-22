@@ -374,8 +374,8 @@ public class JsonService {
                     Path vttPath = Paths.get(mediaRoot, Config.uploadDirectoryTimeScriptvttFile, tutorialId + ".vtt");
                     logger.info("Converting odt file to vtt file.... scriptPath:{}, vttPath:{}", odtFilePath.toString(),
                             vttPath.toString());
-                    String extractedText;
-                    extractedText = ServiceUtility.extractTextFromFile(odtFilePath);
+
+                    String extractedText = ServiceUtility.extractTextFromFile(odtFilePath);
                     ServiceUtility.writeTextToVtt(extractedText, vttPath);
                 } catch (Exception e) {
 

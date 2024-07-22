@@ -57,6 +57,7 @@ public class ServiceUtility {
             String textValue = "";
             String startTimeString = "00:";
             boolean textFlag = true;
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
 
             for (String line : lines) {
                 line = line.replace("\u00A0", "").trim();
@@ -76,7 +77,7 @@ public class ServiceUtility {
                     String newtimeValue = "00:" + formatToTimeScript(line);
 
                     if (!startTimeString.equals("00:")) {
-                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+
                         LocalTime endTime = LocalTime.parse(newtimeValue, formatter);
 
                         endTime = endTime.minusNanos(500_000_000);
@@ -90,7 +91,7 @@ public class ServiceUtility {
 
                 } else {
                     if (textFlag) {
-                        textValue = textValue + line;
+                        textValue = textValue + " " + line.trim();
                     } else {
                         textValue = line.trim();
                         textFlag = true;
@@ -98,11 +99,11 @@ public class ServiceUtility {
                 }
             }
 
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss.SSS");
-            LocalTime startTime = LocalTime.parse(startTimeString, formatter);
+            DateTimeFormatter formatter1 = DateTimeFormatter.ofPattern("HH:mm:ss.SSS");
+            LocalTime startTime = LocalTime.parse(startTimeString, formatter1);
             LocalTime newTime = startTime.plusSeconds(7);
 
-            String endTimeString = formatter.format(newTime);
+            String endTimeString = formatter1.format(newTime);
             sb.append(startTimeString + " --> " + endTimeString + "\n");
             sb.append(textValue + "\n\n");
             Files.writeString(vttFilePath, sb.toString());
