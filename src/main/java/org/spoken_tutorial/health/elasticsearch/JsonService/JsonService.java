@@ -15,6 +15,7 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spoken_tutorial.health.elasticsearch.config.Config;
+import org.spoken_tutorial.health.elasticsearch.config.ServiceUtility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -343,6 +344,48 @@ public class JsonService {
         }
 
         return document;
+    }
+
+    public void convertScriptFileToVtt(int tutorialId, String path, String documentType, int lanId) {
+        logger.info("Entered into convertScriptFileToVtt function}");
+
+        Path odtFilePath = null;
+        if (lanId == 22 && documentType.equals(Config.DOCUMENT_TYPE_TUTORIAL_TIME_SCRIPT)) {
+
+            if (path == null) {
+                return;
+            }
+            odtFilePath = Paths.get(mediaRoot, path);
+
+        } else if (documentType.equals(Config.DOCUMENT_TYPE_TUTORIAL_ORIGINAL_SCRIPT) && lanId != 22) {
+            odtFilePath = Paths.get(mediaRoot, Config.uploadDirectoryScriptOdtFileforDownload, tutorialId + ".odt");
+
+        }
+        if (odtFilePath != null) {
+
+            if (Files.exists(odtFilePath)) {
+                logger.info("Conversion of odt to vtt file for tutorialId: {}", tutorialId);
+
+                Path vttDir = Paths.get(mediaRoot, Config.uploadDirectoryTimeScriptvttFile);
+
+                try {
+
+                    Files.createDirectories(vttDir);
+                    Path vttPath = Paths.get(mediaRoot, Config.uploadDirectoryTimeScriptvttFile, tutorialId + ".vtt");
+                    logger.info("Converting odt file to vtt file.... scriptPath:{}, vttPath:{}", odtFilePath.toString(),
+                            vttPath.toString());
+
+                    String extractedText = ServiceUtility.extractTextFromFile(odtFilePath);
+                    ServiceUtility.writeTextToVtt(extractedText, vttPath);
+                } catch (Exception e) {
+
+                    logger.error("Exception Error in convertScriptFileToVtt method scriptpath:{},  tutorialId:{}",
+                            odtFilePath, tutorialId, e);
+                }
+
+            }
+
+        }
     }
 
 }
