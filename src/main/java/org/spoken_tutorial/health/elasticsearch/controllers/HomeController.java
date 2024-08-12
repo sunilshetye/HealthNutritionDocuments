@@ -349,6 +349,10 @@ public class HomeController {
 
         }
 
+        if (subCriteria2 == null) {
+            subCriteria2 = new Criteria("documentType").is(Config.DOCUMENT_TYPE_TUTORIAL_ORIGINAL_SCRIPT);
+        }
+
         if (subCriteria2 != null) {
             criteria = criteria.subCriteria(subCriteria2);
         }
