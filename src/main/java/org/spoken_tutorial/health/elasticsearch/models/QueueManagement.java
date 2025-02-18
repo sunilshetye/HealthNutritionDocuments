@@ -557,6 +557,12 @@ public class QueueManagement implements Runnable {
                         if (getDocumentUrl() != null) {
                             documentSearch.setDocumentUrl(getDocumentUrl());
                         }
+                        if (getCategory() != null) {
+                            documentSearch.setCategory(getCategory());
+                        }
+                        if (getCategoryId() != 0) {
+                            documentSearch.setCategoryId(getCategoryId());
+                        }
                         if (getViewUrl() != null) {
                             documentSearch.setViewUrl(getViewUrl());
                         }
