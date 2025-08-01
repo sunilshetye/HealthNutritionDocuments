@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spoken_tutorial.health.elasticsearch.threadpool.TaskProcessingService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -26,6 +27,9 @@ public class HealthNutritionElasticSearchApplication extends SpringBootServletIn
     @Autowired
     private TaskProcessingService taskProcessingService;
 
+    @Value("${createdby}")
+    private String createdBy;
+
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
 
@@ -40,6 +44,7 @@ public class HealthNutritionElasticSearchApplication extends SpringBootServletIn
     @Override
     public void run(String... args) throws Exception {
         logger.info("Starting");
+        logger.info("Checking application properties: created by {}", createdBy);
 
         try {
             taskProcessingService.intializeQueue();
