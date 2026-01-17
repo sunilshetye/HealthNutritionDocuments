@@ -141,7 +141,7 @@ public class TaskProcessingService {
                     }
 
                     String path = qmnt.getDocumentPath();
-                    if (path.startsWith("https://")) {
+                    if (path != null && path.startsWith("https://")) {
                         if (!isURLWorking(path)) {
                             logger.info("The documentPath url is not working: " + path);
                             qmnt.setStatus(Config.STATUS_PENDING);
